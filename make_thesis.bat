@@ -7,4 +7,4 @@ docker build -t bpimg -f docker/Dockerfile .
 docker run --rm -v "%cd%:/bp" bpimg sh /bp/docker/render_thesis.sh bachproef
 
 @REM keep window open after run
-pause
+@REM pause
