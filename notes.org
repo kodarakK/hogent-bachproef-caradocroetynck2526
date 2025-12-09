@@ -1,0 +1,235 @@
+* notes van gesprek
+
+docementatie peffectief probleem
+
+emissies data verplaatsen
+
+logica / formula van onderzoekers: vb emissie van diren
+
+
+met vele zaken rekening houden, soms loopt er iets mis
+
+niet perse programmeurs, maar kunnen wel code,
+
+
+gemakkelijk zaken wijzigen aan code ne uit testen
+
+---
+docfx
+de docs zouden nauwer verweven zijn met code
+
+afstanden verminderen
+
+
+--
+
+impact van bepaalde zaken berekenen
+
+wat is de impact van dat 1ne cijfer
+
+sensiviteits analyse
+
+
+python notebook voor een dotnet applicatie
+
+
+hoe kunnen we onderzoekers die niet perse een it achtergrond hebben
+de tools geven om zowel een beter inzicht te krijgen in het model zelf
+en er mee te kunnen experimenteren.
+
+c# dotnet 10, sqlite, razor pages, met een model (vaststaande berekeningen, vb bij koe: zo formules berekenen)
+
+vb
+overbodige mest, landbouwer heeft verschillende exportaties (exportniveau)
+
+wat wil je aanpassen: en wat niet kan
+
+wat *kunnen* we doen
+ik wil dit model/rapportereinsg model emeer onderzoeks tool van maken: met documentatie
+
+een annotatie tool: hier moet dat aangepast worden, het uitzoeken waar het moet aanpassen
+
+KERN: kloof tussen het it technische en onderzoeks aspect verkleinen
+
+samuel: co promotor
+
+beste Samuel is goed in mails
+
+* ai summary
+
+** Hoofdonderzoeksvraag (aanbevolen formulering)
+
+Hoe kunnen we binnen een .NET-gebaseerde (c# & razorpages) onderzoeksapplicatie de kloof
+verkleinen tussen IT-technische logica en wetenschappelijke analyse,
+zodat onderzoekers van ILVO (Instituut voor Landbouw-, Visserij- en Voedingsonderzoek)
+zonder diepgaande programmeerkennis, inzicht krijgen
+in de werking van hun intern model en er zelf mee kunnen experimenteren?
+
+** Alternatieve formuleringen
+
+- Hoe kunnen we een onderzoeksmodel in .NET zodanig documenteren
+  en uitbreiden dat niet-programmeurs (onderzoekers) eenvoudig de berekeningen,
+  aannames en gevoeligheden kunnen begrijpen en aanpassen?
+
+- Hoe kunnen interactieve documentatie- en annotatietools geïntegreerd worden
+  in een .NET-applicatie om onderzoekers te ondersteunen bij het begrijpen,
+  aanpassen en testen van wetenschappelijke modellen?
+
+- Op welke manier kunnen we de technische afstand tussen code (C#-logica)
+  en de onderzoekscontext (emissieberekeningen, gevoeligheidsanalyses) verkleinen,
+  zodat samenwerking tussen ontwikkelaars en onderzoekers efficiënter wordt?
+
+** Mogelijke deelvragen
+
+- Hoe kunnen berekeningsmodellen (zoals emissieformules) in .NET
+  transparanter worden gemaakt voor niet-programmeurs?
+
+- Welke documentatievormen (zoals DocFX, interactieve notebooks
+  of inline annotaties) helpen onderzoekers om de logica beter te begrijpen?
+
+- Hoe kunnen onderzoekers de impact van parameterwijzigingen
+  (gevoeligheidsanalyse) rechtstreeks in de applicatie evalueren?
+
+- Hoe kan documentatie nauwer verweven worden met de codebasis
+  zodat wijzigingen automatisch zichtbaar blijven?
+
+- Welke interface of workflow maakt het voor onderzoekers mogelijk om veilig
+  met modelparameters te experimenteren zonder de code te breken?
+
+- Hoe ziet het model waarop ze hun onderzoeken voorspellen er uit
+  en hoe werkt het intern?
+
+- Wat moet er in handleidingen aanbod komen zodat iemand met weinig IT-kennis
+  parameters kan aanpassen.
+
+* vragen formulieren
+
+** verder bouwen op RM?
+nee
+
+** onderwerp aangereikt?
+ja, door stage
+
+** naam bedrijf
+ILVO (Instituut voor Landbouw-, Visserij- en Voedingsonderzoek)
+
+** BP opnieuw?
+nee
+
+** co-promotor
+ja
+
+** Wat is het probleem?
+ILVO is een organisatie die onderzoek doen op het vakgebied van landbouw, visserij en voeding.
+De onderzoekers hebben hun model, een kluster van formules, en de IT'ers hebben
+deze formules in een applicatie gegoten. Nu willen de onderzoekers onderdelen van
+die formules aanpassen om bv. impacten van verschillende factoren te onderzoeken.
+Zij hebben zelf niet genoeg kennis om dit direct toe te passen in de applicatie.
+Maar het proces om dit via de IT'ers te laten gaan duurt te lang.
+
+** welke bron staaft de nood naar onderzoek rond dit onderwerp
+Mail verkeer en mondeling overleg met mijn toekomstige stagementor.
+(S. Bosch, persoonlijke communicatie, 2025-10-28)
+** hoofdonderzoeksvraag?
+
+Hoe kunnen we binnen een .NET-gebaseerde (c# & razorpages) onderzoeksapplicatie de kloof
+verkleinen tussen IT-technische logica en wetenschappelijke analyse,
+zodat onderzoekers van ILVO (Instituut voor Landbouw-, Visserij- en Voedingsonderzoek)
+zonder diepgaande programmeerkennis, inzicht krijgen
+in de werking van hun intern model en er zelf mee kunnen experimenteren?
+
+** deelvragen probleem beter begrijpen
+- Hoe kunnen berekeningsmodellen (zoals emissieformules) in .NET
+  transparanter worden gemaakt voor niet-programmeurs?
+- Hoe ziet het model waarop ze hun onderzoeken voorspellen er uit
+  en hoe werkt het intern?
+
+** m2 APA refs
+- Anderson, A., Brock, D. & Larkin, K. (2025).
+  Razor Pages architecture and concepts in ASP.NET Core. [Computer Software].
+  Learn.microsoft.com
+  https://learn.microsoft.com/en-us/aspnet/core/razor-pages/?view=aspnetcore-9.0&tabs=visual-studio
+  Geraadpleegd op 2025-11-10
+- Vlaamse Milieu Maatschappij. (n. d.)
+  Uitstoot naar lucht door de veeteelt in Vlaanderen.
+  vmm.vlaanderen.be
+  [[luchtemissies-veeteelt.toepassingen.vmm.vlaanderen.be]]
+  Geraadpleegd op 2025-11-10
+** deelvragen oplossing
+- Welke documentatievormen (zoals DocFX, interactieve notebooks
+  of inline annotaties) helpen onderzoekers om de logica beter te begrijpen?
+- Hoe kunnen onderzoekers de impact van parameterwijzigingen
+  (gevoeligheidsanalyse) rechtstreeks in de applicatie evalueren?
+- Hoe kan documentatie nauwer verweven worden met de codebasis
+  zodat wijzigingen automatisch zichtbaar blijven?
+- Wat moet er in handleidingen aanbod komen zodat iemand met weinig IT-kennis
+  parameters kan aanpassen.
+- Welke manieren bieden anderen programmeer talen aan?
+
+** m2 APA refs
+- Open Source Community (n.d.).
+  GitHub - dotnet/docfx: Static site generator for .NET API documentation.[Computer software]
+  GitHub. https://github.com/dotnet/docfx.
+  Geraadpleegd op 2025-11-10
+- Theunissen, T., Hoppenbrouwers, S., Overbeek, S. (2022)
+  Approaches for Documentation in Continuous Software Development
+  [[https://doi.org/10.7250/csimq.2022-31.01]]
+  Geraadpleegd op 2025-11-10
+** vakgebied
+software dev
+
+** zekerheid geschikt voo BP
+4*
+
+** aless feedback
+
+probleem nog iets duidelijker maken
+vraag ook
+
+wa doe ik nu effectief:
+- paar verschillende kleine POC's en vragen welke geprefereerd wordt
+- 1 grote POC / product maken
+- puur docs? dont think so
+- ist: hier formule: wat ja want to change?
+- dunno yet
+- 
+
+
+nog overleg met co-promotor?
+
+** promotor gesprek
+wat is de vraag van de onderzoekers zelf
+
+en hoe heeft it dit opgevat
+
+DDD domain driven design
+
+literate programming
+
+voldoende beeld van het probleem
+
+een eenvoudig maar complex genoeg
+
+ci / cd pipeline
+
+dsl domain specific palnguage
+
+
+deel 1: onderzoek wanneer werkt het niet
+
+deel 2: oplossing om het doen laten werken
+
+
+vb: mehodologie: vb agile werken, jira bord delen, en hierop werken
+
+de 2 flows samenbrengen en in sync houden, en voorstellen
+
+ik zie waarom dat dit kan werken, maar in praktijk werkt het zo:
+die feedback loop opzetten
+
+
+voor lit studie: effectief eens klein toepassen om te zien als het werkt
+* Anderen links
+
+[[https://scholar.google.com/scholar?hl=nl&as_sdt=0%2C5&q=documentation+tools+for+developers&btnG=]]
+
