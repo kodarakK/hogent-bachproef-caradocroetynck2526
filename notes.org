@@ -71,13 +71,13 @@ in de werking van hun intern model en er zelf mee kunnen experimenteren?
   en uitbreiden dat niet-programmeurs (onderzoekers) eenvoudig de berekeningen,
   aannames en gevoeligheden kunnen begrijpen en aanpassen?
 
-- Hoe kunnen interactieve documentatie- en annotatietools geïntegreerd worden
+- Hoe kunnen interactieve documentatie- en annotatietools geÃ¯ntegreerd worden
   in een .NET-applicatie om onderzoekers te ondersteunen bij het begrijpen,
   aanpassen en testen van wetenschappelijke modellen?
 
 - Op welke manier kunnen we de technische afstand tussen code (C#-logica)
   en de onderzoekscontext (emissieberekeningen, gevoeligheidsanalyses) verkleinen,
-  zodat samenwerking tussen ontwikkelaars en onderzoekers efficiënter wordt?
+  zodat samenwerking tussen ontwikkelaars en onderzoekers efficiÃ«nter wordt?
 
 ** Mogelijke deelvragen
 
@@ -229,6 +229,111 @@ die feedback loop opzetten
 
 
 voor lit studie: effectief eens klein toepassen om te zien als het werkt
+
+
+* plak historie voor voorstel:
+📄 Voorbeeld van een uitgewerkte inleiding (± 500 woorden)
+
+Wetenschappelijke instellingen zoals ILVO (Instituut voor Landbouw-, Visserij- en Voedingsonderzoek) maken intensief gebruik van complexe rekenmodellen om emissies, productie-impact en andere landbouwparameters te analyseren. Deze modellen bestaan vaak uit clusters van formules die door onderzoekers worden ontwikkeld en vervolgens door de IT-afdeling worden geïmplementeerd in softwaretoepassingen. De kwaliteit en duidelijkheid van deze implementaties zijn cruciaal, aangezien onderzoekers op basis van deze toepassingen hypothesen testen, scenario’s simuleren en beleidsrelevante conclusies formuleren. In de praktijk blijken dergelijke modellen echter moeilijk aanpasbaar en weinig transparant zodra ze in code gegoten zijn. De kloof tussen onderzoek en softwareontwikkeling heeft daardoor een directe impact op de snelheid en kwaliteit van het onderzoeksproces.
+
+Binnen ILVO wordt dit probleem duidelijk zichtbaar in hun .NET-gebaseerde applicaties waar emissieformules en bedrijfsparameters zijn verwerkt in C#-logica. Onderzoekers beschikken wél over de inhoudelijke expertise om formules en parameters te wijzigen, maar niet over de programmeerkennis om deze wijzigingen zelfstandig in de software door te voeren. Voor elke aanpassing zijn zij afhankelijk van de IT-afdeling, waardoor kleine wijzigingen of experimenten vaak vertraging oplopen. Tegelijk is de huidige documentatie niet altijd voldoende nauw verweven met de code, waardoor het moeilijk is om te achterhalen waar specifieke berekeningen plaatsvinden en welke aannames aan de basis liggen.
+
+De doelgroep van dit onderzoek bestaat dan ook uit twee nauw samenwerkende groepen binnen ILVO: de onderzoekers die de wetenschappelijke modellen ontwikkelen, en de IT-professionals die deze modellen implementeren, onderhouden en documenteren. Beide groepen ervaren hinder door de huidige werkwijze: onderzoekers missen autonomie, terwijl IT'ers disproportioneel veel tijd besteden aan kleine wijzigingen, uitleg en debugging.
+
+Daarom staat in deze bachelorproef de volgende centrale onderzoeksvraag centraal:
+Hoe kunnen we binnen een .NET-gebaseerde (C# & Razor Pages) onderzoeksapplicatie de kloof verkleinen tussen IT-technische logica en wetenschappelijke analyse, zodat onderzoekers van ILVO zonder diepgaande programmeerkennis inzicht krijgen in de werking van hun intern model en er zelf mee kunnen experimenteren?
+Deze vraag is relevant omdat ze zowel de transparantie van wetenschappelijke modellen verbetert als de samenwerking tussen onderzoek en IT efficiënter maakt.
+
+Het doel van dit onderzoek is om een proof-of-concept te ontwikkelen waarin documentatie, modelberekeningen en experimenteerruimte voor onderzoekers dichter bij elkaar worden gebracht. Hierbij wordt onderzocht welke documentatievormen – zoals DocFX, interactieve notebooks of inline annotaties – het meest geschikt zijn om de interne werking van het .NET-model begrijpelijk te maken. Daarnaast wordt nagegaan hoe parameters veilig kunnen worden aangepast en hoe gevoeligheidsanalyses of simulaties rechtstreeks vanuit de applicatie kunnen worden uitgevoerd. Het uiteindelijke resultaat moet een concreet voorstel en prototype opleveren dat ILVO kan gebruiken om hun onderzoeksmodellen toegankelijker, transparanter en beter onderhoudbaar te maken.
+
+Dit onderzoek wordt bewust afgebakend: het richt zich niet op het herontwerpen van het volledige ILVO-model of het bouwen van een productieklare applicatie, maar wel op het ontwikkelen en evalueren van technieken, workflows en tooling die de interactie tussen code en onderzoek verbeteren. Theoretisch kader wordt gezocht binnen software engineering, documentatieonderzoek, literate programming, domain-driven design en transparantie van wetenschappelijke modellen.
+
+⚡ Als je wil, kan ik deze versie ook inkorten, formeler maken, of perfect afstemmen op je scholen richtlijnen.
+
+Je zei:
+misschien de onderzoeks vraag herfomuleren zodat die de feedback van mijn promotor bevat
+ChatGPT zei:
+
+Natuurlijk — op basis van jouw notities én de feedback van je promotor (“vraag van onderzoekers zelf, hoe IT dit heeft opgevat, twee flows samenbrengen, wanneer werkt het niet, oplossing om het te doen werken, feedback loop”) maak ik een herformulering die beter aansluit bij wat hij bedoelt.
+
+Hier zijn drie opties, van meest concreet naar breder conceptueel, zodat je kunt kiezen welke best past.
+
+✅ Optie 1 — Praktisch en toegepast (sluit héél goed aan bij feedback promotor)
+
+Hoe kunnen we de onderzoeksflow van ILVO-onderzoekers en de implementatieflow van de IT-afdeling beter op elkaar afstemmen binnen een .NET-gebaseerde applicatie, zodat onderzoekers zelfstandig modelparameters en formules kunnen begrijpen, aanpassen en testen zonder de softwarestructuur te doorbreken?
+
+Waarom deze goed is:
+
+legt nadruk op flows samenbrengen
+
+focust op autonomie van onderzoekers, maar zonder ontwikkelaars buitenspel te zetten
+
+benoemt “begrijpen, aanpassen, testen”: exact wat jij moet onderzoeken
+
+✅ Optie 2 — Meer technisch-inhoudelijk (met nadruk op documentatie, DSL, annotaties)
+
+Hoe kunnen documentatie-, annotatie- en interactietools binnen een .NET-omgeving zo worden ingezet dat zowel onderzoekers als IT'ers een gedeeld, transparant beeld hebben van het onderliggende emissiemodel, en onderzoekers veilig kunnen experimenteren met parameters en formules?
+
+Waarom deze goed is:
+
+past bij het idee van literate programming en annotatietools
+
+benadrukt de gedeelde waarheid tussen IT en onderzoekers
+
+sluit aan op het doel “transparantie van het model verhogen”
+
+✅ Optie 3 — Sterk onderzoeksgericht (past goed voor academisch schrift)
+
+Op welke manier kan een .NET-gebaseerd emissiemodel zodanig worden gestructureerd en gedocumenteerd dat onderzoekers zonder diepgaande programmeerkennis inzicht krijgen in de werking van het model, begrijpen waarom onderdelen soms fout lopen, en zelfstandig alternatieve scenario’s kunnen testen?
+
+Waarom deze goed is:
+
+bevat feedback “wanneer werkt het niet → onderzoeken”
+
+focust op inzicht in fouten/complexiteit
+
+sluit aan bij gevoeligheidsanalyse en scenario-experimenten
+
+🔍 Welke vraag past het beste bij jouw huidige richting?
+
+Op basis van jouw notities denk ik dat Optie 1 het dichtst staat bij wat je promotor bedoelde:
+
+twee flows
+
+feedbackloop
+
+praktijkgericht
+
+duidelijk probleemgedreven
+
+toegepast onderzoek
+
+Maar jij kiest natuurlijk wat het best past bij je scriptie.
+
+👉 Wil je dat ik deze onderzoeksvraag ook verwerk in de inleiding die ik eerder voor je maakte?
+
+Ik kan meteen een nieuwe, aangepaste versie uitschrijven.
+
+
+** mijn inleiding:
+
+
+
+
+
+
+
+
+Bij ILVO hebben de onderzoekers een set formules gemaakt uit hun onderzoekingen.
+De IT afdeling van ILVO maakt applicaties om deze formules te gebruiken. Maar de onderzoekers kunnen niet zomaar de code veranderen van de applicatie om zaken te testen en andere parameters te gebruiken.
+Er is mij gevraagd geweest om manieren te vinden om deze code toegankelijker te maken voor de onderzoekers, of een manier waarop zij documentatie en code kunnen schrijven om hun hypotheses te testen en te experimenteren. Dus hoe kan ik er voor zorgen dat onderzoekers hun formules kunnen testen in een makkelijke aanpasbare omgeving?
+Dit zou een onderzoek zijn hoe de onderzoekers hun formules willen testen en een proof-of-concept te maken die zij kunnen gebruiken zonder al te veel programmeer kennis.
+Hierdoor zou de kloof tussen de onderzoekers en IT'ers ook verkleinen.
+Om dit waar te maken, wil ik kijken hoe hun formules intern werken en versimpelen zodat zij die kunnen gebruiken.
+Naast de code ook effectief schrijven is het de bedoeling dat de code gedocumenteerd word zodat het niet uren zoeken tegen dat men verstaat wat de code doet.
+Dit kan gebeuren doormiddel van interactieve notebooks of inline annotaties.
+
+
 * Anderen links
 
 [[https://scholar.google.com/scholar?hl=nl&as_sdt=0%2C5&q=documentation+tools+for+developers&btnG=]]
