@@ -40,10 +40,22 @@
 Wetenschappelijke instituten zoals ILVO (Instituut voor Landbouw-, Visserij- en voedingsOnderzoek) intensief gebruiken van complexe rekenmodellen om emissies, productie-impact en andere landbouwparameters te analyseren. Deze modellen bestaan uit ingewikkelde verzamelingen van formules die door de onderzoekers worden ontwikkeld en vervolgens geimplementeerd worden door het IT departement in softwaretoepassingen.
 Aangezien dat de onderzoekers deze toepassingen gebruiken om hun hypotheses te testen en scenario's simuleren, is de kwaliteit en duidelijkheid van deze implementatie van groot belang. In praktijk blijken deze modellen moeilijk aan te passen zodra ze in de code zijn gegoten.
 
-Binnen ILVO wordt dit probleem duidelijk zichtbaar in hun .NET applicaties waar emissieformules en bedrijfsparameters zijn verwerkt in de C# logica. Onderzoekers beschikken over de nodige inhoudelijke expertise om hun formules en parameters te wijzigen, maar niet genoeg programmeer kennis om deze wijzigingen zelfstandig door te voeren in de software. Voor elke wijziging zijn zij afhankelijk van het IT departement, waardoor kleine veranderingen vaak vertraging oplopen.
+Binnen ILVO wordt dit probleem duidelijk zichtbaar in hun .NET applicaties waar emissieformules en bedrijfsparameters zijn verwerkt in de C\# logica. Onderzoekers beschikken over de nodige inhoudelijke expertise om hun formules en parameters te wijzigen, maar niet genoeg programmeer kennis om deze wijzigingen zelfstandig door te voeren in de software. Voor elke wijziging zijn zij afhankelijk van het IT departement, waardoor kleine veranderingen vaak vertraging oplopen.
 Tegelijkertijd is de huidige documentatie niet altijd voldoende nauw verwoven met de code, waardoor het moeilijk is om te achterhalen waar specifieke berekeningen plaatsvinden en welke aanames aan de basis liggen.
 
-De doelgroep van dir onderzoek bestaat dan ook uit twee nauw samenwerkende groepen binnen ILVO: de onderzoekers die de wetenschappelijke modellen ontwikkelen en de IT-professionals die deze modellen implementeren, onderhouden en documenteren. Beide groepen ervaren hinder dooe de huidige werkwijze: onderzoekers missen autonomie, terwijl IT'ers veel tijd spenderen aan kleine wijzigingen, uitleg en debugging.
+De doelgroep van dir onderzoek bestaat dan ook uit twee nauw samenwerkende groepen binnen ILVO:\@ de onderzoekers die de wetenschappelijke modellen ontwikkelen en de IT-professionals die deze modellen implementeren, onderhouden en documenteren. Beide groepen ervaren hinder dooe de huidige werkwijze: onderzoekers missen autonomie, terwijl IT'ers veel tijd spenderen aan kleine wijzigingen, uitleg en debugging.
+
+Daarom staat in deze bachelorproef de volgende centrale onderzoeksvraag centraal:
+Hoe kunnen we binnen een .NET-gebaseerde (C\# \& Razor Pages) onderzoeksapplicatie de kloof verkleinen tussen IT-technische logica en wetenschappelijke analyse, zodat onderzoekers van ILVO zonder diepgaande programmeerkennis inzicht krijgen in de werking van hun intern model en er zelf mee kunnen experimenteren?
+Deze vraag is relevant omdat ze zowel de transparantie van wetenschappelijke modellen verbetert als de samenwerking tussen onderzoek en IT efficiënter maakt.
+
+Het doel van dit onderzoek is om een proof-of-concept te ontwikkelen waarin de wetenschappelijke ondrezoekers met hun modellen kunnen experimenteren zonder dat zij een extensieve kennis van programmeren nodig hebben. Hierbij wordt onderzocht welke documentatie vormen het meest geschikt zijn om de interne werking van hun modellen begrijpelijk te maken. Daarnaast wordt nagegaan hoe parameters veilig kunnen worden aangepast. Het uiteindelijke resultaat moet een concreet voorstel en prototype opleveren dat ILVO kan gebruiken om hun onderzoeks modellen toegankelijker, transparanter en beter onderhoudbaar te maken.
+
+
+\emph{mogelijkse afbakening, maar nog niet volledig}
+
+Dit onderzoek wordt bewust afgebakend: het richt zich niet op het herontwerpen van het volledige ILVO-model of het bouwen van een productieklare applicatie, maar wel op het ontwikkelen en evalueren van technieken, workflows en tooling die de interactie tussen code en onderzoek verbeteren. Theoretisch kader wordt gezocht binnen software engineering, documentatieonderzoek, literate programming, domain-driven design en transparantie van wetenschappelijke modellen.
+
 
 
 %---------- Stand van zaken ---------------------------------------------------
@@ -51,24 +63,23 @@ De doelgroep van dir onderzoek bestaat dan ook uit twee nauw samenwerkende groep
 \section{Literatuurstudie}%
 \label{sec:literatuurstudie}
 
-Hier beschrijf je de \emph{state-of-the-art} rondom je gekozen onderzoeksdomein, d.w.z.\ een inleidende, doorlopende tekst over het onderzoeksdomein van je bachelorproef. Je steunt daarbij heel sterk op de professionele \emph{vakliteratuur}, en niet zozeer op populariserende teksten voor een breed publiek. Wat is de huidige stand van zaken in dit domein, en wat zijn nog eventuele open vragen (die misschien de aanleiding waren tot je onderzoeksvraag!)?
+%% Hier beschrijf je de \emph{state-of-the-art} rondom je gekozen onderzoeksdomein, d.w.z.\ een inleidende, doorlopende tekst over het onderzoeksdomein van je bachelorproef. Je steunt daarbij heel sterk op de professionele \emph{vakliteratuur}, en niet zozeer op populariserende teksten voor een breed publiek. Wat is de huidige stand van zaken in dit domein, en wat zijn nog eventuele open vragen (die misschien de aanleiding waren tot je onderzoeksvraag!)?
 
-Je mag de titel van deze sectie ook aanpassen (literatuurstudie, stand van zaken, enz.). Zijn er al gelijkaardige onderzoeken gevoerd? Wat concluderen ze? Wat is het verschil met jouw onderzoek?
+%% Je mag de titel van deze sectie ook aanpassen (literatuurstudie, stand van zaken, enz.). Zijn er al gelijkaardige onderzoeken gevoerd? Wat concluderen ze? Wat is het verschil met jouw onderzoek?
 
-Verwijs bij elke introductie van een term of bewering over het domein naar de vakliteratuur, bijvoorbeeld~\autocite{Hykes2013}! Denk zeker goed na welke werken je refereert en waarom.
+%% %% Verwijs bij elke introductie van een term of bewering over het domein naar de vakliteratuur, bijvoorbeeld~\autocite{Hykes2013}! Denk zeker goed na welke werken je refereert en waarom.
+%% Draag zorg voor correcte literatuurverwijzingen! Een bronvermelding hoort thuis \emph{binnen} de zin waar je je op die bron baseert, dus niet er buiten! Maak meteen een verwijzing als je gebruik maakt van een bron. Doe dit dus \emph{niet} aan het einde van een lange paragraaf. Baseer nooit teveel aansluitende tekst op eenzelfde bron.
 
-Draag zorg voor correcte literatuurverwijzingen! Een bronvermelding hoort thuis \emph{binnen} de zin waar je je op die bron baseert, dus niet er buiten! Maak meteen een verwijzing als je gebruik maakt van een bron. Doe dit dus \emph{niet} aan het einde van een lange paragraaf. Baseer nooit teveel aansluitende tekst op eenzelfde bron.
+%% Als je informatie over bronnen verzamelt in JabRef, zorg er dan voor dat alle nodige info aanwezig is om de bron terug te vinden (zoals uitvoerig besproken in de lessen Research Methods).
 
-Als je informatie over bronnen verzamelt in JabRef, zorg er dan voor dat alle nodige info aanwezig is om de bron terug te vinden (zoals uitvoerig besproken in de lessen Research Methods).
+%% % Voor literatuurverwijzingen zijn er twee belangrijke commando's:
+%% % \autocite{KEY} => (Auteur, jaartal) Gebruik dit als de naam van de auteur
+%% %   geen onderdeel is van de zin.
+%% % \textcite{KEY} => Auteur (jaartal)  Gebruik dit als de auteursnaam wel een
+%% %   functie heeft in de zin (bv. ``Uit onderzoek door Doll & Hill (1954) bleek
+%% %   ...'')
 
-% Voor literatuurverwijzingen zijn er twee belangrijke commando's:
-% \autocite{KEY} => (Auteur, jaartal) Gebruik dit als de naam van de auteur
-%   geen onderdeel is van de zin.
-% \textcite{KEY} => Auteur (jaartal)  Gebruik dit als de auteursnaam wel een
-%   functie heeft in de zin (bv. ``Uit onderzoek door Doll & Hill (1954) bleek
-%   ...'')
-
-Je mag deze sectie nog verder onderverdelen in subsecties als dit de structuur van de tekst kan verduidelijken.
+%% Je mag deze sectie nog verder onderverdelen in subsecties als dit de structuur van de tekst kan verduidelijken.
 
 %---------- Methodologie ------------------------------------------------------
 \section{Methodologie}%

@@ -334,6 +334,21 @@ Naast de code ook effectief schrijven is het de bedoeling dat de code gedocument
 Dit kan gebeuren doormiddel van interactieve notebooks of inline annotaties.
 
 
+** ideas:
+Inleiding
+
+Reproducible Research
+
+Literate Programming
+
+Computational Notebooks
+
+Tooling for Scientific Models
+
+Gaps in Current Practice
+
+Positie van dit onderzoek
+
 * Anderen links
 
 [[https://scholar.google.com/scholar?hl=nl&as_sdt=0%2C5&q=documentation+tools+for+developers&btnG=]]
