@@ -83,9 +83,28 @@ Dit onderzoek wordt bewust afgebakend: het richt zich niet op het herontwerpen v
 
 Literate programming \autocite{LiterateProgramming} werd geïntroduceerd door \textcite{Knuth1984} als een methode waarbij code en documentatie 1 geïntegreerd geheel vormen, eerder dan gescheiden artifacten. De bedoeling is dat er 1 bestand is met de code en de documentatie erond. De tools halen de code eruit en creeeren een uitvoerbaar bestand en een ander bestand met de documentatie, dat kan een html web pagina zijn, of een \LaTeX bestand / pdf. Het kan ook een Markdown bestand zijn.
 
-In plaats van `code with comments` vertrekt literate programming vanuit het idee dat een programma in de eerste plaats een verhaal is dat aan een menselijke lezer moet worden uitgelegd, waarbij uitvoerbare code een secundaire afgeleide vorm is.
+In plaats van `code with comments` vertrekt literate programming vanuit het idee dat een programma in de eerste plaats een verhaal is dat aan een menselijke lezer moet worden uitgelegd, waarbij uitvoerbare code een secundaire afgeleide vorm is \autocite{Knuth1984}.
+Sindsdien zijn er talrijke systemen ontstaan die Knuths principes toepassen in een moderne ontwikkelingsomgeving.
 
+Hoewel Knuths oorspronkelijke WEB en CWEB nog weinig gebruikt worden in de hedendaagse softwarepraktijk, leven zijn ideeen voor in computationele notebooks, literate programminglibraries en research pipelines. Tools zoals Jupyter Notebooks, Org-mode Babel en Quarto implementeren een moderne interpretatie van Knuths 'weave' en 'tangle'-proces, waarin broncode zowel als uitvoerbaar script en als leesbare documentatie dient.
 
+\subsection{Org-mode Babel}
+Org mode is een 'major mode' voor GNU Emacs. Org mode kan voor heel veel gebruikt worden. Van notities nemen tot todo-lists, computational notebooks en literate programming \autocite{orgmode2025}.
+In Org mode zijn er `src-blocks`:
+\begin{minted}{text}
+* Src-blocks in org-mode
+#+BEGIN_SRC python :results verbatim
+  nummer: int = 10
+  return nummer
+#+END_SRC
+
+#+RESULTS:
+: 10
+\end{minted}
+
+Hierin kan code worden uitgevoerd terwijl er tekst rond staat.
+Dit is het idee van literate programming.
+De meeste `cellen` in org-mode hebben hun eigen environment, maar er bestaan manieren om dit te vermijden.
 
 %---------- Methodologie ------------------------------------------------------
 \section{Methodologie}%

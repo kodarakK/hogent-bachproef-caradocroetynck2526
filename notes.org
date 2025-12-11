@@ -353,3 +353,17 @@ Positie van dit onderzoek
 
 [[https://scholar.google.com/scholar?hl=nl&as_sdt=0%2C5&q=documentation+tools+for+developers&btnG=]]
 
+#+BEGIN_SRC python :results verbatim :session a
+  nummer: int = 10
+#+END_SRC
+
+#+RESULTS:
+: None
+
+
+#+begin_src python :results verbatim :session a
+  return (nummer)
+#+end_src
+
+#+RESULTS:
+
