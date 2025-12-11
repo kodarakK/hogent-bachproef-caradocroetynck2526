@@ -90,7 +90,7 @@ Hoewel Knuths oorspronkelijke WEB en CWEB nog weinig gebruikt worden in de heden
 
 \subsection{Org-mode Babel}
 Org mode is een 'major mode' voor GNU Emacs. Org mode kan voor heel veel gebruikt worden. Van notities nemen tot todo-lists, computational notebooks en literate programming \autocite{orgmode2025}.
-In Org mode zijn er `src-blocks`:
+In Org Mode met Babel zijn er `src-blocks`:
 \begin{minted}{text}
 * Src-blocks in org-mode
 #+BEGIN_SRC python :results verbatim
@@ -105,7 +105,14 @@ In Org mode zijn er `src-blocks`:
 Hierin kan code worden uitgevoerd terwijl er tekst rond staat.
 Dit is het idee van literate programming.
 De meeste `cellen` in org-mode hebben hun eigen environment, maar er bestaan manieren om dit te vermijden.
+Babel verbeterd de src-blocks door een paar zaken te voorzien:
+\begin{itemize}
+\item interactieve en programma executie van code blokken
+\item code blokken die functies met parameters hebben, kunnen andere code blokken accepteren en oproepen, en
+\item bestanden exporteren voor literate programming
+\end{itemize}
 
+  
 %---------- Methodologie ------------------------------------------------------
 \section{Methodologie}%
 \label{sec:methodologie}
