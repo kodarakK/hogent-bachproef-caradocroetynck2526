@@ -86,10 +86,13 @@ Literate programming \autocite{LiterateProgramming} werd geïntroduceerd door \te
 In plaats van `code with comments` vertrekt literate programming vanuit het idee dat een programma in de eerste plaats een verhaal is dat aan een menselijke lezer moet worden uitgelegd, waarbij uitvoerbare code een secundaire afgeleide vorm is \autocite{Knuth1984}.
 Sindsdien zijn er talrijke systemen ontstaan die Knuths principes toepassen in een moderne ontwikkelingsomgeving.
 
-Hoewel Knuths oorspronkelijke WEB en CWEB nog weinig gebruikt worden in de hedendaagse softwarepraktijk, leven zijn ideeen voor in computationele notebooks, literate programminglibraries en research pipelines. Tools zoals Jupyter Notebooks, Org-mode Babel en Quarto implementeren een moderne interpretatie van Knuths 'weave' en 'tangle'-proces, waarin broncode zowel als uitvoerbaar script en als leesbare documentatie dient.
+Hoewel Knuths oorspronkelijke WEB en CWEB nog weinig gebruikt worden in de hedendaagse softwarepraktijk, leven zijn ideeen voor in computationele notebooks, literate programminglibraries en research pipelines. Tools zoals Jupyter Notebooks, Org-mode Babel en Quaurto implementeren een moderne interpretatie van Knuths 'weave' en 'tangle'-proces, waarin broncode zowel als uitvoerbaar script en als leesbare documentatie dient.
+
+De execution haalt de source code eruit en zorgt voor een uitvoerbaar bestand. De Weave operatie zorgt er voor dat de documentatie uit het source bestand wordt gehaal en die in het gewenste formaat zet. De Tangle operatie verspreid de source code in het respectivelijke bestanden zelf, niet direct een executable.
 
 \subsection{Org-mode Babel}
 Org mode is een 'major mode' voor GNU Emacs. Org mode kan voor heel veel gebruikt worden. Van notities nemen tot todo-lists, computational notebooks en literate programming \autocite{orgmode2025}.
+
 In Org Mode met Babel zijn er `src-blocks`:
 \begin{minted}{text}
 * Src-blocks in org-mode
@@ -111,6 +114,25 @@ Babel verbeterd de src-blocks door een paar zaken te voorzien:
 \item code blokken die functies met parameters hebben, kunnen andere code blokken accepteren en oproepen, en
 \item bestanden exporteren voor literate programming
 \end{itemize}
+
+\subsection{Jupyter notebook}
+Jupyter notebooks zijn gemaakt voor python. Deze notebooks worden door vele mensen gebruikt en in verschillende omgevingen.
+Dit kan gaan van een student die python leert en zijn notities er bij wilt schrijven tot een volledige data analyse door professionele onderzoekers.
+Dit is de facto standaard voor computationeel onderzoek en datascience \autocite{jupyternotebook}.
+Het werkt met verschillende `cellen`. Er zijn de Markdown cellen en de python cellen.
+De python cellen verbinden met een virtuele omgeving en voeren hierop telkens hun code uit.
+Aangezien ze werken op dezelfde omgeving zijn de cellen verbonden aan elkaar.
+Het grootste verschil met org-mode is dat een .org bestand een plain tekst bestand is. Het is mogelijk om dit bestand te bekijken in eender welke editor.
+Jupyter notebooks niet. Je hebt een editor nodig die jupyter notebooks ondersteund. Het bekentste is VsCode van Microsoft.
+Er bestaat ook de officiele command en app van jupyter zelf die een server opstart en dan in de browser beschikbaar is.
+
+Maar jupyter notebooks hebben zeker hun minpunten.
+\textcite{Rule2018} tonen aan dat Jupyter Notebooks niet-lineaire uitvoergeschiedenis hebben, wat reproduceerbaarheid ernstig bemoeilijkt.
+Ook omdat de cellen in een willekeurige volgorde kunnen worden uitgevoerd, moet er opgelet worden met de run volgorde.
+De notebooks hebben ook een onzichtbare global state.
+Het zijn json bestanden, dus versie controle beheer kan hier ook moeilijk mee doen.
+Aangezien dat alles ook in 1 bestand zit, kan het snel "bloated" zijn.
+
 
   
 %---------- Methodologie ------------------------------------------------------
