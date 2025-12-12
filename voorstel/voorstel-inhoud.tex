@@ -30,7 +30,7 @@
 
 % Denk er aan: een typische bachelorproef is \textit{toegepast onderzoek}, wat betekent dat je start vanuit een concrete probleemsituatie in bedrijfscontext, een \textbf{casus}. Het is belangrijk om je onderwerp goed af te bakenen: je gaat voor die \textit{ene specifieke probleemsituatie} op zoek naar een goede oplossing, op basis van de huidige kennis in het vakgebied.
 
-% De doelgroep moet ook concreet en duidelijk zijn, dus geen algemene of vaag gedefinieerde groepen zoals \emph{bedrijven}, \emph{developers}, \emph{Vlamingen}, enz. Je richt je in elk geval op it-professionals, een bachelorproef is geen populariserende tekst. Eén specifiek bedrijf (die te maken hebben met een concrete probleemsituatie) is dus beter dan \emph{bedrijven} in het algemeen.
+% De doelgroep moet ook concreet en duidelijk zijn, dus geen algemene of vaag gedefinieerde groepen zoals \emph{bedrijven}, \emph{developers}, \emph{Vlamingen}, enz. Je richt je in elk geval op it-professionals, een bachelorproef is geen populariserende tekst. EÃ©n specifiek bedrijf (die te maken hebben met een concrete probleemsituatie) is dus beter dan \emph{bedrijven} in het algemeen.
 
 % Formuleer duidelijk de onderzoeksvraag! De begeleiders lezen nog steeds te veel voorstellen waarin we geen onderzoeksvraag terugvinden.
 
@@ -47,15 +47,11 @@ De doelgroep van dir onderzoek bestaat dan ook uit twee nauw samenwerkende groep
 
 Daarom staat in deze bachelorproef de volgende centrale onderzoeksvraag centraal:
 Hoe kunnen we binnen een .NET-gebaseerde (C\# \& Razor Pages) onderzoeksapplicatie de kloof verkleinen tussen IT-technische logica en wetenschappelijke analyse, zodat onderzoekers van ILVO zonder diepgaande programmeerkennis inzicht krijgen in de werking van hun intern model en er zelf mee kunnen experimenteren?
-Deze vraag is relevant omdat ze zowel de transparantie van wetenschappelijke modellen verbetert als de samenwerking tussen onderzoek en IT efficiënter maakt.
+Deze vraag is relevant omdat ze zowel de transparantie van wetenschappelijke modellen verbetert als de samenwerking tussen onderzoek en IT efficienter maakt.
 
 Het doel van dit onderzoek is om een proof-of-concept te ontwikkelen waarin de wetenschappelijke ondrezoekers met hun modellen kunnen experimenteren zonder dat zij een extensieve kennis van programmeren nodig hebben. Hierbij wordt onderzocht welke documentatie vormen het meest geschikt zijn om de interne werking van hun modellen begrijpelijk te maken. Daarnaast wordt nagegaan hoe parameters veilig kunnen worden aangepast. Het uiteindelijke resultaat moet een concreet voorstel en prototype opleveren dat ILVO kan gebruiken om hun onderzoeks modellen toegankelijker, transparanter en beter onderhoudbaar te maken.
 
-
-\emph{mogelijkse afbakening, maar nog niet volledig}
-
 Dit onderzoek wordt bewust afgebakend: het richt zich niet op het herontwerpen van het volledige ILVO-model of het bouwen van een productieklare applicatie, maar wel op het ontwikkelen en evalueren van technieken, workflows en tooling die de interactie tussen code en onderzoek verbeteren. Theoretisch kader wordt gezocht binnen software engineering, documentatieonderzoek, literate programming, domain-driven design en transparantie van wetenschappelijke modellen.
-
 
 
 %---------- Stand van zaken ---------------------------------------------------
@@ -81,17 +77,17 @@ Dit onderzoek wordt bewust afgebakend: het richt zich niet op het herontwerpen v
 
 %% Je mag deze sectie nog verder onderverdelen in subsecties als dit de structuur van de tekst kan verduidelijken.
 \subsection{Literate programming}
-Literate programming \autocite{LiterateProgramming} werd ge�ntroduceerd door \textcite{Knuth1984} als een methode waarbij code en documentatie 1 ge�ntegreerd geheel vormen, eerder dan gescheiden artifacten. De bedoeling is dat er 1 bestand is met de code en de documentatie erond. De tools halen de code eruit en creeeren een uitvoerbaar bestand en een ander bestand met de documentatie, dat kan een html web pagina zijn, of een \LaTeX bestand / pdf. Het kan ook een Markdown bestand zijn.
+Literate programming \autocite{LiterateProgramming} werd geïntroduceerd door \textcite{Knuth1984} als een methode waarbij code en documentatie 1 geïntegreerd geheel vormen, eerder dan gescheiden artifacten. De bedoeling is dat er 1 bestand is met de code en de documentatie erond. De tools halen de code eruit en creeeren een uitvoerbaar bestand en een ander bestand met de documentatie, dat kan een html web pagina zijn, of een \LaTeX bestand / pdf. Het kan ook een Markdown bestand zijn.
 
-In plaats van `code with comments` vertrekt literate programming vanuit het idee dat een programma in de eerste plaats een verhaal is dat aan een menselijke lezer moet worden uitgelegd, waarbij uitvoerbare code een secundaire afgeleide vorm is \autocite{Knuth1984}.
+In plaats van `code with comments' vertrekt literate programming vanuit het idee dat een programma in de eerste plaats een verhaal is dat aan een menselijke lezer moet worden uitgelegd, waarbij uitvoerbare code een secundaire afgeleide vorm is \autocite{Knuth1984}.
 Sindsdien zijn er talrijke systemen ontstaan die Knuths principes toepassen in een moderne ontwikkelingsomgeving.
 
-Hoewel Knuths oorspronkelijke WEB en CWEB nog weinig gebruikt worden in de hedendaagse softwarepraktijk, leven zijn ideeen voor in computationele notebooks, literate programminglibraries en research pipelines. Tools zoals Jupyter Notebooks, Org-mode Babel en Quaurto implementeren een moderne interpretatie van Knuths 'weave' en 'tangle'-proces, waarin broncode zowel als uitvoerbaar script en als leesbare documentatie dient.
+Hoewel Knuths oorspronkelijke WEB en CWEB nog weinig gebruikt worden in de hedendaagse softwarepraktijk, leven zijn ideeen voor in computationele notebooks, literate programminglibraries en research pipelines. Tools zoals Jupyter Notebooks, Org-mode Babel en Quaurto implementeren een moderne interpretatie van Knuths `weave' en `tangle'-proces, waarin broncode zowel als uitvoerbaar script en als leesbare documentatie dient.
 
 De execution haalt de source code eruit en zorgt voor een uitvoerbaar bestand. De Weave operatie zorgt er voor dat de documentatie uit het source bestand wordt gehaal en die in het gewenste formaat zet. De Tangle operatie verspreid de source code in het respectivelijke bestanden zelf, niet direct een executable.
 
 \subsection{Org-mode Babel}
-Org mode is een 'major mode' voor GNU Emacs. Org mode kan voor heel veel gebruikt worden. Van notities nemen tot todo-lists, computational notebooks en literate programming \autocite{orgmode2025}.
+Org mode is een `major mode' voor GNU Emacs. Org mode kan voor heel veel gebruikt worden. Van notities nemen tot todo-lists, computational notebooks en literate programming \autocite{orgmode2025}.
 
 In Org Mode met Babel zijn er `src-blocks`:
 \begin{minted}{text}
@@ -107,7 +103,7 @@ In Org Mode met Babel zijn er `src-blocks`:
 
 Hierin kan code worden uitgevoerd terwijl er tekst rond staat.
 Dit is het idee van literate programming.
-De meeste `cellen` in org-mode hebben hun eigen environment, maar er bestaan manieren om dit te vermijden.
+De meeste `cellen' in org-mode hebben hun eigen environment, maar er bestaan manieren om dit te vermijden.
 Babel verbeterd de src-blocks door een paar zaken te voorzien:
 \begin{itemize}
 \item interactieve en programma executie van code blokken
@@ -122,7 +118,7 @@ Dit is de facto standaard voor computationeel onderzoek en datascience \autocite
 Het werkt met verschillende `cellen`. Er zijn de Markdown cellen en de python cellen.
 De python cellen verbinden met een virtuele omgeving en voeren hierop telkens hun code uit.
 Aangezien ze werken op dezelfde omgeving zijn de cellen verbonden aan elkaar.
-Het grootste verschil met org-mode is dat een .org bestand een plain tekst bestand is. Het is mogelijk om dit bestand te bekijken in eender welke editor.
+Het grootste verschil met org-mode is dat een \text{.}org bestand een plain tekst bestand is. Het is mogelijk om dit bestand te bekijken in eender welke editor.
 Jupyter notebooks niet. Je hebt een editor nodig die jupyter notebooks ondersteund. Het bekentste is VsCode van Microsoft.
 Er bestaat ook de officiele command en app van jupyter zelf die een server opstart en dan in de browser beschikbaar is.
 
@@ -131,7 +127,7 @@ Maar jupyter notebooks hebben zeker hun minpunten.
 Ook omdat de cellen in een willekeurige volgorde kunnen worden uitgevoerd, moet er opgelet worden met de run volgorde.
 De notebooks hebben ook een onzichtbare global state.
 Het zijn json bestanden, dus versie controle beheer kan hier ook moeilijk mee doen.
-Aangezien dat alles ook in 1 bestand zit, kan het snel "bloated" zijn.
+Aangezien dat alles ook in 1 bestand zit, kan het snel `bloated' zijn.
 
 \subsection{RMarkdown}
 \texttt{RMarkdown} \autocite{RStudio2020} is ook een computational notebook zoals Jupyter Notebooks, 
@@ -160,8 +156,6 @@ image(volcano, col - viridis(200))
 ```
 \end{minted}
 
-
-
   
 %---------- Methodologie ------------------------------------------------------
 \section{Methodologie}%
@@ -169,9 +163,9 @@ image(volcano, col - viridis(200))
 
 % Hier beschrijf je hoe je van plan bent het onderzoek te voeren. Welke onderzoekstechniek ga je toepassen om elk van je onderzoeksvragen te beantwoorden? Gebruik je hiervoor literatuurstudie, interviews met belanghebbenden (bv.~voor requirements-analyse), experimenten, simulaties, vergelijkende studie, risico-analyse, PoC, \ldots?
 
-% Valt je onderwerp onder één van de typische soorten bachelorproeven die besproken zijn in de lessen Research Methods (bv.\ vergelijkende studie of risico-analyse)? Zorg er dan ook voor dat we duidelijk de verschillende stappen terug vinden die we verwachten in dit soort onderzoek!
+% Valt je onderwerp onder Ã©Ã©n van de typische soorten bachelorproeven die besproken zijn in de lessen Research Methods (bv.\ vergelijkende studie of risico-analyse)? Zorg er dan ook voor dat we duidelijk de verschillende stappen terug vinden die we verwachten in dit soort onderzoek!
 
-% Vermijd onderzoekstechnieken die geen objectieve, meetbare resultaten kunnen opleveren. Enquêtes, bijvoorbeeld, zijn voor een bachelorproef informatica meestal \textbf{niet geschikt}. De antwoorden zijn eerder meningen dan feiten en in de praktijk blijkt het ook bijzonder moeilijk om voldoende respondenten te vinden. Studenten die een enquête willen voeren, hebben meestal ook geen goede definitie van de populatie, waardoor ook niet kan aangetoond worden dat eventuele resultaten representatief zijn.
+% Vermijd onderzoekstechnieken die geen objectieve, meetbare resultaten kunnen opleveren. EnquÃªtes, bijvoorbeeld, zijn voor een bachelorproef informatica meestal \textbf{niet geschikt}. De antwoorden zijn eerder meningen dan feiten en in de praktijk blijkt het ook bijzonder moeilijk om voldoende respondenten te vinden. Studenten die een enquÃªte willen voeren, hebben meestal ook geen goede definitie van de populatie, waardoor ook niet kan aangetoond worden dat eventuele resultaten representatief zijn.
 
 % Uit dit onderdeel moet duidelijk naar voor komen dat je bachelorproef ook technisch voldoen\-de diepgang zal bevatten. Het zou niet kloppen als een bachelorproef informatica ook door bv.\ een student marketing zou kunnen uitgevoerd worden.
 
@@ -179,13 +173,73 @@ image(volcano, col - viridis(200))
 
 % Probeer ook een tijdschatting te maken. Hoe lang zal je met elke fase van je onderzoek bezig zijn en wat zijn de concrete \emph{deliverables} in elke fase?
 
+
+\subsection{Probleem- en domeinanalyse}
+In deze fase wordt onderzocht hoe ILVO momenteel werkt met hun \text{.NET}-gebaseerde modellen.
+
+
+\begin{itemize}
+\item interviews en overlegmomenten met de onderzoekers (inhoudelijke experts) en de ontwikkelaars
+\item Analyse van bestaande \texttt{C\#}-code, Razor pages, berekeningslogica en interne documentatie
+\item Identificeren van
+  \item waar berekeningen plaatsvinden
+  \item welke parameters en formules onderzoekers willen aanpassen
+  \item typische fouten of bottlenecks
+  \item waarvoor onderzoekers nu afhankelijk zijn van IT.\@
+\end{itemize}
+
+\subsection{Literatuurstudie \& technologieverkenning}
+Deze fase biedt het theoretische en technische kader dat rest van het onderzoek ondersteunt.
+
+\begin{itemize}
+\item Literate programming (\autocite{knuth1984}, morderne interpretaties in software engineering)
+\item Reproducible research workflows in wetenschappelijke software
+\item Documentation-as-code: DocFX, Jupyter notebook, quarto, org mode
+\item Computational notebooks: jupyter, \text{.NET} Interactive, polyglot notebooks
+\item annotatie- en traceertools binnen codebases
+\item DSL's en transparantie in wetenschappelijke modellen
+\end{itemize}
+
+\subsection{Proof-of-Concept ontwikkeling}
+Op basis van de analyse en literatuur wordt minstens 1, maar mogelijk meerdere POC's ontwikkeld.
+Het doel is niet een productieklare applicatie, maar het aantonen van mogelijke oplossingsrichtingen.
+
+Mogelijke richtingen voor POC's zijn:
+
+\begin{enumerate}
+\item Interactieve notebooks:
+  De formules zijn snel aan te passen en het resultaat is direct te zien. Er is een automatische uitleg van parameters. Er zijn ook visualisaties van impact en gevoeligheidanalyses
+\item Inline annotatie-omgeving van C\#-code
+  De commentaar blokken en uitleg wordt automatisch weergegeven naast de logicablokken. De documentatie gegenereerd via DocFX wordt teruggekoppeld naar de onderzoekers.
+\item Model viewer binnen een razor page
+  Zorgt voor een grafisch overzicht van het model.
+  Mogelijks parameters met sliders.
+  Bedoelt om toekomstige scenario's te simuleren
+\item Koppeling tussen code en documentatie
+  Alles in 1 bestand.
+  Eventueel via Quarto of org-mode.
+  
+\end{enumerate}
 %---------- Verwachte resultaten ----------------------------------------------
 \section{Verwacht resultaat, conclusie}%
 \label{sec:verwachte_resultaten}
 
-Hier beschrijf je welke resultaten je verwacht. Als je metingen en simulaties uitvoert, kan je hier al mock-ups maken van de grafieken samen met de verwachte conclusies. Benoem zeker al je assen en de onderdelen van de grafiek die je gaat gebruiken. Dit zorgt ervoor dat je concreet weet welk soort data je moet verzamelen en hoe je die moet meten.
+%% Hier beschrijf je welke resultaten je verwacht. Als je metingen en simulaties uitvoert, kan je hier al mock-ups maken van de grafieken samen met de verwachte conclusies. Benoem zeker al je assen en de onderdelen van de grafiek die je gaat gebruiken. Dit zorgt ervoor dat je concreet weet welk soort data je moet verzamelen en hoe je die moet meten.
 
-Wat heeft de doelgroep van je onderzoek aan het resultaat? Op welke manier zorgt jouw bachelorproef voor een meerwaarde?
+%% Wat heeft de doelgroep van je onderzoek aan het resultaat? Op welke manier zorgt jouw bachelorproef voor een meerwaarde?
 
-Hier beschrijf je wat je verwacht uit je onderzoek, met de motivatie waarom. Het is \textbf{niet} erg indien uit je onderzoek andere resultaten en conclusies vloeien dan dat je hier beschrijft: het is dan juist interessant om te onderzoeken waarom jouw hypothesen niet overeenkomen met de resultaten.
+%% Hier beschrijf je wat je verwacht uit je onderzoek, met de motivatie waarom. Het is \textbf{niet} erg indien uit je onderzoek andere resultaten en conclusies vloeien dan dat je hier beschrijft: het is dan juist interessant om te onderzoeken waarom jouw hypothesen niet overeenkomen met de resultaten.
 
+\subsection{Probleem- en domeinanalyse}
+Een helder overzicht van de \textit{current flow} (onderzoekers \rightarrow  IT \rightarrow  applicatie)
+
+Een lijst van problemen, zoals:
+\begin{itemize}
+  \item beperkte transparantie
+  \item onvoldoende verweven documentatie
+  \item moeilijk traceerbaarheid van berekeningen
+  \item lange feedbackloops
+\end{itemize}
+
+\subsection{Literatuurstudie \& technologieverkenning}
+Een lijst van mogelijke technieken en tools om de kloof tussen code en onderzoek te verkleinen. Ook bepalen welke technieken \textit{haalbaar en relevant} zijn voor ILVO.\@
