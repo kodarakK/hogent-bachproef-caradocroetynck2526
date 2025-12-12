@@ -37,19 +37,19 @@
 % Schrijf ook iets over de doelstelling. Wat zie je als het concrete eindresultaat van je onderzoek, naast de uitgeschreven scriptie? Is het een proof-of-concept, een rapport met aanbevelingen, \ldots Met welk eindresultaat kan je je bachelorproef als een succes beschouwen?
 
 
-Wetenschappelijke instituten zoals ILVO (Instituut voor Landbouw-, Visserij- en voedingsOnderzoek) intensief gebruiken van complexe rekenmodellen om emissies, productie-impact en andere landbouwparameters te analyseren. Deze modellen bestaan uit ingewikkelde verzamelingen van formules die door de onderzoekers worden ontwikkeld en vervolgens geimplementeerd worden door het IT departement in softwaretoepassingen.
-Aangezien dat de onderzoekers deze toepassingen gebruiken om hun hypotheses te testen en scenario's simuleren, is de kwaliteit en duidelijkheid van deze implementatie van groot belang. In praktijk blijken deze modellen moeilijk aan te passen zodra ze in de code zijn gegoten.
+Wetenschappelijke instituten zoals ILVO (Instituut voor Landbouw-, Visserij- en voedingsOnderzoek) maken intensief gebruik van complexe rekenmodellen om emissies, productie-impact en andere landbouwparameters te analyseren. Deze modellen bestaan uit ingewikkelde verzamelingen van formules die door de onderzoekers worden ontwikkeld en vervolgens geimplementeerd worden door het IT departement in softwaretoepassingen.
+Aangezien de onderzoekers deze toepassingen gebruiken om hun hypotheses te testen en scenario's simuleren, is de kwaliteit en duidelijkheid van deze implementatie van groot belang. In praktijk blijken deze modellen moeilijk aan te passen zodra ze in de code zijn gegoten.
 
-Binnen ILVO wordt dit probleem duidelijk zichtbaar in hun .NET applicaties waar emissieformules en bedrijfsparameters zijn verwerkt in de C\# logica. Onderzoekers beschikken over de nodige inhoudelijke expertise om hun formules en parameters te wijzigen, maar niet genoeg programmeer kennis om deze wijzigingen zelfstandig door te voeren in de software. Voor elke wijziging zijn zij afhankelijk van het IT departement, waardoor kleine veranderingen vaak vertraging oplopen.
-Tegelijkertijd is de huidige documentatie niet altijd voldoende nauw verwoven met de code, waardoor het moeilijk is om te achterhalen waar specifieke berekeningen plaatsvinden en welke aanames aan de basis liggen.
+Binnen ILVO wordt dit probleem duidelijk zichtbaar in hun .NET applicaties waar emissieformules en bedrijfsparameters zijn verwerkt in de C\# logica. Onderzoekers beschikken over de nodige inhoudelijke expertise om hun formules en parameters te wijzigen, maar hebben niet altijd genoeg programmeer kennis om deze wijzigingen zelfstandig door te voeren in de software. Voor elke wijziging zijn zij afhankelijk van het IT departement, waardoor kleine veranderingen vaak vertraging oplopen.
+Tegelijkertijd is de huidige documentatie niet altijd voldoende nauw verwoven met de code, waardoor het moeilijk is om te achterhalen waar specifieke berekeningen plaatsvinden en welke aannames aan de basis liggen.
 
-De doelgroep van dir onderzoek bestaat dan ook uit twee nauw samenwerkende groepen binnen ILVO:\@ de onderzoekers die de wetenschappelijke modellen ontwikkelen en de IT-professionals die deze modellen implementeren, onderhouden en documenteren. Beide groepen ervaren hinder dooe de huidige werkwijze: onderzoekers missen autonomie, terwijl IT'ers veel tijd spenderen aan kleine wijzigingen, uitleg en debugging.
+De doelgroep van dit onderzoek bestaat dan ook uit twee nauw samenwerkende groepen binnen ILVO:\@ de onderzoekers die de wetenschappelijke modellen ontwikkelen en de IT-professionals die deze modellen implementeren, onderhouden en documenteren. Beide groepen ervaren hinder door de huidige werkwijze: onderzoekers missen autonomie, terwijl IT'ers veel tijd spenderen aan kleine wijzigingen, uitleg en debugging.
 
 Daarom staat in deze bachelorproef de volgende centrale onderzoeksvraag centraal:
 Hoe kunnen we binnen een .NET-gebaseerde (C\# \& Razor Pages) onderzoeksapplicatie de kloof verkleinen tussen IT-technische logica en wetenschappelijke analyse, zodat onderzoekers van ILVO zonder diepgaande programmeerkennis inzicht krijgen in de werking van hun intern model en er zelf mee kunnen experimenteren?
 Deze vraag is relevant omdat ze zowel de transparantie van wetenschappelijke modellen verbetert als de samenwerking tussen onderzoek en IT efficienter maakt.
 
-Het doel van dit onderzoek is om een proof-of-concept te ontwikkelen waarin de wetenschappelijke ondrezoekers met hun modellen kunnen experimenteren zonder dat zij een extensieve kennis van programmeren nodig hebben. Hierbij wordt onderzocht welke documentatie vormen het meest geschikt zijn om de interne werking van hun modellen begrijpelijk te maken. Daarnaast wordt nagegaan hoe parameters veilig kunnen worden aangepast. Het uiteindelijke resultaat moet een concreet voorstel en prototype opleveren dat ILVO kan gebruiken om hun onderzoeks modellen toegankelijker, transparanter en beter onderhoudbaar te maken.
+Het doel van dit onderzoek is om een proof-of-concept te ontwikkelen waarin de wetenschappelijke onderzoekers met hun modellen kunnen experimenteren zonder dat zij een extensieve kennis van programmeren nodig hebben. Hierbij wordt onderzocht welke documentatie vormen het meest geschikt zijn om de interne werking van hun modellen begrijpelijk te maken. Daarnaast wordt nagegaan hoe parameters veilig kunnen worden aangepast. Het uiteindelijke resultaat moet een concreet voorstel en prototype opleveren dat ILVO kan gebruiken om hun onderzoeks modellen toegankelijker, transparanter en beter onderhoudbaar te maken.
 
 Dit onderzoek wordt bewust afgebakend: het richt zich niet op het herontwerpen van het volledige ILVO-model of het bouwen van een productieklare applicatie, maar wel op het ontwikkelen en evalueren van technieken, workflows en tooling die de interactie tussen code en onderzoek verbeteren. Theoretisch kader wordt gezocht binnen software engineering, documentatieonderzoek, literate programming, domain-driven design en transparantie van wetenschappelijke modellen.
 
@@ -77,17 +77,17 @@ Dit onderzoek wordt bewust afgebakend: het richt zich niet op het herontwerpen v
 
 %% Je mag deze sectie nog verder onderverdelen in subsecties als dit de structuur van de tekst kan verduidelijken.
 \subsection{Literate programming}
-Literate programming \autocite{LiterateProgramming} werd geïntroduceerd door \textcite{Knuth1984} als een methode waarbij code en documentatie 1 geïntegreerd geheel vormen, eerder dan gescheiden artifacten. De bedoeling is dat er 1 bestand is met de code en de documentatie erond. De tools halen de code eruit en creeeren een uitvoerbaar bestand en een ander bestand met de documentatie, dat kan een html web pagina zijn, of een \LaTeX bestand / pdf. Het kan ook een Markdown bestand zijn.
+Literate programming \autocite{LiterateProgramming} werd geïntroduceerd door \textcite{Knuth1984} als een methode waarbij code en documentatie 1 geïntegreerd geheel vormen, eerder dan gescheiden artefacten. De bedoeling is dat er 1 bestand is met de code en de documentatie errond. De tools halen de code eruit en creeeren een uitvoerbaar bestand en een ander bestand met de documentatie, dat kan een html web pagina zijn, of een \LaTeX \@ bestand / pdf. Het kan ook een Markdown bestand zijn.
 
 In plaats van `code with comments' vertrekt literate programming vanuit het idee dat een programma in de eerste plaats een verhaal is dat aan een menselijke lezer moet worden uitgelegd, waarbij uitvoerbare code een secundaire afgeleide vorm is \autocite{Knuth1984}.
 Sindsdien zijn er talrijke systemen ontstaan die Knuths principes toepassen in een moderne ontwikkelingsomgeving.
 
-Hoewel Knuths oorspronkelijke WEB en CWEB nog weinig gebruikt worden in de hedendaagse softwarepraktijk, leven zijn ideeen voor in computationele notebooks, literate programminglibraries en research pipelines. Tools zoals Jupyter Notebooks, Org-mode Babel en Quaurto implementeren een moderne interpretatie van Knuths `weave' en `tangle'-proces, waarin broncode zowel als uitvoerbaar script en als leesbare documentatie dient.
+Hoewel Knuths oorspronkelijke WEB en CWEB nog weinig gebruikt worden in de hedendaagse softwarepraktijk, leven zijn ideeen voort in computationele notebooks, literate programminglibraries en research pipelines. Tools zoals Jupyter Notebooks, Org-mode Babel en Quarto implementeren een moderne interpretatie van Knuths `weave' en `tangle'-proces, waarin broncode zowel als uitvoerbaar script en als leesbare documentatie dient.
 
-De execution haalt de source code eruit en zorgt voor een uitvoerbaar bestand. De Weave operatie zorgt er voor dat de documentatie uit het source bestand wordt gehaal en die in het gewenste formaat zet. De Tangle operatie verspreid de source code in het respectivelijke bestanden zelf, niet direct een executable.
+De execution haalt de source code eruit en zorgt voor een uitvoerbaar bestand. De Weave operatie zorgt er voor dat de documentatie uit het source bestand wordt gehaald en die in het gewenste formaat zet. De Tangle operatie verspreidt de source code in de respectievelijke bestanden zelf, niet direct uitvoerbaar.
 
 \subsection{Org-mode Babel}
-Org mode is een `major mode' voor GNU Emacs. Org mode kan voor heel veel gebruikt worden. Van notities nemen tot todo-lists, computational notebooks en literate programming \autocite{orgmode2025}.
+Org mode is een `major mode' voor GNU Emacs. Org mode kan voor heel veel gebruikt worden: van notities nemen tot todo-lists, computational notebooks en literate programming \autocite{orgmode2025}.
 
 In Org Mode met Babel zijn er `src-blocks`:
 \begin{minted}{text}
@@ -103,8 +103,8 @@ In Org Mode met Babel zijn er `src-blocks`:
 
 Hierin kan code worden uitgevoerd terwijl er tekst rond staat.
 Dit is het idee van literate programming.
-De meeste `cellen' in org-mode hebben hun eigen environment, maar er bestaan manieren om dit te vermijden.
-Babel verbeterd de src-blocks door een paar zaken te voorzien:
+De meeste `cellen' in org-mode hebben hun eigen omgeving, maar er bestaan manieren om dit te vermijden.
+Babel verbetert de src-blocks door een paar zaken te voorzien:
 \begin{itemize}
 \item interactieve en programma executie van code blokken
 \item code blokken die functies met parameters hebben, kunnen andere code blokken accepteren en oproepen, en
@@ -113,13 +113,13 @@ Babel verbeterd de src-blocks door een paar zaken te voorzien:
 
 \subsection{Jupyter notebook}
 Jupyter notebooks zijn gemaakt voor python. Deze notebooks worden door vele mensen gebruikt en in verschillende omgevingen.
-Dit kan gaan van een student die python leert en zijn notities er bij wilt schrijven tot een volledige data analyse door professionele onderzoekers.
-Dit is de facto standaard voor computationeel onderzoek en datascience \autocite{jupyternotebook}.
-Het werkt met verschillende `cellen`. Er zijn de Markdown cellen en de python cellen.
+Dit kan gaan van een student die python leert en zijn notities er bij wil schrijven tot een volledige data analyse door professionele onderzoekers.
+Dit is een standaard voor computationeel onderzoek en datascience \autocite{jupyternotebook}.
+Het werkt met verschillende `cellen`: de markdown cellen en de python cellen.
 De python cellen verbinden met een virtuele omgeving en voeren hierop telkens hun code uit.
 Aangezien ze werken op dezelfde omgeving zijn de cellen verbonden aan elkaar.
 Het grootste verschil met org-mode is dat een \text{.}org bestand een plain tekst bestand is. Het is mogelijk om dit bestand te bekijken in eender welke editor.
-Jupyter notebooks niet. Je hebt een editor nodig die jupyter notebooks ondersteund. Het bekentste is VsCode van Microsoft.
+Jupyter notebooks niet. Je hebt een editor nodig die jupyter notebooks ondersteunt. Het bekentste is VsCode van Microsoft.
 Er bestaat ook de officiele command en app van jupyter zelf die een server opstart en dan in de browser beschikbaar is.
 
 Maar jupyter notebooks hebben zeker hun minpunten.
@@ -156,6 +156,9 @@ image(volcano, col - viridis(200))
 ```
 \end{minted}
 
+\subsection{Tussenbesluit}
+
+
   
 %---------- Methodologie ------------------------------------------------------
 \section{Methodologie}%
@@ -182,17 +185,19 @@ In deze fase wordt onderzocht hoe ILVO momenteel werkt met hun \text{.NET}-gebas
 \item interviews en overlegmomenten met de onderzoekers (inhoudelijke experts) en de ontwikkelaars
 \item Analyse van bestaande \texttt{C\#}-code, Razor pages, berekeningslogica en interne documentatie
 \item Identificeren van
+  \begin{itemize}
   \item waar berekeningen plaatsvinden
   \item welke parameters en formules onderzoekers willen aanpassen
   \item typische fouten of bottlenecks
   \item waarvoor onderzoekers nu afhankelijk zijn van IT.\@
+  \end{itemize}
 \end{itemize}
 
 \subsection{Literatuurstudie \& technologieverkenning}
 Deze fase biedt het theoretische en technische kader dat rest van het onderzoek ondersteunt.
 
 \begin{itemize}
-\item Literate programming (\autocite{knuth1984}, morderne interpretaties in software engineering)
+\item Literate programming (\autocite{Knuth1984}, morderne interpretaties in software engineering)
 \item Reproducible research workflows in wetenschappelijke software
 \item Documentation-as-code: DocFX, Jupyter notebook, quarto, org mode
 \item Computational notebooks: jupyter, \text{.NET} Interactive, polyglot notebooks
@@ -209,17 +214,39 @@ Mogelijke richtingen voor POC's zijn:
 \begin{enumerate}
 \item Interactieve notebooks:
   De formules zijn snel aan te passen en het resultaat is direct te zien. Er is een automatische uitleg van parameters. Er zijn ook visualisaties van impact en gevoeligheidanalyses
-\item Inline annotatie-omgeving van C\#-code
+\item Inline annotatie-omgeving van C\#-code.
   De commentaar blokken en uitleg wordt automatisch weergegeven naast de logicablokken. De documentatie gegenereerd via DocFX wordt teruggekoppeld naar de onderzoekers.
-\item Model viewer binnen een razor page
+\item Model viewer binnen een razor page.
   Zorgt voor een grafisch overzicht van het model.
   Mogelijks parameters met sliders.
   Bedoelt om toekomstige scenario's te simuleren
-\item Koppeling tussen code en documentatie
+\item Koppeling tussen code en documentatie.
   Alles in 1 bestand.
   Eventueel via Quarto of org-mode.
   
 \end{enumerate}
+
+\subsection{Evaluatie en validatie}
+Er zullen korte gebruikerstesten plaatsvinden:
+\begin{itemize}
+\item Kunnen de onderzoekers formules terugvinden?
+\item Begrijpen ze de werking van het model beter?
+\item Kunnen ze parameters aanpassen zonder code te breken?
+\end{itemize}
+
+Semi-gestructureerde interviews met:
+\begin{itemize}
+\item Onderzoekers over bruikbaarheid
+\item IT'ers over impact op onderhoudbaarheid
+\end{itemize}
+
+Analyse van feedback:
+\begin{itemize}
+\item wat werkt?
+\item wat werkt niet?
+\item welke uitbreidingen zijn nodig?
+\end{itemize}
+
 %---------- Verwachte resultaten ----------------------------------------------
 \section{Verwacht resultaat, conclusie}%
 \label{sec:verwachte_resultaten}
@@ -242,4 +269,20 @@ Een lijst van problemen, zoals:
 \end{itemize}
 
 \subsection{Literatuurstudie \& technologieverkenning}
-Een lijst van mogelijke technieken en tools om de kloof tussen code en onderzoek te verkleinen. Ook bepalen welke technieken \textit{haalbaar en relevant} zijn voor ILVO.\@
+Een lijst van mogelijke technieken en tools om de kloof tussen code en onderzoek te verkleinen.
+Ook bepalen welke technieken \textit{haalbaar en relevant} zijn voor ILVO.\@
+
+
+\subsection{Proof-of-Concept ontwikkeling}
+Een geintegreerde POC die aantoont hoe onderzoekers:
+\begin{itemize}
+\item parameters kunnen wijzigen,
+\item resultaten kunnen testen,
+\end{itemize}
+zonder afhankelijk te zijn van IT voor kleine experimenten.
+
+\subsection{Evaluatie en validatie}
+Conclusies over welke aanpak het meest effectief is om de kloof te verkleinen en een concreet advies voor ILVO met mogelijke roadmap.
+
+
+
