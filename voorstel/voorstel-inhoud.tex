@@ -177,76 +177,85 @@ image(volcano, col - viridis(200))
 % Probeer ook een tijdschatting te maken. Hoe lang zal je met elke fase van je onderzoek bezig zijn en wat zijn de concrete \emph{deliverables} in elke fase?
 
 
-\subsection{Probleem- en domeinanalyse}
-In deze fase wordt onderzocht hoe ILVO momenteel werkt met hun \text{.NET}-gebaseerde modellen.
+% \subsection{Probleem- en domeinanalyse}
+% In deze fase wordt onderzocht hoe ILVO momenteel werkt met hun \text{.NET}-gebaseerde modellen.
 
 
-\begin{itemize}
-\item interviews en overlegmomenten met de onderzoekers (inhoudelijke experts) en de ontwikkelaars
-\item Analyse van bestaande \texttt{C\#}-code, Razor pages, berekeningslogica en interne documentatie
-\item Identificeren van
-  \begin{itemize}
-  \item waar berekeningen plaatsvinden
-  \item welke parameters en formules onderzoekers willen aanpassen
-  \item typische fouten of bottlenecks
-  \item waarvoor onderzoekers nu afhankelijk zijn van IT.\@
-  \end{itemize}
-\end{itemize}
+% \begin{itemize}
+% \item interviews en overlegmomenten met de onderzoekers (inhoudelijke experts) en de ontwikkelaars
+% \item Analyse van bestaande \texttt{C\#}-code, Razor pages, berekeningslogica en interne documentatie
+% \item Identificeren van
+%   \begin{itemize}
+%   \item waar berekeningen plaatsvinden
+%   \item welke parameters en formules onderzoekers willen aanpassen
+%   \item typische fouten of bottlenecks
+%   \item waarvoor onderzoekers nu afhankelijk zijn van IT.\@
+%   \end{itemize}
+% \end{itemize}
 
-\subsection{Literatuurstudie \& technologieverkenning}
-Deze fase biedt het theoretische en technische kader dat rest van het onderzoek ondersteunt.
+% \subsection{Literatuurstudie \& technologieverkenning}
+% Deze fase biedt het theoretische en technische kader dat rest van het onderzoek ondersteunt.
 
-\begin{itemize}
-\item Literate programming (\autocite{Knuth1984}, morderne interpretaties in software engineering)
-\item Reproducible research workflows in wetenschappelijke software
-\item Documentation-as-code: DocFX, Jupyter notebook, quarto, org mode
-\item Computational notebooks: jupyter, \text{.NET} Interactive, polyglot notebooks
-\item annotatie- en traceertools binnen codebases
-\item DSL's en transparantie in wetenschappelijke modellen
-\end{itemize}
+% \begin{itemize}
+% \item Literate programming (\autocite{Knuth1984}, morderne interpretaties in software engineering)
+% \item Reproducible research workflows in wetenschappelijke software
+% \item Documentation-as-code: DocFX, Jupyter notebook, quarto, org mode
+% \item Computational notebooks: jupyter, \text{.NET} Interactive, polyglot notebooks
+% \item annotatie- en traceertools binnen codebases
+% \item DSL's en transparantie in wetenschappelijke modellen
+% \end{itemize}
 
-\subsection{Proof-of-Concept ontwikkeling}
-Op basis van de analyse en literatuur wordt minstens 1, maar mogelijk meerdere POC's ontwikkeld.
-Het doel is niet een productieklare applicatie, maar het aantonen van mogelijke oplossingsrichtingen.
+% \subsection{Proof-of-Concept ontwikkeling}
+% Op basis van de analyse en literatuur wordt minstens 1, maar mogelijk meerdere POC's ontwikkeld.
+% Het doel is niet een productieklare applicatie, maar het aantonen van mogelijke oplossingsrichtingen.
 
-Mogelijke richtingen voor POC's zijn:
+% Mogelijke richtingen voor POC's zijn:
 
-\begin{enumerate}
-\item Interactieve notebooks:
-  De formules zijn snel aan te passen en het resultaat is direct te zien. Er is een automatische uitleg van parameters. Er zijn ook visualisaties van impact en gevoeligheidanalyses
-\item Inline annotatie-omgeving van C\#-code.
-  De commentaar blokken en uitleg wordt automatisch weergegeven naast de logicablokken. De documentatie gegenereerd via DocFX wordt teruggekoppeld naar de onderzoekers.
-\item Model viewer binnen een razor page.
-  Zorgt voor een grafisch overzicht van het model.
-  Mogelijks parameters met sliders.
-  Bedoelt om toekomstige scenario's te simuleren
-\item Koppeling tussen code en documentatie.
-  Alles in 1 bestand.
-  Eventueel via Quarto of org-mode.
+% \begin{enumerate}
+% \item Interactieve notebooks:
+%   De formules zijn snel aan te passen en het resultaat is direct te zien. Er is een automatische uitleg van parameters. Er zijn ook visualisaties van impact en gevoeligheidanalyses
+% \item Inline annotatie-omgeving van C\#-code.
+%   De commentaar blokken en uitleg wordt automatisch weergegeven naast de logicablokken. De documentatie gegenereerd via DocFX wordt teruggekoppeld naar de onderzoekers.
+% \item Model viewer binnen een razor page.
+%   Zorgt voor een grafisch overzicht van het model.
+%   Mogelijks parameters met sliders.
+%   Bedoelt om toekomstige scenario's te simuleren
+% \item Koppeling tussen code en documentatie.
+%   Alles in 1 bestand.
+%   Eventueel via Quarto of org-mode.
   
-\end{enumerate}
+% \end{enumerate}
 
-\subsection{Evaluatie en validatie}
-Er zullen korte gebruikerstesten plaatsvinden:
-\begin{itemize}
-\item Kunnen de onderzoekers formules terugvinden?
-\item Begrijpen ze de werking van het model beter?
-\item Kunnen ze parameters aanpassen zonder code te breken?
-\end{itemize}
+% \subsection{Evaluatie en validatie}
+% Er zullen korte gebruikerstesten plaatsvinden:
+% \begin{itemize}
+% \item Kunnen de onderzoekers formules terugvinden?
+% \item Begrijpen ze de werking van het model beter?
+% \item Kunnen ze parameters aanpassen zonder code te breken?
+% \end{itemize}
 
-Semi-gestructureerde interviews met:
-\begin{itemize}
-\item Onderzoekers over bruikbaarheid
-\item IT'ers over impact op onderhoudbaarheid
-\end{itemize}
+% Semi-gestructureerde interviews met:
+% \begin{itemize}
+% \item Onderzoekers over bruikbaarheid
+% \item IT'ers over impact op onderhoudbaarheid
+% \end{itemize}
 
-Analyse van feedback:
-\begin{itemize}
-\item wat werkt?
-\item wat werkt niet?
-\item welke uitbreidingen zijn nodig?
-\end{itemize}
+% Analyse van feedback:
+% \begin{itemize}
+% \item wat werkt?
+% \item wat werkt niet?
+% \item welke uitbreidingen zijn nodig?
+Binnen een concrete casus bij het Instituut voor Landbouw-, Visserij- en Voedingsonderzoek (ILVO) wordt een toegepast, onderwerpgericht onderzoeksopzet gevolgd. De focus ligt op het analyseren van de huidige samenwerking tussen onderzoekers en softwareontwikkelaars rond een \text{.NET}-gebaseerd rekenmodel, en op het uitwerken van een haalbare oplossingsrichting die deze samenwerking ondersteunt. De methodologie is opgebouwd uit vijf opeenvolgende fasen, waarin zowel het probleemdomein als het oplossingsdomein systematisch worden onderzocht.
 
+make -k \subsection{Eerste fase}
+In de eerste fase wordt het probleemdomein in kaart gebracht. Hierbij wordt onderzocht hoe onderzoekers en ontwikkelaars momenteel samenwerken rond het bestaande model, waar verantwoordelijkheden liggen en op welke punten de workflows elkaar belemmeren. Deze analyse vertrekt vanuit concrete use-cases, zoals het aanpassen van emissieformules, het testen van alternatieve parameters en het uitvoeren van gevoeligheidsanalyses. De gegevens worden verzameld via documentanalyse en overlegmomenten met betrokkenen, met als doel inzicht krijgen in waar de kloof tussen wetenschappelijke logica en technische implementatie zich manifesteert.
+
+\subsection{Tweede fase}
+De tweede fase richt zich op het identificeren van noden en vereisten van beide doelgroepen. Voor onderzoekers gaat het onder meer om transparantie van berekeningen, experimenteerruimte en begrijpelijke documentatie; voor ontwikkelaars om onderhoudbaarheid, stabiliteit en controle over data en interfaces. Deze noden worden gestructureerd geformuleerd als functionele en niet-functionele requirements, die richtinggevend zijn voor het verdere onderzoek. Hierbij wordt expliciet rekening gehouden met organisatorische aspecten, zoals taakverdeling en communicatiestromen, in lijn met inzichten uit onder meer Conway's Law \autocite{conwayslaw}.
+
+\subsection{Derde fase}
+In de derde fase wordt het oplossingsdomein onderzocht aan de hand van een gerichte literatuurstudie en analyse 
+% \end{itemize}
 %---------- Verwachte resultaten ----------------------------------------------
 \section{Verwacht resultaat, conclusie}%
 \label{sec:verwachte_resultaten}
