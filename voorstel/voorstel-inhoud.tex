@@ -10,7 +10,7 @@
 % Dit voorstel is gebaseerd op het onderzoeksvoorstel dat werd geschreven in het
 % kader van het vak Research Methods dat ik (vorig/dit) academiejaar heb
 % uitgewerkt (met medesturent VOORNAAM NAAM als mede-auteur).
-% 
+%
 
 \section{Inleiding}%
 \label{sec:inleiding}
@@ -127,9 +127,9 @@ Dit is het idee van literate programming.
 De meeste `cellen' in org-mode hebben hun eigen omgeving, maar er bestaan manieren om dit te vermijden.
 Babel verbetert de src-blocks door een paar zaken te voorzien:
 \begin{itemize}
-\item interactieve en programma executie van code blokken
-\item code blokken die functies met parameters hebben, kunnen andere code blokken accepteren en oproepen, en
-\item bestanden exporteren voor literate programming
+	\item interactieve en programma executie van code blokken
+	\item code blokken die functies met parameters hebben, kunnen andere code blokken accepteren en oproepen, en
+	\item bestanden exporteren voor literate programming
 \end{itemize}
 
 \subsection{Jupyter notebook}
@@ -151,10 +151,10 @@ Het zijn json bestanden, dus versie controle beheer kan hier ook moeilijk mee do
 Aangezien dat alles ook in 1 bestand zit, kan het snel `bloated' zijn.
 
 \subsection{RMarkdown}
-\texttt{RMarkdown} \autocite{RStudio2020} is ook een computational notebook zoals Jupyter Notebooks, 
-maar het ondersteunt meerdere talen. Het volgt een structuur die sterk aansluit bij de principes van 
-literate programming. Een \texttt{.Rmd}-bestand wordt verwerkt door \texttt{knitr} \autocite{Xie2025}, 
-een transparante engine voor het genereren van dynamische rapporten in R, ontwikkeld binnen de 
+\texttt{RMarkdown} \autocite{RStudio2020} is ook een computational notebook zoals Jupyter Notebooks,
+maar het ondersteunt meerdere talen. Het volgt een structuur die sterk aansluit bij de principes van
+literate programming. Een \texttt{.Rmd}-bestand wordt verwerkt door \texttt{knitr} \autocite{Xie2025},
+een transparante engine voor het genereren van dynamische rapporten in R, ontwikkeld binnen de
 softwareomgeving voor statistische computing \texttt{R} \autocite{RFoundation}.
 
 \texttt{Knitr} voert alle code blokken uit en maakt een nieuw Markdown bestand aan met alle code en hun uitkomsten.
@@ -180,7 +180,7 @@ image(volcano, col - viridis(200))
 \subsection{Tussenbesluit}
 
 
-  
+
 %---------- Methodologie ------------------------------------------------------
 \section{Methodologie}%
 \label{sec:methodologie}
@@ -244,7 +244,7 @@ image(volcano, col - viridis(200))
 % \item Koppeling tussen code en documentatie.
 %   Alles in 1 bestand.
 %   Eventueel via Quarto of org-mode.
-  
+
 % \end{enumerate}
 
 % \subsection{Evaluatie en validatie}
@@ -298,10 +298,10 @@ Een helder overzicht van de \textit{current flow} (onderzoekers \rightarrow  IT 
 
 Een lijst van problemen, zoals:
 \begin{itemize}
-  \item beperkte transparantie
-  \item onvoldoende verweven documentatie
-  \item moeilijk traceerbaarheid van berekeningen
-  \item lange feedbackloops
+	\item beperkte transparantie
+	\item onvoldoende verweven documentatie
+	\item moeilijk traceerbaarheid van berekeningen
+	\item lange feedbackloops
 \end{itemize}
 
 \subsection{Literatuurstudie \& technologieverkenning}
@@ -312,13 +312,10 @@ Ook bepalen welke technieken \textit{haalbaar en relevant} zijn voor ILVO.\@
 \subsection{Proof-of-Concept ontwikkeling}
 Een geintegreerde POC die aantoont hoe onderzoekers:
 \begin{itemize}
-\item parameters kunnen wijzigen,
-\item resultaten kunnen testen,
+	\item parameters kunnen wijzigen,
+	\item resultaten kunnen testen,
 \end{itemize}
 zonder afhankelijk te zijn van IT voor kleine experimenten.
 
 \subsection{Evaluatie en validatie}
-Conclusies over welke aanpak het meest effectief is om de kloof te verkleinen en een concreet advies voor ILVO met mogelijke roadmap.
-
-
-
+Conclusie over welke aanpak het meest effectief is om de kloof te verkleinen en een concreet advies voor ILVO met mogelijke roadmap.
