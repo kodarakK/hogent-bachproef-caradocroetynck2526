@@ -4,7 +4,10 @@
 
 \section{Pythonnet}
 Naast de bedoeling om de code te documenteren, is het ook de bedoeling om de codebase die in \texttt{C#} is geschreven te laten interageren met python. De onderzoekers kennen geen \texttt{C#} maar wel python. Omdat zij groten deels beslissen wat de berekeningen zijn kunnen ze dat wel in python zetten.
-Via \textcite{pythonnet} kan python dll's lezen, importeren en gebruiken.
+Pythonnet zorgt voor een integratie van \textcite{Cpython} engine en de .NET runtime. Het compiled geen python naar IL (Intermediate Language), een assembler achtige taal die wordt gebruikt als een brug tussen high-end \texttt{c#} code en machine code.
+Het kan dan CLR services aanspreken, bestaande python code gebruiken en C-API extensies gebruiken met de normale uitvoer snelheden van python.
+
+Via \textcite{pythonnet} kan python dll's lezen, importeren en gebruiken:
 
 \begin{listing}
   \begin{minted}{python}
@@ -50,6 +53,110 @@ def simple_form():
   \end{minted}
   \caption[pythonnet codefragment]{Codefragment gemaakt als voorbeeld}
 \end{listing}
+
+Het toffe van pythonnet is dat men naast \texttt{c#} python kan aanroepen, het ook omgekeerd kan.
+
+\begin{listing}
+  \begin{minted}{c#}
+    using Python.Runtime;
+
+    var filePath = ""; // pad naar python bestand
+    PythonEngine.Initialize();
+    using (Py.GIL())
+    {
+      sys.path.insert(0, folder);
+      string moduleName = Path.GetFileNameWithoutExtension(filePath);
+      try
+      {
+        dynamic module = Py.Import(moduleName);
+      }
+    }
+
+  \end{minted}
+  \caption[c# code fragment]{c# code dat een python file inleest en beschikbaar maakt voor uitvoer}
+\end{listing}
+
+\section{Literate programming}
+Literate programming \autocite{LiterateProgramming} werd geïntroduceerd door \textcite{Knuth1984} als een methode waarbij code en documentatie 1 geïntegreerd geheel vormen, eerder dan gescheiden artefacten. De bedoeling is dat er 1 bestand is met de code en de documentatie errond. De tools halen de code eruit en creeeren een uitvoerbaar bestand en een ander bestand met de documentatie, dat kan een html web pagina zijn, of een \LaTeX \@ bestand / pdf. Het kan ook een Markdown bestand zijn.
+
+In plaats van `code with comments' vertrekt literate programming vanuit het idee dat een programma in de eerste plaats een verhaal is dat aan een menselijke lezer moet worden uitgelegd, waarbij uitvoerbare code een secundaire afgeleide vorm is \autocite{Knuth1984}.
+Sindsdien zijn er talrijke systemen ontstaan die Knuths principes toepassen in een moderne ontwikkelingsomgeving.
+
+Hoewel Knuths oorspronkelijke WEB en CWEB nog weinig gebruikt worden in de hedendaagse softwarepraktijk, leven zijn ideeen voort in computationele notebooks, literate programminglibraries en research pipelines. Tools zoals Jupyter Notebooks, Org-mode Babel en Quarto implementeren een moderne interpretatie van Knuths `weave' en `tangle'-proces, waarin broncode zowel als uitvoerbaar script en als leesbare documentatie dient.
+
+De execution haalt de source code eruit en zorgt voor een uitvoerbaar bestand. De Weave operatie zorgt er voor dat de documentatie uit het source bestand wordt gehaald en die in het gewenste formaat zet. De Tangle operatie verspreidt de source code in de respectievelijke bestanden zelf, niet direct uitvoerbaar.
+
+\section{Org-mode Babel}
+Org mode is een `major mode' voor GNU Emacs. Org mode kan voor heel veel gebruikt worden: van notities nemen tot todo-lists, computational notebooks en literate programming \autocite{orgmode2025}.
+
+In Org Mode met Babel zijn er `src-blocks`:
+
+\begin{minted}{text}
+* Src-blocks in org-mode
+#+BEGIN_SRC python :results verbatim
+  nummer: int = 10
+  return nummer
+#+END_SRC
+
+#+RESULTS:
+: 10
+\end{minted}
+
+
+Hierin kan code worden uitgevoerd terwijl er tekst rond staat.
+Dit is het idee van literate programming.
+De meeste `cellen' in org-mode hebben hun eigen omgeving, maar er bestaan manieren om dit te vermijden.
+Babel verbetert de src-blocks door een paar zaken te voorzien:
+\begin{itemize}
+	\item interactieve en programma executie van code blokken
+	\item code blokken die functies met parameters hebben, kunnen andere code blokken accepteren en oproepen, en
+	\item bestanden exporteren voor literate programming
+\end{itemize}
+
+\section{Jupyter notebook}
+Jupyter notebooks zijn gemaakt voor python. Deze notebooks worden door vele mensen gebruikt en in verschillende omgevingen.
+Dit kan gaan van een student die python leert en zijn notities er bij wil schrijven tot een volledige data analyse door professionele onderzoekers.
+Dit is een standaard voor computationeel onderzoek en datascience \autocite{jupyternotebook}.
+Het werkt met verschillende `cellen`: de markdown cellen en de python cellen.
+De python cellen verbinden met een virtuele omgeving en voeren hierop telkens hun code uit.
+Aangezien ze werken op dezelfde omgeving zijn de cellen verbonden aan elkaar.
+Het grootste verschil met org-mode is dat een \text{.}org bestand een plain tekst bestand is. Het is mogelijk om dit bestand te bekijken in eender welke editor.
+Jupyter notebooks niet. Je hebt een editor nodig die jupyter notebooks ondersteunt. Het bekentste is VsCode van Microsoft.
+Er bestaat ook de officiele command en app van jupyter zelf die een server opstart en dan in de browser beschikbaar is.
+
+Maar jupyter notebooks hebben zeker hun minpunten.
+\textcite{Rule2018} tonen aan dat Jupyter Notebooks niet-lineaire uitvoergeschiedenis hebben, wat reproduceerbaarheid ernstig bemoeilijkt.
+Ook omdat de cellen in een willekeurige volgorde kunnen worden uitgevoerd, moet er opgelet worden met de run volgorde.
+De notebooks hebben ook een onzichtbare global state.
+Het zijn json bestanden, dus versie controle beheer kan hier ook moeilijk mee doen.
+Aangezien dat alles ook in 1 bestand zit, kan het snel `bloated' zijn.
+
+\section{RMarkdown}
+\texttt{RMarkdown} \autocite{RStudio2020} is ook een computational notebook zoals Jupyter Notebooks,
+maar het ondersteunt meerdere talen. Het volgt een structuur die sterk aansluit bij de principes van
+literate programming. Een \texttt{.Rmd}-bestand wordt verwerkt door \texttt{knitr} \autocite{Xie2025},
+een transparante engine voor het genereren van dynamische rapporten in R, ontwikkeld binnen de
+softwareomgeving voor statistische computing \texttt{R} \autocite{RFoundation}.
+
+\texttt{Knitr} voert alle code blokken uit en maakt een nieuw Markdown bestand aan met alle code en hun uitkomsten.
+Het gemaakte Markdown bestand wordt dan geevalueerd door pandoc \autocite{pandoc}, die dan het finale product maakt.
+Vb:
+\begin{minted}{text}
+---
+title: "viridis demo"
+output: html_document
+---
+
+```{r include - FALSE}
+library(viridis)
+```
+The code below ...
+
+## Colors
+```{r}
+image(volcano, col - viridis(200))
+```
+\end{minted}
 
 
 % Tip: Begin elk hoofdstuk met een paragraaf inleiding die beschrijft hoe
