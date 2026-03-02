@@ -6,6 +6,7 @@
 Naast de bedoeling om de code te documenteren, is het ook de bedoeling om de codebase die in \texttt{C\#} is geschreven te laten interageren met python. De onderzoekers kennen geen \texttt{C\#} maar wel python. Omdat zij groten deels beslissen wat de berekeningen zijn kunnen ze dat wel in python zetten.
 Pythonnet zorgt voor een integratie van \textcite{Cpython} engine en de .NET runtime. Het compiled geen python naar IL (Intermediate Language), een assembler achtige taal die wordt gebruikt als een brug tussen high-end \texttt{c\#} code en machine code.
 Het kan dan CLR services aanspreken, bestaande python code gebruiken en C-API extensies gebruiken met de normale uitvoer snelheden van python.
+Het zal automatisch op windows het .NET Framework kiezen en op Linux en MacOS zal het \textcite{MonoProject} gebruiken.
 
 De \autocite{clr} is een runtime om .NET code uit te voeren. De talen die op deze runtime kunnen worden uitgevoerd zijn C\#, VB.NET en F\#.
 Andere talen kunnen ook worden uitgevoerd via de .NET runtime, maar zijn niet direct ondersteund door \textcite{clr}.
@@ -14,15 +15,15 @@ De compiler vormt de code om naar IL, erachter voert de CLR een JIT-compilatie u
 Via \textcite{pythonnet} kan python dll's lezen, importeren en gebruiken:
 
 \begin{listing}
-  \begin{minted}{python}
+	\begin{minted}{python}
     import clr
     from System import String
     from System.Collections import *
   \end{minted}
-  \caption[pythonnet officeel codefragment]{Codefragment van de website}
+	\caption[pythonnet officeel codefragment]{Codefragment van de website}
 \end{listing}
 \begin{listing}
-  \begin{minted}{python}
+	\begin{minted}{python}
     import clr
     clr.AddReference("System.Windows.Forms")
     clr.AddReference("System.Drawing")
@@ -55,13 +56,13 @@ def simple_form():
 
 
   \end{minted}
-  \caption[pythonnet codefragment]{Codefragment gemaakt als voorbeeld}
+	\caption[pythonnet codefragment]{Codefragment gemaakt als voorbeeld}
 \end{listing}
 
 Het toffe van pythonnet is dat men naast \texttt{c\#} python kan aanroepen, het ook omgekeerd kan.
 
 \begin{listing}
-  \begin{minted}{csharp}
+	\begin{minted}{csharp}
     using Python.Runtime;
 
     var filePath = ""; // pad naar python bestand
@@ -77,8 +78,17 @@ Het toffe van pythonnet is dat men naast \texttt{c\#} python kan aanroepen, het 
     }
 
   \end{minted}
-  \caption[c\# code fragment]{c\# code dat een python file inleest en beschikbaar maakt voor uitvoer}
+	\caption[c\# code fragment]{c\# code dat een python file inleest en beschikbaar maakt voor uitvoer}
 \end{listing}
+
+\section{IronPython}
+
+\textcite{IronPython} is een open source implementatie van de Python programmeer taal dat is geintegreerd met .NET.
+IronPython kan zoals pythonnet .NET dll's aanspreken via `clr` en kan andere python code ook gebruiken.
+In tegenstelling tot pythonnet kan IronPython niet aangeroepen worden vanuit .NET gebaseerde talen.
+
+Een groot nadeel van IronPython is dat het niet de nieuwste versie van python gebruikt, waarin dat pythonnet werkt tot en met versie 3.13,
+heeft IronPython support voor versie 2.7 en 3.4.
 
 \section{Literate programming}
 Literate programming \autocite{LiterateProgramming} werd geïntroduceerd door \textcite{Knuth1984} als een methode waarbij code en documentatie 1 geïntegreerd geheel vormen, eerder dan gescheiden artefacten. De bedoeling is dat er 1 bestand is met de code en de documentatie errond. De tools halen de code eruit en creeeren een uitvoerbaar bestand en een ander bestand met de documentatie, dat kan een html web pagina zijn, of een \LaTeX \@ bestand / pdf. Het kan ook een Markdown bestand zijn.
@@ -145,7 +155,7 @@ softwareomgeving voor statistische computing \texttt{R} \autocite{RFoundation}.
 \texttt{Knitr} voert alle code blokken uit en maakt een nieuw Markdown bestand aan met alle code en hun uitkomsten.
 Het gemaakte Markdown bestand wordt dan geevalueerd door pandoc \autocite{pandoc}, die dan het finale product maakt.
 Vb:
-\begin{minted}{text}
+\begin{minted}{markdown}
 ---
 title: "viridis demo"
 output: html_document
