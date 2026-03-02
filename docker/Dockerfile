@@ -14,3 +14,4 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 COPY fonts/ /usr/share/fonts/opentype
 RUN fc-cache -f -v
+RUN ln -s /usr/bin/python3 /usr/bin/python
