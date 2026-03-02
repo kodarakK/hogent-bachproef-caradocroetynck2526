@@ -7,6 +7,10 @@ Naast de bedoeling om de code te documenteren, is het ook de bedoeling om de cod
 Pythonnet zorgt voor een integratie van \textcite{Cpython} engine en de .NET runtime. Het compiled geen python naar IL (Intermediate Language), een assembler achtige taal die wordt gebruikt als een brug tussen high-end \texttt{c#} code en machine code.
 Het kan dan CLR services aanspreken, bestaande python code gebruiken en C-API extensies gebruiken met de normale uitvoer snelheden van python.
 
+De \autocite{clr} is een runtime om .NET code uit te voeren. De talen die op deze runtime kunnen worden uitgevoerd zijn C\#, VB.NET en F\#.
+Andere talen kunnen ook worden uitgevoerd via de .NET runtime, maar zijn niet direct ondersteund door \textcite{clr}.
+De compiler vormt de code om naar IL, erachter voert de CLR een JIT-compilatie uit om de code naar machine code te vertalen.
+
 Via \textcite{pythonnet} kan python dll's lezen, importeren en gebruiken:
 
 \begin{listing}
@@ -37,13 +41,13 @@ class MainForm(Form):
         self.Size = Size(400, 600)
 def simple_form():
     global _application_initialized
-    
+
     try:
         if not _application_initialized:
             Application.EnableVisualStyles()
             Application.SetCompatibleTextRenderingDefault(False)
             _application_initialized = True
-        
+
         Application.Run(MainForm())
     except Exception as e:
         print(f"Error in simple_form: {e}")
@@ -206,4 +210,3 @@ image(volcano, col - viridis(200))
 %   \end{tabular}
 %   \caption[Voorbeeld tabel]{\label{tab:example}Voorbeeld van een tabel.}
 % \end{table}
-

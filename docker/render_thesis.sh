@@ -11,6 +11,8 @@ set -x
 
 cd "/bp/${source_dir}"
 
+mkdir -p "${output_dir}"
+
 # Find all main .tex files (containing the \documentclass command)
 source_files=$(grep --files-with-match '\\documentclass' ./*.tex)
 
