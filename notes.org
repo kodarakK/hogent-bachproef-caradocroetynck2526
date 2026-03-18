@@ -192,7 +192,7 @@ wa doe ik nu effectief:
 - puur docs? dont think so
 - ist: hier formule: wat ja want to change?
 - dunno yet
-- 
+-
 
 
 nog overleg met co-promotor?
@@ -367,3 +367,36 @@ Positie van dit onderzoek
 
 #+RESULTS:
 
+* BP schrijfplan (uit conversatie met AI, 2025)
+
+** Wat er al staat
+- ~inleiding.tex~: volledig uitgewerkt
+- ~standvanzaken.tex~: pythonnet, IronPython, literate programming, Jupyter, RMarkdown, Org-mode
+- ~methodologie.tex~: 5 fasen beschreven
+
+** Wat er nog ontbreekt in standvanzaken
+- JupyterHub (multi-user jupyter in organisaties)
+- Jupyter in Docker (isolatie, per-user containers)
+- ASP.NET Core minimal API (databrug tussen notebook en .NET model)
+- Reverse proxy / iframe embedding (hoe toon je Jupyter in een Razor app)
+
+** Nog te schrijven hoofdstukken
+- ~requirements.tex~: kan nu geschreven worden, zonder dat ILVO app af is
+- ~architectuur.tex~: op basis van het 8-stappenplan (Razor + Secure Jupyter + Client Data)
+- ~proof-of-concept.tex~: later, als de echte integratie gebouwd is
+- ~conclusie.tex~: op het einde
+
+** Huidige situatie
+- Toegang tot ILVO webapp, maar nog niet af
+- Eigen DB + eigen DLLs beschikbaar om lokaal mee te testen
+- Exploratieve POCs al gemaakt (hoe pythonnet werkt in verschillende scenario's)
+- Die POCs zijn geen eindproduct maar verkennend onderzoek (hoort in fase 3 methodologie)
+- Echte integratie in ILVO app komt later
+
+** Opties voor volgende stap
+- Optie A (makkelijkst): schrijf ontbrekende stand van zaken secties
+- Optie B (meest waardevol nu): schrijf architectuurhoofdstuk op basis van 8-stappenplan
+- Optie C: schrijf requirements hoofdstuk
+
+** Gekozen volgende stap
+# TODO: vul hier in wat je gekozen hebt
