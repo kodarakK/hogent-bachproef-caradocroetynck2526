@@ -12,10 +12,7 @@
 %   explicit approval!), remove the option "dutch," or replace with "english".
 
 \usepackage{lipsum} % For blind text, can be removed after adding actual content
-<<<<<<< HEAD
-=======
 \usepackage{soul}
->>>>>>> 9bc65c7 (pc)
 
 %% Pictures to include in the text can be put in the graphics/ folder
 \graphicspath{{../graphics/}}
@@ -28,11 +25,6 @@
 \usepackage[chapter,outputdir=../output]{minted}
 \usemintedstyle{solarized-light}
 
-<<<<<<< HEAD
-\usepackage{soul}
-
-=======
->>>>>>> 9bc65c7 (pc)
 %% Formatting for minted environments.
 \setminted{%
     autogobble,
@@ -92,19 +84,11 @@
 \hypersetup{pageanchor=false} %% Disable page numbering references
 %% Render a Dutch outer title page if the main language is English
 \IfLanguageName{english}{%
-	<<<<<<< HEAD
 	%% If necessary, information can be changed here
 	\degreesought{Professionele Bachelor toegepaste informatica}%
 	\begin{otherlanguage}{dutch}%
 		\maketitle%
 	\end{otherlanguage}%
-	=======
-	%% If necessary, information can be changed here
-	\degreesought{Professionele Bachelor toegepaste informatica}%
-	\begin{otherlanguage}{dutch}%
-		\maketitle%
-	\end{otherlanguage}%
-	>>>>>>> 9bc65c7 (pc)
 }{}
 
 %% Generates title page content
@@ -159,6 +143,7 @@
 %\input{...}
 %...
 %
+\input{architectuur.tex}
 \input{eerste_plan.tex}
 
 \input{conclusie}
