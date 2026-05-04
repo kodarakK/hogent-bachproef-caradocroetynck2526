@@ -1,0 +1,56 @@
+\chapter{\IfLanguageName{dutch}{Setup}{Setup}}%
+\label{ch:setup}
+
+\section{Docker starten vanuit C#}
+
+Binnen het EMAV-project wordt een gestandaardiseerde opzet gehanteerd voor het initialiseren van de applicatieomgeving.
+Een eerste stap in dit proces is het kopiëren van de noodzakelijke dynamic-link libraries (DLL's).
+Dankzij een doordachte projectstructuur en consistente naamgevingsconventies kunnen deze DLL-bestanden,
+die geautomatiseerde manier gegenereerd worden tijdens het buildproces van de applicatie,
+op een geautomatiseerde manier naar de correcte directory worden verplaatst.
+
+De jupyter notebooks worden gecontaineriseerd met behulp van een Dockerfile.
+Deze Dockerfile is gebaseerd op een runtime image van Microsoft, meer bepaald de .NET 10.0 runtime.
+Deze image steunt op een Debian-gebaseerde Linuxdistributie, wat een stabiele en breed ondersteunde basis biedt.
+
+Tijdens de buildfase van de container worden bijkomende afhankelijkheden geïnstalleerd via het pakketbeheersysteem \texttt{apt-get},
+waaronder Python en gerelateerde packages.
+Aansluitend worden de eerder gegenereerde DLL-bestanden in de container gekopieerd, zodat deze beschikbaar zijn voor verdere verwerking.
+
+Na het opzetten van de omgeving wordt een Jupyter-server opgestart via een specifiek startupscript.
+Dit script zorgt ervoor dat de relevante DLL's worden ingeladen en dat de belangerijkste namespaces toegankelijk worden gemaakt binnen de Python-omgeving.
+Voor het gebruik van specifieke modellen of functionaliteiten kunnen bijkomende import vereist zijn.
+
+Deze aanpak maakt het mogelijk om een reproduceerbare en consistente ontwikkel- en uitvoeringsomgeving te garanderen, wat essentieel is binnen een professionele software ontwikkelingscontext.
+
+
+Voor de interop tussen C# en docker wordt er gebruik gemaakt van Docker.Dotnet \textcite{docker_dotnet}.
+
+Voor het automatisch opzetten van een Jupyter-gebaseerde analyseomgeving werd een \texttt{JupyterSetup}-klasse geimplementeerd in C\#.
+Deze klasse is verantwoordelijk voor twee hoofdtaken:
+\begin{itemize}
+	\item het verzamelen en kopieren van de benodigde DLL-bestanden en
+	\item het opstarten van een Docker-container waarin een Jupyter-server draait
+\end{itemize}
+
+\subsection{Algemene opzet}
+De centrale methode van deze klasse is de \texttt{Setup}-methode, die beide stappen sequentieel uitvoert:
+
+\begin{minted}{csharp}
+public static async Task Setup()
+{
+    SetupDLL();
+    await SetupDocker();
+}
+\end{minted}
+
+Hierbij wordt eerste de lokale omgeving voorbereid (DLL's), waarna de containeromgeving wordt opgestart.
+
+\subsection{Kopieren van DLL-bestanden}
+De methode \texttt{SetupDLL} is verantwoordelijk voor het verzamelen van alle relevante DLL-bestanden die tijdens het buildproces gegenereerd worden.
+Op basis van de locatie van de uitvoerende assembly wordt de root van de solution bepaald:
+
+\begin{minted}{csharp}
+var assemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
+var solutionRoot     = Path.GetFullPath(Path.Combine(assemblyLocation, "..", "..", "..", "..",));
+\end{minted}

@@ -369,7 +369,11 @@ Positie van dit onderzoek
 
 * BP schrijfplan (uit conversatie met AI, 2025)
 
-** Wat er al staat
+** Wat er al staat- JupyterHub (multi-user jupyter in organisaties)
+- Jupyter in Docker (isolatie, per-user containers)
+- ASP.NET Core minimal API (databrug tussen notebook en .NET model)
+- Reverse proxy / iframe embedding (hoe toon je Jupyter in een Razor app)
+
 - ~inleiding.tex~: volledig uitgewerkt
 - ~standvanzaken.tex~: pythonnet, IronPython, literate programming, Jupyter, RMarkdown, Org-mode
 - ~methodologie.tex~: 5 fasen beschreven
