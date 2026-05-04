@@ -155,29 +155,75 @@ softwareomgeving voor statistische computing \texttt{R} \autocite{RFoundation}.
 \texttt{Knitr} voert alle code blokken uit en maakt een nieuw Markdown bestand aan met alle code en hun uitkomsten.
 Het gemaakte Markdown bestand wordt dan geevalueerd door pandoc \autocite{pandoc}, die dan het finale product maakt.
 Vb:
+\begin{listing}[H]
 \begin{minted}{markdown}
 ---
 title: "viridis demo"
 output: html_document
 ---
 
-```{r include - FALSE}
+```{r include=FALSE}
 library(viridis)
 ```
 The code below ...
 
 ## Colors
 ```{r}
-image(volcano, col - viridis(200))
+image(volcano, col = viridis(200))
 ```
 \end{minted}
 
+\end{listing}
 
 \section{Jupyter in Docker}
 
 Een jupyter notebook is een RCE (Remote Code Execution), dit is perfect voor een hacker om de volledige infrastructuur neer te halen.
 Als dit in een bedrijf gebruikt wordt op een server moet er dus een zware beveiliging op zitten.
 Een goede start is isolatie.
+
+Aangezien dat we dll's nodig gaan hebben en mogelijks c\# code gaan hebben, starten we in de Dockerfile vanuit een Microsoft runtime docker image.
+
+
+\begin{listing}[H]
+	\begin{minted}{dockerfile}
+FROM mcr.microsoft.com/dotnet/runtime:8.0
+RUN apt-get update && apt-get install -y python3 python3-pip
+RUN pip3 install jupyterlab \
+                 pythonnet \
+                 ipykernel \
+                 --break-system-packages
+WORKDIR /app
+COPY dlls /app/dlls
+COPY notebooks /app/notebooks
+COPY startup.py /root/.ipython/profile_default/ipython_config.py
+EXPOSE 8888
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", "--notebook-dir=/app/notebooks"]
+	\end{minted}
+\caption[Dockerfile voor jupyter notebook in docker]{Dockerfile voor jupyter notebook in docker}
+\end{listing}
+
+
+Deze dockerfile downloads de nodige packages, kopieert de dlls in de dlls folder en de notebooks uit de notebook folder en start de jupyter notebook server.
+
+De startup.py is een python bestand dat bij het maken van de docker image code uitvoert tijdens dat de kernel start. Hierdoor kunnen er dll's geladen worden voordat de gebruiker toegang heeft en veel boilerplate mag weglaten.
+
+\begin{listing}
+	\begin{minted}{python}
+c = get_config()
+c.InteractiveShellApp.exec_lines = [
+  'import sys',
+  'import pythonnet',
+  'pythonnet.load("coreclr")',
+  'import clr',
+  'sys.path.append("/app/dlls")',
+  'clr.AddReference("<dll naam zonder '.dll'>")',
+  'from <imported namespace> import *'
+]
+	\end{minted}
+\caption[startup.py bij dockerfile]{startup.py dat wordt geladen tijdens de kernel opstart van de jupyter notebook kernel}
+\end{listing}
+
+
 
 
 
