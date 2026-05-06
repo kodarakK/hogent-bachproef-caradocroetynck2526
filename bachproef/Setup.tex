@@ -90,6 +90,7 @@ private static void SetupDll()
 }
 \end{minted}
 
+
 De aanpak is eenvoudig maar robuust: alle DLL's uit de \texttt{obj}-directories 
 (build-output) worden verzameld,
 maar referentie-assemblies en runtime-specifieke bestanden worden uitgesloten.
@@ -250,4 +251,5 @@ te mitigeren. Het bestandssysteem is zoveel mogelijk read-only, met schrijfrecht
 
 De gehele setup wordt aangeboden via een enkele \texttt{Setup()}-methode. Dit zorgt voor eenvoud voor eindgebruikers:
 een enkele aanroep initialiseert DLL's en start de container. Dit minimaliseert fouten en handmatige tussenkomst.
+
 
