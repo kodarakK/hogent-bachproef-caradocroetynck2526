@@ -1,0 +1,36 @@
+terug koppelen aan probleem stelling.
+antwoorden op hoofdvragen.
+
+deelvragen niet terug gekomen in tekst, niet beantwoord geweest
+
+niet bereikt, niet erg, maar ze moeten terugkomen
+
+vragen herhalen en trugkoppelen in de tekst (conclusie in de tekst)
+
+echt wel die deelvragen
+
+nu losse stukken koppelen aan elkaar
+
+conway's law, hoe?
+
+aantal herhalingen
+
+bvb limieten, why, from where, ...
+
+hoe kom je tot de gebruikte waarden
+
+solution root via parameter
+
+parameters (poorten) moeten configureerbaar zijn
+
+5.4.2, zin geeft aan tot meer, niet duidelijk genoeg, hoe (stappenplan achtig)
+
+sommige codefragmenten
+
+logica zit fout,
+
+er moet een antwoord te zijn
+
+eens checken hoe mijn oplossing zit bij samuel
+
+vragen wanneer samuel beschikbaar is voor verdedeging, 11, 12, 15
