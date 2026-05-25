@@ -47,8 +47,9 @@ Deze klasse is verantwoordelijk voor twee hoofdtaken:
 \end{itemize}
 
 \subsection{Algemene opzet}
-De centrale methode van deze klasse is de \texttt{Setup}-methode, die beide stappen sequentieel uitvoert:
+De centrale methode van deze klasse is de \texttt{Setup}-methode, die beide stappen sequentieel uitvoert. De implementatie hiervan is terug te vinden in Codefragment \ref{lst:setup_main}.
 
+\begin{listing}[ht]
 \begin{minted}{csharp}
 public static async Task Setup()
 {
@@ -56,40 +57,15 @@ public static async Task Setup()
     await SetupDocker();
 }
 \end{minted}
+\caption{De centrale \texttt{Setup}-methode van de \texttt{JupyterSetup}-klasse.}
+\label{lst:setup_main}
+\end{listing}
 
-Hierbij wordt eerste de lokale omgeving voorbereid (DLL's), waarna de containeromgeving wordt opgestart.
+Hierbij wordt eerst de lokale omgeving voorbereid (DLL's), waarna de containeromgeving wordt opgestart.
 
 \subsection{Kopieren van DLL-bestanden}
 De methode \texttt{SetupDLL} is verantwoordelijk voor het verzamelen van alle relevante DLL-bestanden die tijdens het buildproces gegenereerd worden.
-Op basis van de locatie van de uitvoerende assembly wordt de root van de solution bepaald:
-
-\begin{minted}{csharp}
-private static void SetupDll()
-{
-    var assemblyLocation = Path.GetDirectoryName(
-        Assembly.GetExecutingAssembly().Location)!;
-    var solutionRoot = Path.GetFullPath(
-        Path.Combine(assemblyLocation, "..", "..", "..", "..")
-    );
-
-    var targetDir = Path.Combine(solutionRoot, "ILVO.EMAV.Jupyter", "dlls");
-    Directory.CreateDirectory(targetDir);
-
-    var dllFiles = Directory.GetFiles(solutionRoot, "*.dll", SearchOption.AllDirectories)
-        .Where(path => path.Contains(@"\obj\"))
-        .Where(path => !path.Contains(@"\ref\"))
-        .Where(path => !path.Contains(@"\runtimes\"));
-
-    foreach (var dll in dllFiles)
-    {
-        var fileName = Path.GetFileName(dll);
-        var destPath = Path.Combine(targetDir, fileName);
-        File.Copy(dll, destPath, overwrite: true);
-        Console.WriteLine($"Copied: {fileName}");
-    }
-}
-\end{minted}
-
+Op basis van de locatie van de uitvoerende assembly wordt de root van de solution bepaald. De volledige logica voor het filteren en kopiëren van deze bestanden is opgenomen in Bijlage \ref{ch:codefragmenten} (zie Codefragment \ref{lst:setupdll}).
 
 De aanpak is eenvoudig maar robuust: alle DLL's uit de \texttt{obj}-directories 
 (build-output) worden verzameld,
@@ -104,8 +80,9 @@ die later in de Docker-image worden opgenomen.
 
 De \texttt{Docker.DotNet}-bibliotheek abstraheert de Docker-daemon-communicatie. 
 Op Windows gebruikt deze named pipes,
-op Linux Unix-sockets. De klasse initialiseert eenmalig de client:
+op Linux Unix-sockets. De klasse initialiseert eenmalig de client, zoals getoond in Codefragment \ref{lst:docker_init}:
 
+\begin{listing}[ht]
 \begin{minted}{csharp}
 docker = new DockerClientConfiguration(
     new Uri(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
@@ -113,38 +90,14 @@ docker = new DockerClientConfiguration(
         : "unix:///var/run/docker.sock")
 ).CreateClient();
 \end{minted}
+\caption{Initialisatie van de \texttt{DockerClient} voor verschillende platformen.}
+\label{lst:docker_init}
+\end{listing}
 
 \subsection{Container aanmaken en poorten binden}
 
 De container wordt aangemaakt op basis van de \texttt{jupyter-image}. Via dynamische poortbinding
-kunnen meerdere Jupyter-instanties parallel op dezelfde machine draaien:
-
-\begin{minted}{csharp}
-var response = await docker.Containers.CreateContainerAsync(
-    new CreateContainerParameters
-    {
-        Image = "jupyter-image",
-        ExposedPorts = new Dictionary<string, EmptyStruct> 
-        { 
-            { "8888/tcp", default } 
-        },
-        HostConfig = new HostConfig
-        {
-            PortBindings = new Dictionary<string, IList<PortBinding>>
-            {
-                {
-                    "8888/tcp", new List<PortBinding>
-                    {
-                        new PortBinding { HostPort = "" }
-                    }
-                }
-            }
-        }
-    }
-);
-
-await docker.Containers.StartContainerAsync(response.ID, null);
-\end{minted}
+kunnen meerdere Jupyter-instanties parallel op dezelfde machine draaien. De gedetailleerde configuratie van de \texttt{CreateContainerParameters} is te vinden in Codefragment \ref{lst:docker_create}.
 
 Wanneer \texttt{HostPort} leeg is, kiest Docker een vrije poort automatisch. 
 Dit voorkómt conflicten en maakt
@@ -154,27 +107,7 @@ het mogelijk dat onderzoeksgroepen parallel hun eigen analyseomgeving draaien.
 
 Jupyter genereert bij opstarten een beveiligingstoken in de logs. 
 Dit moet aan gebruikers ter beschikking gesteld worden.
-De implementatie parseert de container-logs met reguliere expressies:
-
-\begin{minted}{csharp}
-var logs = await docker.Containers.GetContainerLogsAsync(response.ID, true,
-    new ContainerLogsParameters 
-    { 
-        ShowStderr = true, 
-        ShowStdout = true, 
-        Follow = false 
-    });
-
-var output = await DemultiplexStream(logs);
-
-var tokenMatch = Regex.Match(output, @"token=([a-f0-9]+)");
-var token = tokenMatch.Success ? tokenMatch.Groups[1].Value : "";
-
-var portMatch = Regex.Match(output, @"http://[^:]+:(\d+)");
-var port = portMatch.Success ? portMatch.Groups[1].Value : "8888";
-
-var jupyterUrl = $"http://localhost:{port}/?token={token}";
-\end{minted}
+De implementatie parseert de container-logs met reguliere expressies, zoals weergegeven in Codefragment \ref{lst:docker_logs}.
 
 De \texttt{DemultiplexStream}-methode zorgt ervoor dat de Docker-logs 
 (die in een gedemultiplexed formaat komen)
@@ -184,26 +117,7 @@ correct naar UTF-8 tekst worden omgezet. Deze URL kan vervolgens aan de gebruike
 
 \subsection{Docker base-image en Python-setup}
 
-De Dockerfile bouwt voort op de .NET 10.0 runtime, wat native .NET-ondersteuning in Python garandeert:
-
-\begin{minted}{dockerfile}
-FROM mcr.microsoft.com/dotnet/runtime:10.0
-
-RUN apt-get update && apt-get install -y python3 python3-pip
-
-RUN pip3 install jupyterlab pythonnet ipykernel --break-system-packages
-
-WORKDIR /app
-
-COPY dlls /app/dlls
-COPY notebooks /app/notebooks
-COPY startup.py /root/.ipython/profile_default/ipython_config.py
-
-EXPOSE 8888
-
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", \
-    "--notebook-dir=/app/notebooks"]
-\end{minted}
+De Dockerfile bouwt voort op de .NET 10.0 runtime, wat native .NET-ondersteuning in Python garandeert. Het volledige build-script is opgenomen in Bijlage \ref{app:container_config} (zie Codefragment \ref{lst:dockerfile}).
 
 De \texttt{--break-system-packages}-vlag is nodig omdat deze container geen systeem-wide Python is,
 en pip's veiligheidsmechanismen dus niet relevant zijn.
@@ -211,25 +125,7 @@ en pip's veiligheidsmechanismen dus niet relevant zijn.
 \subsection{Automatische initialisatie van .NET-referenties}
 
 IPython voert automatisch configuratie uit wanneer het opstart. Dit wordt gebruikt om alle .NET-DLL's
-in te laden zonder dat gebruikers dat handmatig moeten doen. Het bestand \texttt{startup.py} bevat:
-
-\begin{minted}{python}
-c = get_config()
-c.InteractiveShellApp.exec_lines = [
-    'import sys',
-    'import pythonnet',
-    'pythonnet.load("coreclr")',
-    'import clr',
-    'sys.path.append("/app/dlls")',
-    'clr.AddReference("ILVO.EMAV.Core")',
-    'clr.AddReference("ILVO.EMAV.Data.Web")',
-    'clr.AddReference("ILVO.EMAV.Infrastructure.Exporter")',
-    # ... verdere references
-    'from ILVO.EMAV.Core import *',
-    'from ILVO.EMAV.Data.Rekenfactoren import *',
-    # ... verdere imports
-]
-\end{minted}
+in te laden zonder dat gebruikers dat handmatig moeten doen. De specifieke configuratie hiervoor is te vinden in Codefragment \ref{lst:startuppy}.
 
 Hierdoor zijn alle klassen en functies uit de domein- en infrastructuurlaag onmiddellijk beschikbaar
 in notebooks zonder extra import-statements.
@@ -251,5 +147,3 @@ te mitigeren. Het bestandssysteem is zoveel mogelijk read-only, met schrijfrecht
 
 De gehele setup wordt aangeboden via een enkele \texttt{Setup()}-methode. Dit zorgt voor eenvoud voor eindgebruikers:
 een enkele aanroep initialiseert DLL's en start de container. Dit minimaliseert fouten en handmatige tussenkomst.
-
-

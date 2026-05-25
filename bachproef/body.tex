@@ -1,0 +1,155 @@
+\chapter{\IfLanguageName{dutch}{Deelvragen}{Answers}}
+\label{ch:body}
+
+\section{huidige samenwerking}
+De programmeurs maken \& onderhouden het EMAV project. De onderzoekers gebruiken het om berekeningen te finetunen.
+
+
+\section{moeilijk te verstaande onderdelen van EMAV}
+Het oude EMAV project is een Windows Forms applicatie met behulp van externe (licenced) libraries.
+Maar vanwege een scheiding tussen externe en interne klanten, is er een scheiding tussen Database access.
+Hierdoor is de gang van access in oude EMAV een grote omgang en wierwar van code.
+
+De nieuwe EMAV is een razor page applicatie. 
+Aangezien het nieuw project van nul start, kunnen betere ontwerp beslissingen genomen worden.
+
+Ongeacht de nieuwe start, blijft het project zeer complex. De complexiteit van het EMAV-project vloeit niet enkel voort uit de omvang van de codebasis, maar ook uit de noodzaak om een robuuste, testbare en uitbreidbare architectuur te bieden voor een systeem dat zowel data-intensief als aan verandering onderhevig is. Om deze complexiteit beheersbaar te houden, wordt er consistent gebruikgemaakt van diverse ontwerppatronen. In deze sectie worden de belangrijkste patronen besproken, waarbij telkens de link wordt gelegd tussen het theoretische concept en de concrete meerwaarde voor de architectuur van EMAV.
+
+\subsection{Repository Pattern}
+Het repository patroon fungeert als een essentiële abstractielaag tussen de domeinlogica en de diverse gegevensbronnen waarover EMAV beschikt. 
+Volgens \textcite{fowlerRepository} gedraagt een repository zich als een in-memory verzameling van domeinobjecten, waarbij de technische details van de onderliggende persistentiemechanismen volledig worden geabstraheerd. 
+In de context van EMAV is dit patroon cruciaal omdat het project opereert op een hybride datastructuur die over de jaren heen is geëvolueerd. 
+Enerzijds is er een SQLite-database voor de opslag van ruwe inputgegevens en rekendata, en anderzijds een SQL Server-database voor de webgerelateerde metadata en gebruikersbeheer.
+
+Binnen de codebase wordt dit gerealiseerd via een gelaagde hiërarchie van interfaces en implementaties. 
+In het \texttt{ILVO.EMAV.Shared}-project bevindt zich de basisdefinitie \texttt{IBaseRepository<T>}, die algemene CRUD-operaties (\textit{Create, Read, Update, Delete}) definieert. 
+Specifieke projecten breiden dit uit, zoals \texttt{IWebBaseRepository<TEntity>} in de core-laag, waarbij gebruik wordt gemaakt van generieke constraints (\texttt{where TEntity \: class, IWebBaseEntity}). 
+De \texttt{ILVO.EMAV.Core}-laag communiceert uitsluitend met deze interfaces. 
+Hierdoor blijft de kern van de applicatie volledig onwetend over de specifieke implementatie details, of die nu gebruikmaakt van Entity Framework Core in \texttt{ILVO.EMAV.Infrastructure.Web} of gespecialiseerde logic in de input-laag.
+
+Deze abstractie verhoogt de onderhoudbaarheid aanzienlijk\: indien een database-schema wijzigt of indien men besluit over te stappen naar een andere opslagtechnologie, hoeven de wijzigingen enkel in de infrastructuurlaag te worden doorgevoerd. 
+De businesslogica blijft onaangetast. 
+Bovendien is dit patroon de hoeksteen voor kwalitatieve unit testing. 
+Door repositories te \textit{mocken}, kan de businesslogica worden getoetst zonder afhankelijkheid van een actieve databaseverbinding. 
+Dit wijst op een architecturale keuze die gericht is op stabiliteit op lange termijn en eenvoudige verifieerbaarheid van de code \autocite{millett2015patterns}.
+
+\subsection{Command Query Responsibility Segregation (CQRS)}
+CQRS is een geavanceerd architectuurpatroon waarbij de verantwoordelijkheid voor het opvragen van gegevens (Queries) strikt wordt gescheiden van de verantwoordelijkheid voor het wijzigen van de systeemtoestand (Commands). 
+Volgens \textcite{fowlerCQRS} biedt deze scheiding de mogelijkheid om elk pad onafhankelijk te structureren, te optimaliseren en te schalen. 
+In een complex systeem zoals EMAV, waar berekeningen uren kunnen duren en metadata-opvragingen milliseconden moeten duren, is deze scheiding bittere noodzaak.
+
+Binnen EMAV wordt CQRS geïmplementeerd met de \texttt{LiteBus}-bibliotheek \autocite{litebus}. 
+Dit resulteert in een zogenaamde "Vertical Slice Architecture" binnen de core-projecten \autocite{jimmyBogardVerticalSlice}. 
+Een actie zoals het verwijderen van een berekening wordt niet afgehandeld door een generieke "CalculationService", maar door een specifieke \texttt{DeleteCalculationCommand} en de bijbehorende \texttt{DeleteCalculationCommandHandler}. 
+Dit commando bevat enkel de minimale data (zoals een \texttt{Guid Id}) en de handler voert de noodzakelijke stappen uit \: het ophalen van de metadata via een repository, het verwijderen van fysieke bestanden via een \texttt{IFileManager} en het finaal verwijderen van de database-records.
+
+Aan de query-zijde worden specifieke modellen (DTO's) geretourneerd die geoptimaliseerd zijn voor de weergave in de UI, in plaats van de volledige domeinentiteiten te "lekken". 
+Deze aanpak voorkomt het ontstaan van "Gouden Klassen" die alle logica van een bepaald domein bevatten. 
+In plaats daarvan is de logica gedistribueerd over honderden kleine, gefocuste klassen die elk één specifieke taak hebben. 
+Dit verlaagt de cognitieve last voor ontwikkelaars die aan het project werken aanzienlijk.
+
+\subsection{Mediator Pattern}
+Onlosmakelijk verbonden met de CQRS-aanpak is het mediator patroon. 
+Dit patroon fungeert als een centrale "verkeersleider" die de communicatie tussen verschillende objecten coördineert, waardoor directe koppelingen tussen componenten worden vermeden \autocite{gof1994}. 
+In de moderne architectuur van EMAV is de \texttt{IMediator} het enige aanspreekpunt voor de presentatielaag (\texttt{ILVO.EMAV.Web}).
+
+Een Razor Page in de UI-laag hoeft geen enkel inzicht te hebben in welke services, repositories of validators nodig zijn om een bepaalde actie uit te voeren. 
+De pagina stuurt simpelweg een commando of query naar de mediator. 
+De mediator zorgt er vervolgens voor dat dit bericht door de juiste "pipelines" passeert. 
+Zo worden commando's automatisch eerst gevalideerd door \texttt{IValidator}-implementaties voordat ze de handler bereiken.
+
+Dit zorgt voor een extreme vorm van ontkoppeling \: de presentatielaag heeft geen enkele directe referentie naar de infrastructuur- of datalaag. 
+Dit verhoogt de flexibiliteit van het systeem enorm; handlers kunnen worden herschreven, verplaatst naar andere microservices of gedecoreerd met extra logging zonder dat er ook maar één regel code in de UI-laag hoeft te wijzigen. 
+Dit patroon is een directe indicatie van de architecturale volwassenheid van het project en draagt bij aan de robuustheid tegen technologische veranderingen.
+
+\subsection{Strategy Pattern}
+Het strategie patroon is een gedragspatroon dat toelaat om een algoritme te selecteren op runtime en dit algoritme in te kapselen in een uitwisselbaar object \autocite{gof1994}. 
+In de rekenkern van EMAV is dit patroon van fundamenteel belang om de wetenschappelijke variabiliteit van de emissiemodellen te ondersteunen. 
+De kerninterface \texttt{ICalculator<Tin, Tout>} vormt de basis voor een uitgebreide familie van rekenstrategieën.
+
+Deze architectuur is essentieel omdat EMAV berekeningen uitvoert voor diverse domeinen, zoals enterische emissies, stalemissies en mestverwerking. 
+Elke berekening heeft haar eigen set formules, inputparameters en validatieregels. 
+Door elke berekening als een afzonderlijke strategie (bijvoorbeeld \texttt{BerekenEmissieLandbouwbodem}) te implementeren, blijft de overkoepelende orchestratielogica clean en overzichtelijk. 
+De orchestrator roept simpelweg de \texttt{DoCalc}-methode aan op de geïnjecteerde strategie.
+
+Dit bevordert het \textit{Open-Closed Principle} (onderdeel van SOLID)\: de rekenkern staat open voor uitbreiding (men kan eenvoudig een nieuwe rekenmodule toevoegen door de interface te implementeren), maar is gesloten voor aanpassingen (de bestaande orchestratie hoeft niet gewijzigd te worden). 
+Voor een project waar wetenschappers regelmatig nieuwe formules aanleveren, is dit een cruciale eigenschap die voorkomt dat het project na verloop van tijd "vastloopt" in haar eigen complexiteit.
+
+\subsection{Factory Pattern}
+Het factory patroon wordt aangewend om de creatie van objecten te abstraheren van de client-code. 
+Dit is met name nuttig wanneer het exacte type van het aan te maken object afhankelijk is van configuratie of gebruikersinput op runtime. 
+In EMAV wordt dit patroon prominent toegepast in de \texttt{IExporterFactory}.
+
+Het systeem ondersteunt een breed scala aan exportmogelijkheden, waaronder CSV voor verdere analyse in statistische software, Excel voor rapportage en JSON voor integratie met andere systemen. 
+De \texttt{ExporterFactory} neemt een \texttt{ExportType} als parameter en retourneert de juiste implementatie van de \texttt{IExporter}-interface. 
+Hierdoor hoeft de aanroepende code niet te weten hoe een specifieke exporter geconfigureerd moet worden.
+
+Deze centralisatie van creatielogica voorkomt codeduplicatie en maakt het systeem zeer modulair. 
+Indien er in de toekomst ondersteuning voor een nieuw formaat moet worden toegevoegd, hoeft enkel een nieuwe klasse te worden geschreven en geregistreerd in de factory. 
+De rest van de applicatie blijft volledig ongewijzigd. 
+Dit illustreert de visie van het project op uitbreidbaarheid en het vermijden van "harde" koppelingen tussen componenten \autocite{gof1994}.
+
+\subsection{Facade Pattern}
+Gezien de enorme interne complexiteit van de EMAV-rekenkern, waarbij tientallen subsystemen gelijktijdig actief zijn, is het facade patroon onontbeerlijk. 
+Een facade biedt een vereenvoudigde interface naar een complex subsysteem, waardoor de interne complexiteit wordt afgeschermd voor de gebruiker \autocite{gof1994}. 
+In EMAV fungeren de belangrijkste controllers en orchestratie-services als facades.
+
+Wanneer een gebruiker op "Start Berekening" klikt, lijkt dit voor de UI een enkele actie. 
+Achter de facade vindt echter een complexe dans plaats\: inputbestanden worden gevalideerd, de juiste rekenfactoren worden uit de database opgehaald, cache-mechanismen worden geraadpleegd, meerdere berekeningsstrategieën worden in de juiste volgorde aangeroepen en de resultaten worden finaal geaggregeerd en weggeschreven. 
+De facade verbergt deze interacties en biedt een stabiele API.
+
+Dit is een erkenning van de inherente complexiteit van het domein\: in plaats van te proberen de complexiteit volledig weg te nemen, wordt ze beheersbaar gemaakt door ze te groeperen achter logische, gebruiksvriendelijke interfaces. Dit verbetert de onderhoudbaarheid omdat de interne werking van de rekenkern kan worden geoptimaliseerd zonder dat de UI-code hiervan hinder ondervindt.
+
+\subsection{Dependency Injection (DI) en Inversion of Control (IoC)}
+Dependency Injection is de architecturale "ruggengraat" die alle voorgaande patronen in EMAV faciliteert en verbindt. 
+In plaats van dat klassen hun eigen afhankelijkheden instantiëren, worden deze afhankelijkheden van buitenaf aangeboden. Volgens \textcite{seemann2019di} is DI de enige manier om een echt modulaire en testbare software-architectuur te bouwen.
+
+EMAV maakt optimaal gebruik van de ingebouwde DI-container van .NET. 
+Elk deelproject (Core, Infrastructure, Web) bevat een eigen \texttt{DependencyInjection.cs}-bestand waarin de interne services, handlers en repositories worden geregistreerd. 
+Dit bevordert een hoge mate van inkapseling\: de UI-laag hoeft enkel de DI-methode van de Core-laag aan te roepen om alle benodigde logica beschikbaar te maken.
+
+Dit mechanisme is cruciaal voor de flexibiliteit van het project. 
+Het laat toe om op een transparante manier implementaties te wisselen op basis van de omgeving of voor testdoeleinden. 
+DI is de motor achter de andere patronen; zonder een goede DI-structuur zouden patronen zoals Strategy en Repository leiden tot een onhoudbare hoeveelheid "handmatige" object-creatie doorheen de applicatie.
+
+\subsection{Adapter Pattern}
+Het adapter patroon maakt het mogelijk dat klassen met incompatibele interfaces toch naadloos kunnen samenwerken \autocite{gof1994}. 
+In de context van EMAV is dit patroon een cruciaal instrument om de kloof tussen de moderne "Clean Architecture" en de waardevolle legacy-code te overbruggen. 
+Zoals eerder beschreven, bevat het project logica die overgenomen is uit een oudere Windows Forms-omgeving.
+
+In plaats van deze oude code integraal te herschrijven, worden adapters ingezet. 
+Deze adapters presenteren de oude functionaliteit aan de nieuwe applicatie via een interface die voldoet aan de nieuwe standaarden (bijvoorbeeld door gebruik te maken van \texttt{Task<T>} voor asynchroon werken). 
+Hierdoor kan de nieuwe kernlogica modern en "clean" blijven, terwijl ze toch gebruikmaakt van de bewezen nauwkeurigheid van de bestaande rekenmodules. 
+Dit toont een pragmatische en architecturaal verantwoorde aanpak van software-evolutie aan.
+
+\subsection{Decorator Pattern en Result Pattern}
+Het decorator patroon voegt dynamisch verantwoordelijkheden toe aan een object zonder de onderliggende klasse te wijzigen \autocite{gof1994}. 
+In de EMAV-codebase wordt dit principe toegepast via de mediator pipeline. 
+Elke actie die door het systeem stroomt, wordt "gedecoreerd" met extra functionaliteit zoals automatische validatie via \texttt{FluentValidation}. 
+Hierdoor blijven de eigenlijke business-handlers "puur" en gefocust op hun specifieke taak.
+
+Daarnaast wordt het \textbf{Result Pattern} (via de \texttt{ErrorOr} bibliotheek) consistent toegepast. 
+In plaats van uitzonderingen (\textit{exceptions}) te gebruiken voor control flow bij te verwachten fouten, retourneren methoden een object dat ofwel het resultaat, ofwel een lijst van fouten bevat. 
+Dit patroon, zoals beschreven door \textcite{khorikovResultPattern}, zorgt voor een zeer voorspelbare en robuuste foutafhandeling die naadloos integreert met de Clean Architecture-filosofie en functionele programmeerprincipes.
+
+\subsection{Clean Architecture}
+Alle voorgaande patronen komen samen in de overkoepelende Clean Architecture-structuur van EMAV. 
+Volgens \textcite{martin2017clean} is het hoofddoel van deze architectuur om de businesslogica volledig te isoleren van infrastructuur, frameworks en externe invloeden. 
+In de projectstructuur van EMAV is deze filosofie strikt doorgevoerd\:
+\begin{itemize}
+    \item \textbf{Domain Layer (\texttt{ILVO.EMAV.Data.*})\:} Bevat de pure entiteiten en domeinobjecten.
+    \item \textbf{Application Layer (\texttt{ILVO.EMAV.Core})\:} Bevat de businessregels, de mediator handlers en de definities van de interfaces.
+    \item \textbf{Infrastructure Layer (\texttt{ILVO.EMAV.Infrastructure.*})\:} Bevat de technische implementaties, zoals database-connectiviteit en bestandssysteem-interacties.
+    \item \textbf{Presentation Layer (\texttt{ILVO.EMAV.Web})\:} De user interface die uitsluitend communiceert met de Core-laag.
+\end{itemize}
+
+Deze gelaagdheid zorgt ervoor dat EMAV een zeer hoge mate van technologische onafhankelijkheid geniet. De Clean Architecture is de ultieme uiting van de complexiteitsbeheersing binnen dit project\: het biedt een duurzaam frame waarin alle andere design patterns optimaal tot hun recht komen om samen een kwalitatief superieur softwareproduct te vormen.
+
+
+\section{tekortschieting van documentatie}
+
+\section{documentatie vormen}
+
+\section{veilig experimenteren}
+
+\section{nauwere verweving tussen code \& docs}

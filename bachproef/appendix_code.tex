@@ -1,0 +1,141 @@
+\chapter{\IfLanguageName{dutch}{Codefragmenten}{Code Fragments}}
+\label{ch:codefragmenten}
+
+In deze bijlage worden de uitgebreide code-implementaties weergegeven die in Hoofdstuk \ref{ch:setup} werden besproken.
+
+\section{C\# Implementatie details}
+\label{app:csharp_setup}
+
+\begin{listing}[ht]
+\begin{minted}{csharp}
+private static void SetupDll()
+{
+    var assemblyLocation = Path.GetDirectoryName(
+        Assembly.GetExecutingAssembly().Location)!;
+    var solutionRoot = Path.GetFullPath(
+        Path.Combine(assemblyLocation, "..", "..", "..", "..")
+    );
+
+    var targetDir = Path.Combine(solutionRoot, "ILVO.EMAV.Jupyter", "dlls");
+    Directory.CreateDirectory(targetDir);
+
+    var dllFiles = Directory.GetFiles(solutionRoot, "*.dll", SearchOption.AllDirectories)
+        .Where(path => path.Contains(@"\obj\"))
+        .Where(path => !path.Contains(@"\ref\"))
+        .Where(path => !path.Contains(@"\runtimes\"));
+
+    foreach (var dll in dllFiles)
+    {
+        var fileName = Path.GetFileName(dll);
+        var destPath = Path.Combine(targetDir, fileName);
+        File.Copy(dll, destPath, overwrite: true);
+        Console.WriteLine($"Copied: {fileName}");
+    }
+}
+\end{minted}
+\caption[Implementatie van de \texttt{SetupDll}-methode.]{Implementatie van de \texttt{SetupDll}-methode voor het verzamelen van DLL-bestanden.}
+\label{lst:setupdll}
+\end{listing}
+
+\begin{listing}[ht]
+\begin{minted}{csharp}
+var response = await docker.Containers.CreateContainerAsync(
+    new CreateContainerParameters
+    {
+        Image = "jupyter-image",
+        ExposedPorts = new Dictionary<string, EmptyStruct> 
+        { 
+            { "8888/tcp", default } 
+        },
+        HostConfig = new HostConfig
+        {
+            PortBindings = new Dictionary<string, IList<PortBinding>>
+            {
+                {
+                    "8888/tcp", new List<PortBinding>
+                    {
+                        new PortBinding { HostPort = "" }
+                    }
+                }
+            }
+        }
+    }
+);
+
+await docker.Containers.StartContainerAsync(response.ID, null);
+\end{minted}
+\caption[Aanmaken en opstarten van de Jupyter Docker-container.]{Aanmaken en opstarten van de Jupyter Docker-container via Docker.DotNet.}
+\label{lst:docker_create}
+\end{listing}
+
+\begin{listing}[ht]
+\begin{minted}{csharp}
+var logs = await docker.Containers.GetContainerLogsAsync(response.ID, true,
+    new ContainerLogsParameters 
+    { 
+        ShowStderr = true, 
+        ShowStdout = true, 
+        Follow = false 
+    });
+
+var output = await DemultiplexStream(logs);
+
+var tokenMatch = Regex.Match(output, @"token=([a-f0-9]+)");
+var token = tokenMatch.Success ? tokenMatch.Groups[1].Value : "";
+
+var portMatch = Regex.Match(output, @"http://[^:]+:(\d+)");
+var port = portMatch.Success ? portMatch.Groups[1].Value : "8888";
+
+var jupyterUrl = $"http://localhost:{port}/?token={token}";
+\end{minted}
+\caption[Extractie van de Jupyter-token en poort uit logs.]{Extractie van de Jupyter-token en poort uit de container-logs.}
+\label{lst:docker_logs}
+\end{listing}
+
+\section{Container Configuratie}
+\label{app:container_config}
+
+\begin{listing}[ht]
+\begin{minted}{docker}
+FROM mcr.microsoft.com/dotnet/runtime:10.0
+
+RUN apt-get update && apt-get install -y python3 python3-pip
+
+RUN pip3 install jupyterlab pythonnet ipykernel --break-system-packages
+
+WORKDIR /app
+
+COPY dlls /app/dlls
+COPY notebooks /app/notebooks
+COPY startup.py /root/.ipython/profile_default/ipython_config.py
+
+EXPOSE 8888
+
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", \
+    "--notebook-dir=/app/notebooks"]
+\end{minted}
+\caption[Dockerfile voor de Jupyter-omgeving.]{Dockerfile voor de Jupyter-omgeving met .NET-ondersteuning.}
+\label{lst:dockerfile}
+\end{listing}
+
+\begin{listing}[ht]
+\begin{minted}{python}
+c = get_config()
+c.InteractiveShellApp.exec_lines = [
+    'import sys',
+    'import pythonnet',
+    'pythonnet.load("coreclr")',
+    'import clr',
+    'sys.path.append("/app/dlls")',
+    'clr.AddReference("ILVO.EMAV.Core")',
+    'clr.AddReference("ILVO.EMAV.Data.Web")',
+    'clr.AddReference("ILVO.EMAV.Infrastructure.Exporter")',
+    # ... verdere references
+    'from ILVO.EMAV.Core import *',
+    'from ILVO.EMAV.Data.Rekenfactoren import *',
+    # ... verdere imports
+]
+\end{minted}
+\caption[Startup-script voor IPython.]{Startup-script voor IPython voor het automatisch inladen van .NET-assemblies.}
+\label{lst:startuppy}
+\end{listing}
