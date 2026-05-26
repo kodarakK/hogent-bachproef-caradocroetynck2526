@@ -1,0 +1,25 @@
+\chapter{veilig experimenteren}
+\label{ch:veilig_experimenteren}
+
+Een van de belangrijkste doelstellingen van dit onderzoek is om onderzoekers de vrijheid te geven om te experimenteren met modellen, zonder dat dit een risico vormt voor de stabiliteit van de productieomgeving. Veilig experimenteren vereist zowel technische isolatie op procesniveau als functionele vangrails op dataniveau.
+
+\section{Technische isolatie via Docker-sandboxing}
+Zoals gedetailleerd beschreven in de technische opzet (zie Hoofdstuk \ref{ch:setup}), vormt containerisatie via Docker de infrastructuurele basis voor veiligheid. Elke onderzoeker krijgt bij het opstarten van een sessie een eigen, kortstondige (\textit{ephemeral}) Jupyter-container.
+
+Dit sandboxing-mechanisme biedt bescherming op meerdere niveaus:
+\begin{itemize}
+    \item \textbf{Bestandssysteem-isolatie:} De container heeft een eigen \textit{read-only} root-bestandssysteem. Wijzigingen die een onderzoeker aanbrengt aan de systeemconfiguratie van de container gaan verloren na het afsluiten van de sessie, waardoor de omgeving altijd "schoon" blijft voor de volgende run.
+    \item \textbf{Resource-limieten:} Door gebruik te maken van Docker's resource-quota (CPU en geheugen) kan worden voorkomen dat een experimenteel script de volledige server platlegt. Mocht een onderzoeker per ongeluk een geheugenlek of een oneindige lus introduceren, dan zal enkel zijn individuele container worden gepauzeerd of getermineerd.
+    \item \textbf{Netwerk-isolatie:} De Jupyter-container bevindt zich in een afgeschermd netwerksegment. Hij kan enkel communiceren met de noodzakelijke databronnen en de web-API van EMAV, maar heeft geen ongecontroleerde toegang tot het bredere netwerk van ILVO.
+\end{itemize}
+Deze isolatie verlaagt de psychologische drempel voor onderzoekers om "wat-als"-scenario's te verkennen. De angst om het "echte" systeem te breken wordt technisch weggenomen door de sandbox-architectuur.
+
+\section{Data-integriteit en Lokale Data-clonering}
+Veilig experimenteren betekent ook dat de onderzoeker moet kunnen werken met realistische data zonder de centrale metadata-database te vervuilen. Binnen de EMAV-notebooks wordt gebruikgemaakt van een strategie van \textit{local cloning}.
+
+Wanneer een onderzoeker een analyse start, wordt er een tijdelijke kopie gemaakt van de relevante SQLite-bestanden met inputgegevens. De onderzoeker kan parameters in deze lokale kopieën naar hartenlust aanpassen, verwijderen of toevoegen om de gevoeligheid van het model te testen. De officiële database blijft hierbij onaangetast. Door de resultaten van een experimentele run direct in de notebook te vergelijken met de resultaten van het officiële model, krijgt de onderzoeker onmiddellijk \textit{visual feedback}. Dit proces van directe validatie fungeert als een functionele vangrail: fouten in de wetenschappelijke logica worden direct zichtbaar in de grafieken, nog voordat er sprake is van een formele aanvraag for een codewijziging.
+
+\section{De weg van Experiment naar Productie: Gecontroleerde Promotie}
+Tot slot maakt de voorgestelde omgeving een cruciaal onderscheid tussen een "vrij experiment" en een "formele model-update". Een notebook dient als de zandbak waarin een nieuwe wetenschappelijke formule wordt verfijnd en gevalideerd over meerdere iteraties.
+
+Zodra een onderzoeker overtuigd is van de meerwaarde van een wijziging, fungeert de notebook als de \textit{technische specificatie} voor de IT-afdeling. In plaats van een vaag tekstdocument, overhandigt de onderzoeker een werkend code-exemplaar. De IT-ontwikkelaar neemt vervolgens de taak op zich om deze gevalideerde logica structureel te integreren in de C\#-rekenmodules, inclusief de bijbehorende unit tests and architecturale optimalisaties. Dit schept een heldere verdeling van verantwoordelijkheden: de onderzoeker is de eigenaar van de wetenschappelijke innovatie, terwijl de IT-afdeling de bewaker blijft van de softwarekwaliteit en stabiliteit.
