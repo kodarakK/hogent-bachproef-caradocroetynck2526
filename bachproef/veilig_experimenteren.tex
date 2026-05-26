@@ -7,11 +7,11 @@ Een van de belangrijkste doelstellingen van dit onderzoek is om onderzoekers de 
 Zoals gedetailleerd beschreven in de technische opzet (zie Hoofdstuk \ref{ch:poc}), vormt containerisatie via Docker de infrastructuurele basis voor veiligheid. Elke onderzoeker krijgt bij het opstarten van een sessie een eigen, kortstondige (ephemeral) Jupyter-container.
 
 Dit sandboxing-mechanisme biedt bescherming op meerdere niveaus:
-\begin{itemize}
-    \item \textbf{Bestandssysteem-isolatie:} De container heeft een eigen read-only root-bestandssysteem. Wijzigingen die een onderzoeker aanbrengt aan de systeemconfiguratie van de container gaan verloren na het afsluiten van de sessie, waardoor de omgeving altijd schoon blijft voor de volgende run.
-    \item \textbf{Resource-limieten:} Door gebruik te maken van Docker's resource-quota (CPU en geheugen) kan worden voorkomen dat een experimenteel script de volledige server platlegt. Mocht een onderzoeker per ongeluk een geheugenlek of een oneindige lus introduceren, dan zal enkel zijn individuele container worden gepauzeerd of getermineerd.
-    \item \textbf{Netwerk-isolatie:} De Jupyter-container bevindt zich in een afgeschermd netwerksegment. Hij kan enkel communiceren met de noodzakelijke databronnen en de web-API van EMAV, maar heeft geen ongecontroleerde toegang tot het bredere netwerk van ILVO.
-\end{itemize}
+\begin{description}
+    \item[Bestandssysteem:] De container heeft een eigen read-only root-bestandssysteem. Wijzigingen die een onderzoeker aanbrengt aan de systeemconfiguratie van de container gaan verloren na het afsluiten van de sessie, waardoor de omgeving altijd schoon blijft voor de volgende run.
+    \item[Resource-limieten:] Door gebruik te maken van Docker's resource-quota (CPU en geheugen) kan worden voorkomen dat een experimenteel script de volledige server platlegt. Mocht een onderzoeker per ongeluk een geheugenlek of een oneindige lus introduceren, dan zal enkel zijn individuele container worden gepauzeerd of getermineerd.
+    \item[Netwerk-isolatie:] De Jupyter-container bevindt zich in een afgeschermd netwerksegment. Hij kan enkel communiceren met de noodzakelijke databronnen en de web-API van EMAV, maar heeft geen ongecontroleerde toegang tot het bredere netwerk van ILVO.
+\end{description}
 Deze isolatie verlaagt de psychologische drempel voor onderzoekers om "wat-als"-scenario's te verkennen. De angst om het "echte" systeem te breken wordt technisch weggenomen door de sandbox-architectuur.
 
 \section{Data-integriteit en Lokale Data-clonering}

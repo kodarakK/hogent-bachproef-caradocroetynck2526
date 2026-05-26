@@ -1,0 +1,36 @@
+Using Docker
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  12.15MB
+Step 1/5 : FROM debian:bullseye
+ ---> fc59cd30cd20
+Step 2/5 : RUN apt-get update && apt-get install -y     texlive-latex-base     texlive-latex-extra     texlive-lang-european     texlive-bibtex-extra     biber     git     texlive-xetex     python3     python3-pip     latexmk     && pip install pygments     && rm -rf /var/lib/apt/lists/*
+ ---> Using cache
+ ---> 0916cf08045f
+Step 3/5 : COPY fonts/ /usr/share/fonts/opentype
+ ---> Using cache
+ ---> 24d880e1e5b9
+Step 4/5 : RUN fc-cache -f -v
+ ---> Using cache
+ ---> 081f0f2b9333
+Step 5/5 : RUN ln -s /usr/bin/python3 /usr/bin/python
+ ---> Using cache
+ ---> cd2030b49758
+Successfully built cd2030b49758
+Successfully tagged bpimg:latest
++ cd /bp/bachproef
++ mkdir -p ../output
++ grep --files-with-match \\documentclass ./RoetynckCaradocBP.tex ./appendix-code.tex ./architecture_api.tex ./architecture_database.tex ./architecture_notebooks.tex ./architectuur.tex ./conclusie.tex ./documentatie_vormen.tex ./eerste_plan.tex ./huidige_samenwerking.tex ./huidige_staat_documentatie.tex ./inleiding.tex ./methodologie.tex ./projectcomplexiteit.tex ./proof_of_concept.tex ./samenvatting.tex ./standvanzaken.tex ./tekortschieting_documentatie.tex ./veilig_experimenteren.tex ./verweving_code_docs.tex ./voorwoord.tex
++ source_files=./RoetynckCaradocBP.tex
++ set +x
++ latexmk -file-line-error -interaction=nonstopmode -output-directory=../output -shell-escape -synctex=1 -xelatex ./RoetynckCaradocBP.tex
+========== Compiling ./RoetynckCaradocBP.tex ==========
+Rc files read:
+  /etc/LatexMk
+Latexmk: This is Latexmk, John Collins, 29 September 2020, version: 4.70b.
+Set environment variable BIBINPUTS='../output:'
+Set environment variable TEXINPUTS='../output:'
+Latexmk: All targets (../output/RoetynckCaradocBP.xdv ../output/RoetynckCaradocBP.pdf) are up-to-date
++ set +x
