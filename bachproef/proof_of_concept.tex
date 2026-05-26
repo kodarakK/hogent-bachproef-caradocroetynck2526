@@ -1,0 +1,131 @@
+\chapter{Proof of Concept: Hybride Implementatiestrategie}
+\label{ch:poc}
+
+Om de theoretische concepten rond onderzoeksautonomie en de nauwe verweving van code en documentatie te valideren, is een uitgebreide Proof of Concept (PoC) ontwikkeld. Het hoofddoel van deze PoC is om aan te tonen dat het technisch haalbaar is om binnen een robuuste C\#-omgeving dynamisch te wisselen tussen een gecompileerde C\#-implementatie en een interpretatieve, door onderzoekers aangestuurde Python-implementatie. Dit hoofdstuk biedt een diepgaand overzicht van de infrastructuur, de architecturale keuzes en de uiteindelijke resultaten van deze proefopstelling, waarbij de nadruk ligt op de granulaire switch-strategie voor toekomstige integratie in EMAV-web.
+
+\section{Infrastructuur: Geautomatiseerde Docker-Orchestratie}
+
+De PoC rust op een volledig geautomatiseerde infrastructuur die ervoor zorgt dat elke onderzoeker over een identieke, geïsoleerde en reproduceerbare analyseomgeving beschikt. Het handmatig opzetten van dergelijke omgevingen door onderzoekers zelf zou leiden tot versieconflicten en configuratiefouten. Daarom is gekozen voor orchestratie direct vanuit de C\#-backend van de applicatie.
+
+\subsection{Geautomatiseerde DLL-collectie en Versiebeheer}
+Een fundamentele uitdaging bij het werken met hybride talen is het garanderen dat de Python-scripts opereren op exact dezelfde versie van de domeinlogica als de hoofdapplicatie. Binnen de \texttt{JupyterSetup}-klasse is een robuust mechanisme geïmplementeerd voor DLL-collectie. 
+
+De methode \texttt{SetupDLL} berekent eerst de root van de solution op basis van de locatie van de uitvoerende assembly (\texttt{Assembly.GetExecutingAssembly().Location}). Vervolgens doorzoekt het mechanisme alle \texttt{obj}-directories. De complexiteit hierbij ligt in het filteren van de juiste bestanden: enkel de effectief gecompileerde bibliotheken van de EMAV-kern en data-projecten worden geselecteerd. Referentie-assemblies, debug-symbolen en platformspecifieke runtimes worden expliciet uitgesloten. Door dit proces te automatiseren, is de analyseomgeving altijd gesynchroniseerd met de laatst gebouwde versie van de applicatie, wat de \textquotedbl Single Source of Truth\textquotedbl \@ op binair niveau waarborgt.
+
+\subsection{Programmatisch beheer via Docker.DotNet}
+Voor de eigenlijke orchestratie van de containers wordt gebruikgemaakt van de bibliotheek \texttt{Docker.DotNet}. Deze keuze laat toe om de volledige levenscyclus van een analyseomgeving te beheren zonder dat de gebruiker de command-line interface van Docker hoeft te kennen.
+
+Een cruciaal onderdeel van de implementatie is de platformonafhankelijke communicatielaag. De applicatie detecteert op welk besturingssysteem zij draait en past de verbindingsmethode hierop aan. Op Windows-ontwikkelmachines wordt gebruikgemaakt van named pipes (\texttt{npipe://./pipe/docker\_engine}), terwijl op de Linux-gebaseerde productieservers van ILVO rechtstreeks via Unix-sockets (\texttt{unix:///var/run/docker.sock}) wordt gecommuniceerd. 
+
+\begin{listing}[ht]
+\begin{minted}{csharp}
+docker = new DockerClientConfiguration(
+    new Uri(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+        ? "npipe://./pipe/docker_engine"
+        : "unix:///var/run/docker.sock")
+).CreateClient();
+\end{minted}
+\caption{Initialisatie van de DockerClient voor platformonafhankelijke orchestratie.}
+\label{lst:docker_init_poc}
+\end{listing}
+
+\subsection{Log-parsing en Dynamische Token-extractie}
+Wanneer een Jupyter-container opstart, genereert deze automatisch een unieke beveiligingstoken voor authenticatie. Om de ervaring voor de onderzoeker zo drempelloos mogelijk te maken, wordt deze token automatisch geëxtraheerd. De C\#-backend monitort de log-stream van de container. 
+
+Aangezien de Docker-daemon de logs in een gemultiplexed binair formaat verstuurt, is een gespecialiseerde \texttt{DemultiplexStream}-methode geïmplementeerd om dit te vertalen naar leesbare UTF-8 tekst. Met behulp van de reguliere expressie \texttt{token=([a-f0-9]+)} wordt de token geïsoleerd. Samen met de dynamisch door Docker toegewezen poort vormt dit een unieke URL die direct in de webinterface van EMAV-web aan de onderzoeker wordt gepresenteerd.
+
+\section{Jupyter-container configuratie}
+
+De container fungeert als het \textquotedbl laboratorium\textquotedbl \@ van de onderzoeker. De inrichting ervan is cruciaal om de technische barrière tussen de gecompileerde .NET-wereld en de interactieve Python-wereld weg te nemen.
+
+\subsection{De .NET 10.0 Runtime en Python-omgeving}
+De Docker-image is opgebouwd rond de \texttt{mcr.microsoft.com/dotnet/runtime:10.0} base-image van Microsoft. Door de officiële .NET runtime als basis te nemen, is native ondersteuning voor de C\#-DLL's gegarandeerd. Bovenop deze image worden Python 3 en de noodzakelijke pakketten zoals \texttt{jupyterlab} en \texttt{pythonnet} geïnstalleerd.
+
+\subsection{Automatische Initialisatie via IPython}
+Om te voorkomen dat onderzoekers bij het begin van elke notebook een lijst van complexe import-commando's moeten schrijven, wordt gebruikgemaakt van het IPython-configuratiemechanisme. Dit startup-script (zie Bijlage \ref{ch:codefragmenten}) zorgt ervoor dat bij elke nieuwe sessie automatisch de CLR wordt geladen en alle relevante namespaces worden geïmporteerd. Hierdoor kan een onderzoeker direct in de notebook types zoals \texttt{Rekenfactor} gebruiken, alsof het native Python-klassen zijn.
+
+\section{Strategie voor Granulaire Implementatie-Switches}
+
+Het meest innovatieve aspect van de PoC, en de kern van het plan voor EMAV-web, is de mogelijkheid om op een granulaire manier tussen implementaties te switchen. Dit is niet een keuze voor het hele systeem, maar een keuze die per specifieke berekeningsstap kan worden gemaakt.
+
+\subsection{Het Switcheable-concept per Module}
+In de volledige emissierekenkern van EMAV volgen verschillende wiskundige modules elkaar op. De voorgestelde strategie houdt in dat elke module (bijvoorbeeld \textquotedbl Enterische Emissies\textquotedbl \@ of \textquotedbl Mestopslag\textquotedbl ) wordt behandeld als een uitwisselbaar onderdeel.
+
+Het plan voor de definitieve implementatie in EMAV-web is als volgt:
+\begin{itemize}
+    \item \textbf{Interface-gedreven ontwerp:} Elke rekenmodule implementeert een gestandaardiseerde interface (bijv. \texttt{ICalculator<Tin, Tout>}).
+    \item \textbf{UI-gebaseerde configuratie:} In de webinterface van een project kan de onderzoeker per rekenstap een toggle omzetten.
+    \item \textbf{Dynamische Factory:} De orchestrator roept voor elke stap een factory aan die controleert of voor deze run de officiële code of de experimentele Python-file gebruikt moet worden.
+\end{itemize}
+
+\subsection{Realisatie via het Factory-patroon}
+In de PoC is dit principe gedemonstreerd aan de hand van de \texttt{CustomerListTransformerFactory}. De factory fungeert als de beslissingslaag die de orchestrator ontzorgt.
+
+\begin{listing}[ht]
+\begin{minted}{csharp}
+public class CustomerListTransformerFactory()
+{
+    public static ICustomerListTransformer GetCustomerListTransformer(bool python)
+    {
+        return python ? new PyCustomerListTransformer() : new CsCustomerListTransformer();
+    }
+}
+\end{minted}
+\caption{Factory voor het dynamisch wisselen tussen C\# en Python implementaties.}
+\label{lst:factory_poc}
+\end{listing}
+
+\subsection{De Python-Interop in Actie}
+Indien voor Python wordt gekozen, wordt een \texttt{PyCustomerListTransformer} geïnstantieerd. Deze klasse fungeert als een brug: zij opent de Python-engine binnen de C\#-procescontext, beheert de Global Interpreter Lock (GIL) om concurrency-fouten te voorkomen, en laadt het specifieke scriptbestand in.
+
+\begin{listing}[ht]
+\begin{minted}{csharp}
+public List<Customer> TransformList(List<Customer> lijst)
+{
+    lock (PythonLock)
+    {
+        using (Py.GIL())
+        {
+            dynamic sys = Py.Import("sys");
+            sys.path.append(pythonPath);
+            dynamic module = Py.Import("CustomerListTransformer");
+            var result = module.transform(lijst);
+            return result;
+        }
+    }
+}
+\end{minted}
+\caption{C\#-methode die via Python.NET een extern script aanroept.}
+\label{lst:py_transformer_poc}
+\end{listing}
+
+De onderzoeker kan vervolgens een script aanleveren (bijv. \texttt{correctie\_emissie.py}) dat direct door de professionele C\#-omgeving wordt uitgevoerd:
+
+\begin{listing}[ht]
+\begin{minted}{python}
+def transform(customers):
+    for c in customers:
+        # Onderzoeker kan hier eigen experimentele logica toevoegen
+        c.CustomerName = c.CustomerName.upper() + " (Validated)"
+    return customers
+\end{minted}
+\caption{Voorbeeld van een Python-script voor experimentele modelaanpassingen.}
+\label{lst:py_script_poc}
+\end{listing}
+
+\section{Veiligheid en Validatie}
+
+Het toelaten van externe scripts vereist strikte veiligheidsmaatregelen. In de PoC zijn hiervoor de volgende mechanismen geïmplementeerd:
+\begin{itemize}
+    \item \textbf{Proces-Isolatie:} De containers draaien onder een niet-root gebruiker en hebben strikte CPU- en geheugenlimieten.
+    \item \textbf{Data-Isolatie:} Experimenten werken op tijdelijke SQLite-kopieën, waardoor de centrale database nooit wordt vervuild.
+    \item \textbf{In-Notebook Validatie:} De hybride opzet laat toe om resultaten van de C\#-code en de Python-code direct naast elkaar te vergelijken in grafieken.
+\end{itemize}
+
+\section{Resultaten en Beperkingen}
+
+De PoC bewijst dat de switchable architectuur technisch haalbaar en performant is. De interop via Python.NET is snel genoeg om complexe domeinobjecten heen-en-weer te sturen zonder merkbare vertraging. De belangrijkste beperking is de huidige ontwikkelingsstatus van EMAV-web, waardoor de logica nog niet structureel kon worden ingebed in de echte emissierekenmodules.
+
+\section{Conclusie van de PoC}
+
+De ontwikkelde proefopstelling vormt een geslaagde validatie van de hybride strategie. Het toont aan dat de combinatie van .NET 10.0, Docker en Python.NET de autonomie van de onderzoekers radicaal kan verhogen zonder in te boeten op de softwarekwaliteit van de backend.
