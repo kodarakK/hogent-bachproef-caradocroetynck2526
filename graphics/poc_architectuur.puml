@@ -1,0 +1,60 @@
+@startuml
+skinparam componentStyle uml2
+skinparam backgroundColor white
+skinparam NoteBackgroundColor #FEFFD2
+
+title Architectuur Proof of Concept: Hybride Rekenmodel
+
+package "Host Systeem (C# Backend / EMAV-Web)" {
+    component [JupyterSetup] as Setup
+    component [Docker.DotNet API] as DockerClient
+    component [DLL Collector] as Collector
+    
+    package "Business Logic Layer" {
+        interface ICustomerListTransformer as Interface
+        component [CsCustomerListTransformer] as CsImpl
+        component [PyCustomerListTransformer] as PyBridge
+        component [TransformerFactory] as Factory
+    }
+}
+
+package "Docker Host (Daemon)" {
+    cloud "Container Orchestratie" as Orchestration
+}
+
+package "Isolated Jupyter Container" #F9F9F9 {
+    component [IPython Kernel] as Kernel
+    component [pythonnet Bridge] as PythonNet
+    component [CoreCLR Runtime] as CoreCLR
+    
+    database "Volume Mappings" {
+        folder "/app/dlls" as Binaries
+        folder "/app/notebooks" as Notebooks
+    }
+    
+    note bottom of Kernel
+        **Startup Script:**
+        - Loads CoreCLR
+        - Imports EMAV DLLs
+        - Sets Python path
+    end note
+}
+
+' Relations
+Setup --> Collector : 1. Scans obj/ folders
+Collector ..> Binaries : 2. Copies DLLs
+Setup --> DockerClient : 3. API Calls (Create/Start)
+DockerClient --> Orchestration : unix:// or npipe://
+
+Orchestration ..> Binaries : Mounts
+Orchestration ..> Notebooks : Mounts
+
+Factory --> Interface : Creates
+Factory --> CsImpl : default
+Factory --> PyBridge : if toggled
+
+PyBridge --> PythonNet : Interop Call
+PythonNet --> CoreCLR : Manages GIL
+Kernel --> PythonNet : User Scripting
+
+@enduml

@@ -62,12 +62,20 @@
 %\institution{Internshipcompany BVBA.}
 
 %% Add global exceptions to the hyphenation here
-\hyphenation{back-slash}
+\hyphenation{back-slash com-pu-ta-tio-ne-le on-der-werp-ge-richt pro-gram-meer-ken-nis do-mein-over-schrij-den-de on-der-zoeks-op-zet emis-sie-fac-tor docu-men-ta-tie-plat-for-men im-ple-men-ta-tie-stra-te-gie}
+
+% Voorkom overvolle hboxes door LaTeX iets meer ruimte te geven
+\emergencystretch=3em
 
 %% The bibliography (style and settings are  found in hogentthesis.cls)
 \addbibresource{bachproef.bib}            %% Bibliography file
 \addbibresource{../voorstel/voorstel.bib} %% Bibliography research proposal
 \defbibheading{bibempty}{}
+
+% Zorg dat URL's in de bibliografie beter afgebroken worden
+\setcounter{biburllcpenalty}{7000}
+\setcounter{biburlucpenalty}{8000}
+\setcounter{biburlnumpenalty}{9000}
 
 %% Prevent empty pages for right-handed chapter starts in twoside mode
 \renewcommand{\cleardoublepage}{\clearpage}
@@ -186,6 +194,9 @@ Het onderwerp van deze bachelorproef is gebaseerd op een onderzoeksvoorstel dat 
 \backmatter{}
 
 \setlength\bibitemsep{2pt} %% Add Some space between the bibliograpy entries
+\begingroup
+\emergencystretch=1em
 \printbibliography[heading=bibintoc]
+\endgroup
 
 \end{document}

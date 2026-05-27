@@ -230,6 +230,26 @@ c.InteractiveShellApp.exec_lines = [
 \caption[startup.py bij dockerfile]{startup.py dat wordt geladen tijdens de kernel opstart van de jupyter notebook kernel}
 \end{listing}
 
+\section{Programmatische Orchestratie en Docker SDK's}
+Voor het beheren van containers in een hybride omgeving is er de keuze tussen het aanroepen van de Docker Command-Line Interface (CLI) via shell-scripts of het gebruik van een native Software Development Kit (SDK) zoals \texttt{Docker.DotNet}. 
+
+Hoewel de CLI eenvoudiger is voor ad-hoc taken, biedt een SDK aanzienlijke voordelen op het vlak van robuustheid en beveiliging \autocite{Richardson2018}. Programmatische aansturing via een SDK voorkomt \textquotedbl shell injection\textquotedbl \@ kwetsbaarheden, aangezien parameters als getypeerde objecten worden doorgegeven in plaats van als tekstuele commando's. Bovendien laat een SDK toe om directe feedback van de Docker-daemon te verwerken via rijke exceptie-objecten, wat essentieel is voor foutafhandeling in een multi-user omgeving zoals die van ILVO.
+
+\section{Platform-onafhankelijke IPC: Sockets en Named Pipes}
+De communicatie tussen de orchestrerende applicatie en de Docker-daemon vindt lokaal plaats via Inter-Process Communication (IPC). De gebruikte techniek is afhankelijk van het onderliggende besturingssysteem \autocite{DockerIPC2026}. 
+
+Op Linux-gebaseerde systemen zijn Unix Sockets de standaard. Deze bieden een hoogperformant communicatiekanaal met minimale overhead, omdat zij de volledige netwerkstack omzeilen. Op Windows-omgevingen wordt echter gebruikgemaakt van Named Pipes (\nolinkurl{//./pipe/docker_engine}). Hoewel de technologische implementatie verschilt, abstraheren moderne SDK's deze complexiteit weg, waardoor dezelfde C\#-codebase zowel op een Windows-ontwikkelmachine als op een Linux-productieserver kan opereren.
+
+\section{Design Patterns voor Hybride Systemen}
+De integratie van een scripttaal in een gecompileerde applicatie vereist een doordachte architectuur om te voorkomen dat de codebase rigide of foutgevoelig wordt. \textcite{Ousterhout1998} introduceerde hiervoor het \textquotedbl Two-Level\textquotedbl \@ architectuurmodel, waarbij een krachtige systeemtaal (C\#) de basiscomponenten voorziet en een flexibele scripttaal (Python) fungeert als de \textquotedbl glue code\textquotedbl.
+
+Om deze twee werelden te overbruggen, worden vaak klassieke design patterns toegepast \autocite{Zdun2004}:
+\begin{itemize}
+    \item \textbf{Factory Pattern:} Dit patroon fungeert als een abstractielaag die bepaalt welke implementatie (C\# of Python) moet worden gebruikt. De aanroepende code hoeft de details van de interop niet te kennen.
+    \item \textbf{Proxy Pattern:} De Python-bridge fungeert als een proxy die method-calls van de C\#-wereld vertaalt naar de Python-engine en vice versa, inclusief het beheer van de Global Interpreter Lock (GIL).
+    \item \textbf{Facade Pattern:} Door een vereenvoudigde interface aan de Python-kant aan te bieden, wordt de complexe interne structuur van de .NET-assemblies verborgen voor de onderzoeker.
+\end{itemize}
+
 
 
 

@@ -30,7 +30,7 @@ De container fungeert als het laboratorium van de onderzoeker. De inrichting erv
 De Docker-image is opgebouwd rond de \nolinkurl{mcr.microsoft.com/dotnet/runtime:10.0} base-image van Microsoft. Door de officiële .NET runtime als basis te nemen, is native ondersteuning voor de C\#-DLL's gegarandeerd. Bovenop deze image worden Python 3 en de noodzakelijke pakketten zoals \texttt{jupyterlab} en \texttt{pythonnet} geïnstalleerd.
 
 \subsection{Automatische Initialisatie via IPython}
-Om te voorkomen dat onderzoekers bij het begin van elke notebook een lijst van complexe import-commando's moeten schrijven, wordt gebruikgemaakt van het IPython-configuratiemechanisme. Dit startup-script (zie Bijlage \ref{ch:codefragmenten}) zorgt ervoor dat bij elke nieuwe sessie automatisch de CLR wordt geladen en alle relevante namespaces worden geïmporteerd. Hierdoor kan een onderzoeker direct in de notebook types zoals \texttt{Rekenfactor} gebruiken, alsof het native Python-klassen zijn.
+Om te voorkomen dat onderzoekers bij het begin van elke notebook een lijst van complexe import-commando's moeten schrijven, wordt gebruikgemaakt van het IPython-configuratiemechanisme. Dit startup-script (zie codefragment \ref{lst:startuppy} in Bijlage \ref{ch:codefragmenten}) zorgt ervoor dat bij elke nieuwe sessie automatisch de CLR wordt geladen en alle relevante namespaces worden geïmporteerd. Hierdoor kan een onderzoeker direct in de notebook types zoals \texttt{Rekenfactor} gebruiken, alsof het native Python-klassen zijn.
 
 \section{Strategie voor Granulaire Implementatie-Switches}
 
@@ -109,6 +109,13 @@ Het toelaten van externe scripts vereist strikte veiligheidsmaatregelen. In de P
     \item \textbf{Data-Isolatie:} Experimenten werken op tijdelijke SQLite-kopieën, waardoor de centrale database nooit wordt vervuild.
     \item \textbf{In-Notebook Validatie:} De hybride opzet laat toe om resultaten van de C\#-code en de Python-code direct naast elkaar te vergelijken in grafieken.
 \end{itemize}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{poc_architectuur}
+    \caption{Architecturaal overzicht van de Proof of Concept met C\#-orchestratie en hybride Python-integratie.}
+    \label{fig:poc_architectuur}
+\end{figure}
 
 \section{Resultaten en Beperkingen}
 
