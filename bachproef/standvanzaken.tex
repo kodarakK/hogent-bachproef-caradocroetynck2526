@@ -3,16 +3,22 @@
 
 
 \section{Pythonnet}
-Naast de bedoeling om de code te documenteren, is het ook de bedoeling om de codebase die in \texttt{C\#} is geschreven te laten interageren met python. De onderzoekers kennen geen \texttt{C\#} maar wel python. Omdat zij groten deels beslissen wat de berekeningen zijn kunnen ze dat wel in python zetten.
-Pythonnet zorgt voor een integratie van \textcite{Cpython} engine en de .NET runtime. Het compiled geen python naar IL (Intermediate Language), een assembler achtige taal die wordt gebruikt als een brug tussen high-end \texttt{c\#} code en machine code.
-Het kan dan CLR services aanspreken, bestaande python code gebruiken en C-API extensies gebruiken met de normale uitvoer snelheden van python.
+Naast de bedoeling om de code te documenteren, is het ook de bedoeling om de codebase die in \texttt{C\#} is geschreven te laten interageren met python. 
+De onderzoekers kennen geen \texttt{C\#} maar wel python. Omdat zij groten deels beslissen wat de berekeningen zijn kunnen ze dat wel in python zetten.
+Pythonnet zorgt voor een integratie van \textcite{Cpython} engine en de .NET runtime. 
+Het compiled geen python naar IL (Intermediate Language), een assembler achtige taal die wordt gebruikt als een brug tussen high-end \texttt{c\#} code en low-end machine code.
+Het kan dan CLR (Common Language Runtime) services aanspreken, bestaande python code gebruiken en C-API extensies gebruiken met de normale uitvoer snelheden van python.
 Het zal automatisch op windows het .NET Framework kiezen en op Linux en MacOS zal het \textcite{MonoProject} gebruiken.
 
-De \autocite{clr} is een runtime om .NET code uit te voeren. De talen die op deze runtime kunnen worden uitgevoerd zijn C\#, VB.NET en F\#.
+De CLR \autocite{clr} is een runtime om .NET code uit te voeren. De talen die op deze runtime kunnen worden uitgevoerd zijn C\#, VB.NET en F\#.
 Andere talen kunnen ook worden uitgevoerd via de .NET runtime, maar zijn niet direct ondersteund door \textcite{clr}.
-De compiler vormt de code om naar IL, erachter voert de CLR een JIT-compilatie uit om de code naar machine code te vertalen.
+De compiler vormt de code om naar IL, erachter voert de CLR een JIT-compilatie (Just In Time compilatie) uit om de code naar machine code te vertalen.
 
-Via \textcite{pythonnet} kan python dll's lezen, importeren en gebruiken:
+Een runtime is de softwarelaag die een programma uitvoert en tijdens die uitvoering diensten aanbiedt zoals geheugenbeheer, typecontrole, exception handling en het laden van code. 
+In het geval van Microsoft .NET is de Common Language Runtime (CLR) de runtime die beheerde code omzet naar machinecode en die uitvoering coördineert.
+\autocite{clr}
+
+Via pythonnet \autocite{pythonnet} kan python dll's lezen, importeren en gebruiken:
 
 \begin{listing}
 	\begin{minted}{python}
@@ -83,25 +89,26 @@ Het toffe van pythonnet is dat men naast \texttt{c\#} python kan aanroepen, het 
 
 \section{IronPython}
 
-\textcite{IronPython} is een open source implementatie van de Python programmeer taal dat is geintegreerd met .NET.
-IronPython kan zoals pythonnet .NET dll's aanspreken via `clr` en kan andere python code ook gebruiken.
+IronPython \autocite{IronPython} is een open source implementatie van de Python programmeer taal dat is geintegreerd met .NET.
+IronPython kan zoals pythonnet .NET dll's aanspreken via de CLR en kan andere python code ook gebruiken.
 In tegenstelling tot pythonnet kan IronPython niet aangeroepen worden vanuit .NET gebaseerde talen.
 
 Een groot nadeel van IronPython is dat het niet de nieuwste versie van python gebruikt, waarin dat pythonnet werkt tot en met versie 3.13,
-heeft IronPython support voor versie 2.7 en 3.4.
+heeft IronPython support voor versie 2.7 en 3.4. \autocite{IronPython}
 
 \section{Literate programming}
-Literate programming \autocite{LiterateProgramming} werd geïntroduceerd door \textcite{Knuth1984} als een methode waarbij code en documentatie 1 geïntegreerd geheel vormen, eerder dan gescheiden artefacten. De bedoeling is dat er 1 bestand is met de code en de documentatie errond. De tools halen de code eruit en creeeren een uitvoerbaar bestand en een ander bestand met de documentatie, dat kan een html web pagina zijn, of een \LaTeX \@ bestand / pdf. Het kan ook een Markdown bestand zijn.
+Literate programming \autocite{LiterateProgramming} werd geïntroduceerd door \textcite{Knuth1984} als een methode waarbij code en documentatie 1 geïntegreerd geheel vormen, eerder dan gescheiden artefacten. De bedoeling is dat er 1 bestand is met de code en de documentatie errond. De tools halen de code eruit en creëren een uitvoerbaar bestand en een ander bestand met de documentatie, dat kan een html web pagina zijn, of een \LaTeX \@ bestand / pdf. Het kan ook een Markdown bestand zijn.
 
-In plaats van `code with comments' vertrekt literate programming vanuit het idee dat een programma in de eerste plaats een verhaal is dat aan een menselijke lezer moet worden uitgelegd, waarbij uitvoerbare code een secundaire afgeleide vorm is \autocite{Knuth1984}.
+In plaats van `code with comments' vertrekt literate programming vanuit het idee dat een programma in de eerste plaats een verhaal is dat aan een menselijke lezer moet worden uitgelegd, waarbij uitvoerbare code een secundaire afgeleide vorm is. \autocite{Knuth1984}
 Sindsdien zijn er talrijke systemen ontstaan die Knuths principes toepassen in een moderne ontwikkelingsomgeving.
 
 Hoewel Knuths oorspronkelijke WEB en CWEB nog weinig gebruikt worden in de hedendaagse softwarepraktijk, leven zijn ideeen voort in computationele notebooks, literate programminglibraries en research pipelines. Tools zoals Jupyter Notebooks, Org-mode Babel en Quarto implementeren een moderne interpretatie van Knuths `weave' en `tangle'-proces, waarin broncode zowel als uitvoerbaar script en als leesbare documentatie dient.
 
-De execution haalt de source code eruit en zorgt voor een uitvoerbaar bestand. De Weave operatie zorgt er voor dat de documentatie uit het source bestand wordt gehaald en die in het gewenste formaat zet. De Tangle operatie verspreidt de source code in de respectievelijke bestanden zelf, niet direct uitvoerbaar.
+De execution haalt de source code eruit en zorgt voor een uitvoerbaar bestand. De Weave operatie zorgt er voor dat de documentatie uit het source bestand wordt gehaald en die in het gewenste formaat zet. De Tangle operatie verspreidt de source code in de respectievelijke bestanden zelf, niet direct uitvoerbaar. \autocite{Knuth1984}
 
 \section{Org-mode Babel}
-Org mode is een `major mode' voor GNU Emacs. Org mode kan voor heel veel gebruikt worden: van notities nemen tot todo-lists, computational notebooks en literate programming \autocite{orgmode2025}.
+Org mode is een `major mode' voor GNU Emacs. 
+Org mode kan voor heel veel gebruikt worden: van notities nemen tot todo-lists, computational notebooks en literate programming. \autocite{orgmode2025}
 
 In Org Mode met Babel zijn er `src-blocks`:
 
@@ -143,7 +150,7 @@ Maar jupyter notebooks hebben zeker hun minpunten.
 Ook omdat de cellen in een willekeurige volgorde kunnen worden uitgevoerd, moet er opgelet worden met de run volgorde.
 De notebooks hebben ook een onzichtbare global state.
 Het zijn json bestanden, dus versie controle beheer kan hier ook moeilijk mee doen.
-Aangezien dat alles ook in 1 bestand zit, kan het snel `bloated' zijn.
+Aangezien dat alles ook in 1 bestand zit, kan het snel het groot bestand zijn.
 
 \section{RMarkdown}
 \texttt{RMarkdown} \autocite{RStudio2020} is ook een computational notebook zoals Jupyter Notebooks,
@@ -181,8 +188,7 @@ Een jupyter notebook is een RCE (Remote Code Execution), dit is perfect voor een
 Als dit in een bedrijf gebruikt wordt op een server moet er dus een zware beveiliging op zitten.
 Een goede start is isolatie.
 
-Aangezien dat we dll's nodig gaan hebben en mogelijks c\# code gaan hebben, starten we in de Dockerfile vanuit een Microsoft runtime docker image.
-
+Aangezien dat er dll's nodig gaan zijn en mogelijks C\# code gaat moeten uitvoeren, wordt er gestart in de DockerFile vanuit een Microsoft runtime image.
 
 \begin{listing}[H]
 	\begin{minted}{dockerfile}
@@ -203,9 +209,10 @@ CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", "--notebo
 \end{listing}
 
 
-Deze dockerfile downloads de nodige packages, kopieert de dlls in de dlls folder en de notebooks uit de notebook folder en start de jupyter notebook server.
+Deze dockerfile downloadt de nodige packages, kopieert de dlls in de dlls folder en de notebooks uit de notebook folder en start de jupyter notebook server.
 
-De startup.py is een python bestand dat bij het maken van de docker image code uitvoert tijdens dat de kernel start. Hierdoor kunnen er dll's geladen worden voordat de gebruiker toegang heeft en veel boilerplate mag weglaten.
+De startup.py is een python bestand dat bij het maken van de docker image code uitvoert tijdens dat de kernel start. \autocite{ipython_startup_files}
+Hierdoor kunnen er dll's geladen worden voordat de gebruiker toegang heeft en veel boilerplate mag weglaten.
 
 \begin{listing}
 	\begin{minted}{python}
