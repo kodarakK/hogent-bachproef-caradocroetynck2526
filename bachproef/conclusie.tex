@@ -2,16 +2,15 @@
 %% Conclusie
 %%=============================================================================
 
-\chapter{Conclusie}%
+\chapter{Conclusie}
 \label{ch:conclusie}
 
-% TODO: Trek een duidelijke conclusie, in de vorm van een antwoord op de
-% onderzoeksvra(a)g(en). Wat was jouw bijdrage aan het onderzoeksdomein en
-% hoe biedt dit meerwaarde aan het vakgebied/doelgroep?
-% Reflecteer kritisch over het resultaat. In Engelse teksten wordt deze sectie
-% ``Discussion'' genoemd. Had je deze uitkomst verwacht? Zijn er zaken die nog
-% niet duidelijk zijn?
-% Heeft het onderzoek geleid tot nieuwe vragen die uitnodigen tot verder
-%onderzoek?
+Dit onderzoek richtte zich op het verkleinen van de kloof tussen complexe software-implementaties en wetenschappelijke analyse binnen de context van ILVO. Door de huidige werkwijze te analyseren en een technisch alternatief te valideren, kunnen de volgende conclusies worden getrokken.
 
-\lipsum[76-80]
+De initiële probleemanalyse bevestigde dat de traditionele scheiding tussen documentatie en broncode leidt tot \textit{documentation drift} en een gebrek aan transparantie. Statische documentatievormen, zoals Word-bestanden of technische README's, blijken onvoldoende om de complexe wiskundige onderbouwing van emissiemodellen inzichtelijk te maken voor onderzoekers. Dit creëert een "black-box" effect waarbij onderzoekers volledig afhankelijk zijn van IT voor elke modelwijziging.
+
+De voorgestelde oplossing combineert geavanceerde software-architectuur met interactieve documentatie. De implementatie van \textit{Clean Architecture} binnen het EMAV-project zorgt voor een strikte isolatie van businesslogica, wat de weg vrijmaakt voor een hybride integratie. Door computationele notebooks (Jupyter) te introduceren als interface, transformeert de documentatie van een passief naslagwerk naar een executabel platform. Dit stelt onderzoekers in staat om direct interactie te hebben met de gecompileerde .NET-rekenmodules zonder de onderliggende softwarestructuur te compromitteren.
+
+Daarnaast toont het onderzoek aan dat veilig experimenteren mogelijk is via container-isolatie en \textit{local data-cloning}. Door onderzoekers een sandbox-omgeving te bieden, kunnen zij autonoom hypothesen testen en parameters valideren. Dit verschuift de rol van de IT-afdeling van een louter uitvoerende partij naar een \textit{platform-enabler}, die de robuuste infrastructuur faciliteert waarbinnen wetenschappelijke innovatie kan plaatsvinden.
+
+De Proof-of-Concept heeft de technische haalbaarheid van deze strategie aangetoond. De nauwe verweving van code en narratieve tekst zorgt ervoor dat de wetenschappelijke verantwoording en de eigenlijke implementatie samenkomen in één traceerbare bron. Hiermee wordt de beoogde \textit{Single Source of Truth} gerealiseerd, wat niet alleen de reproduceerbaarheid van het onderzoek verhoogt, maar ook de wendbaarheid en autonomie van de wetenschappers binnen ILVO structureel verbetert.

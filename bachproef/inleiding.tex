@@ -5,57 +5,50 @@
 \chapter{\IfLanguageName{dutch}{Inleiding}{Introduction}}%
 \label{ch:inleiding}
 
-% De inleiding moet de lezer net genoeg informatie verschaffen om het onderwerp te begrijpen en in te zien waarom de onderzoeksvraag de moeite waard is om te onderzoeken. In de inleiding ga je literatuurverwijzingen beperken, zodat de tekst vlot leesbaar blijft. Je kan de inleiding verder onderverdelen in secties als dit de tekst verduidelijkt. Zaken die aan bod kunnen komen in de inleiding~\autocite{Pollefliet2011}:
+In onderzoeksprojecten worden berekeningen vaak eerst uitgewerkt door onderzoekers en pas daarna omgezet naar software. Dat is logisch: onderzoekers kennen het domein en de formules, terwijl ontwikkelaars instaan voor de technische uitwerking. Toch kan die verdeling ook voor problemen zorgen. Deze bachelorproef onderzoekt dat probleem binnen de context van ILVO en het EMAV-project.
 
-% \begin{itemize}
-%   \item context, achtergrond
-%   \item afbakenen van het onderwerp
-%   \item verantwoording van het onderwerp, methodologie
-%   \item probleemstelling
-%   \item onderzoeksdoelstelling
-%   \item onderzoeksvraag
-%   \item \ldots
-% \end{itemize}
+Bij ILVO (Instituut voor Landbouw-, Visserij- en Voedingsonderzoek) worden rekenmodellen gebruikt om onder andere milieu-impact en emissies binnen de landbouwsector te berekenen. Zulke modellen vertrekken vanuit wetenschappelijke kennis, formules en aannames die door onderzoekers worden opgesteld. Wanneer een model in een toepassing gebruikt moet worden, volstaat een Excel-bestand of los document meestal niet meer.
 
-\section{\IfLanguageName{dutch}{Probleemstelling}{Problem Statement}}%
-\label{sec:probleemstelling}
+De berekeningen moeten dan worden omgezet naar software die betrouwbaar, onderhoudbaar en bruikbaar is voor eindgebruikers. In de onderzochte context gebeurt dat binnen een .NET-omgeving, met C\# als belangrijkste programmeertaal.
 
-Wetenschappelijke instituten zoals ILVO (Instituut voor Landbouw-, Visserij- en Voedingsonderzoek) maken intensief gebruik van complexe rekenmodellen om emissies, productie-impact en andere landbouwparameters te analyseren. Deze modellen bestaan uit clusters van formules die door onderzoekers worden ontwikkeld en vervolgens door de IT-afdeling worden geïmplementeerd in softwaretoepassingen. Aangezien onderzoekers deze toepassingen gebruiken om hypothesen te testen en scenario's te simuleren, is de kwaliteit, transparantie en aanpasbaarheid van deze implementaties van groot belang. In de praktijk blijken dergelijke modellen echter moeilijk wijzigbaar en weinig inzichtelijk zodra ze in code zijn gegoten.
+De onderzoekers die met de modellen werken, zijn niet noodzakelijk vertrouwd met C\#. Ze zijn vaak wel vertrouwd met de achterliggende formules, de parameters en de betekenis van de resultaten. Daardoor ontstaat een praktische vraag: hoe kan de software zo worden ingericht dat onderzoekers de berekeningen beter kunnen volgen en eventueel zelf kleine experimenten kunnen uitvoeren?
 
-Binnen ILVO wordt dit probleem concreet zichtbaar in .NET-gebaseerde applicaties waarin emissieformules en bedrijfsparameters zijn verwerkt in C\#-logica. Onderzoekers beschikken over diepgaande inhoudelijke expertise om hun modellen en aannames te verfijnen, maar hebben niet altijd voldoende programmeerkennis om deze wijzigingen zelfstandig in de software door te voeren. Voor elke aanpassing zijn zij afhankelijk van de IT-afdeling, waardoor zelfs beperkte experimenten of kleine parameterwijzigingen vertraging oplopen. Bovendien is de bestaande documentatie niet altijd nauw verweven met de code, wat het moeilijk maakt om te achterhalen waar specifieke berekeningen plaatsvinden en welke aannames eraan ten grondslag liggen.
+In de praktijk ontstaat er een afstand tussen de wetenschappelijke versie van het model en de technische implementatie ervan. Onderzoekers leveren formules, parameters of voorbeeldberekeningen aan. Ontwikkelaars vertalen die vervolgens naar C\#-code, koppelen ze aan databanken en verwerken ze in de rest van de applicatie.
 
-De doelgroep van dit onderzoek bestaat uit twee nauw samenwerkende groepen binnen ILVO: enerzijds de onderzoekers die de wetenschappelijke modellen ontwikkelen, en anderzijds de IT-professionals die deze modellen implementeren, onderhouden en documenteren. Beide groepen ondervinden hinder van de huidige werkwijze: onderzoekers ervaren een gebrek aan autonomie en inzicht, terwijl IT-professionals disproportioneel veel tijd besteden aan kleine aanpassingen, ondersteuning en foutopsporing.
+Dat werkt zolang het model stabiel blijft. Zodra een onderzoeker een formule wil aanpassen, een parameter wil testen of een alternatief scenario wil vergelijken, is er opnieuw technische hulp nodig. De onderzoeker kan de berekening meestal niet rechtstreeks uitvoeren in de softwarecontext waarin het model echt gebruikt wordt. Omgekeerd is het voor ontwikkelaars niet altijd eenvoudig om de wetenschappelijke bedoeling achter elke berekeningsstap te blijven volgen.
 
-\section{\IfLanguageName{dutch}{Onderzoeksvraag}{Research question}}%
-\label{sec:onderzoeksvraag}
+De kern van het probleem is dat de berekeningslogica na verloop van tijd moeilijk zichtbaar wordt voor de onderzoeker. De code voert het model wel uit, maar de wetenschappelijke redenering zit verspreid over documentatie, broncode, overleg en voorbeeldbestanden. Daardoor kan de toepassing voor onderzoekers aanvoelen als een black box.
 
-Vanuit deze concrete probleemsituatie wordt in deze bachelorproef de volgende centrale onderzoeksvraag geformuleerd:
+Een bijkomend probleem is dat documentatie snel achterloopt op de implementatie. Wanneer code wijzigt maar de uitleg niet mee aangepast wordt, ontstaat documentation drift. Dat maakt het moeilijker om na te gaan of de software nog overeenkomt met het model zoals onderzoekers het bedoelen. Deze bachelorproef onderzoekt daarom hoe code, documentatie en experimenteerruimte dichter bij elkaar gebracht kunnen worden.
+
+Deze bachelorproef probeert niet het volledige EMAV-project te herwerken. Ook het volledige emissiemodel zelf wordt niet opnieuw ontworpen. De scope ligt bij een proof-of-concept waarin wordt nagegaan hoe C\#-logica beschikbaar gemaakt kan worden in een Python-omgeving en hoe een alternatieve implementatie getest kan worden zonder de hoofdapplicatie rechtstreeks aan te passen.
+
+De nadruk ligt dus op de technische haalbaarheid en op de bruikbaarheid van de werkwijze voor onderzoekers. Beveiliging, performantie en integratie in een productieomgeving worden besproken waar ze nodig zijn om de PoC te beoordelen, maar ze worden niet volledig uitgewerkt.
+
+Vanuit deze problematiek is de volgende centrale onderzoeksvraag geformuleerd:
 Hoe kunnen we de kloof tussen IT-logica en wetenschappelijke analyse verkleinen, zodat onderzoekers zonder diepgaande programmeerkennis inzicht krijgen in hun modellen en er zelf mee kunnen experimenteren?
 
-Om deze onderzoeksvraag te kunnen beantwoorden, wordt het onderzoek opgesplitst in een aantal samenhangende deelvragen die zowel het probleemdomein als het oplossingsdomein bestrijken. Eerst wordt onderzocht \hl{hoe de huidige samenwerking en workflow tussen onderzoekers en IT-professionals verloopt en waar deze in de praktijk vastloopt}. Daarnaast wordt nagegaan \hl{welke onderdelen van het bestaande .NET-model en de bijhorende code moeilijk te begrijpen of aan te passen zijn voor onderzoekers}. Ook wordt onderzocht \hl{in welke mate de huidige documentatie tekortschiet in het zichtbaar maken van berekeningen, aannames en afhankelijkheden binnen het model}.
+Om deze hoofdvraag te beantwoorden, worden de volgende deelvragen onderzocht:
 
-Op basis van deze probleemanalyse richt het onderzoek zich vervolgens op mogelijke oplossingsrichtingen. Daarbij wordt onderzocht \hl{welke documentatie- en interactievormen onderzoekers ondersteunen bij het begrijpen van wetenschappelijke modellen}, zoals inline annotaties, interactieve documentatie of computationele notebooks. Verder wordt nagegaan \hl{hoe onderzoekers veilig kunnen experimenteren met modelparameters en formules, bijvoorbeeld via simulaties of gevoeligheidsanalyses, zonder de onderliggende softwarestructuur te doorbreken}. Tot slot wordt onderzocht \hl{hoe documentatie en code nauwer met elkaar verweven kunnen worden zodat wijzigingen aan het model automatisch transparant blijven voor alle betrokkenen}.
+\begin{enumerate}
+    \item Welke onderdelen van de bestaande code en architectuur maken het moeilijk voor onderzoekers om de berekeningen te volgen?
+    \item Waarom volstaat de huidige documentatie niet om het model en de implementatie samen duidelijk te maken?
+    \item Welke vormen van interactieve documentatie of notebooks zijn geschikt om berekeningen begrijpelijker te maken?
+    \item Hoe kan een onderzoeker veilig experimenteren met een alternatieve implementatie zonder de stabiliteit van de applicatie te schaden?
+    \item Hoe kan een proof-of-concept aantonen dat C\#-logica en Python-code samen gebruikt kunnen worden binnen deze context?
+\end{enumerate}
 
-\section{\IfLanguageName{dutch}{Onderzoeksdoelstelling}{Research objective}}%
-\label{sec:onderzoeksdoelstelling}
+Het doel van dit onderzoek is om een haalbare werkwijze te verkennen waarmee onderzoekers meer inzicht krijgen in de berekeningen, zonder dat de bestaande software volledig herbouwd moet worden. Daarvoor wordt een proof-of-concept uitgewerkt. De focus ligt niet alleen op documentatie, maar ook op de vraag hoe onderzoekers op een gecontroleerde manier met de berekeningen kunnen experimenteren.
 
-Het doel van dit onderzoek is het ontwikkelen van een proof-of-concept waarin documentatie, modelberekeningen en experimenteerruimte voor onderzoekers dichter bij elkaar worden gebracht. Dit proof-of-concept moet aantonen hoe onderzoekers op een gecontroleerde en begrijpelijke manier met hun modellen kunnen werken, terwijl de onderhoudbaarheid en technische kwaliteit van de software behouden blijft. Het uiteindelijke resultaat bestaat uit een concreet voorstel en prototype dat ILVO kan ondersteunen bij het toegankelijker, transparanter en duurzamer maken van hun onderzoeksmodellen.
+De belangrijkste doelstellingen zijn:
 
-Dit onderzoek wordt bewust afgebakend: het richt zich niet op het herontwerpen van het volledige ILVO-model of het bouwen van een productieklare applicatie, maar op het ontwikkelen en evalueren van technieken, workflows en tooling die de interactie tussen code en onderzoek verbeteren. Het theoretisch kader wordt gezocht binnen software engineering, documentatieonderzoek, literate programming, domain-driven design en transparantie van wetenschappelijke modellen.
+\begin{itemize}
+    \item Architecturale scheiding: nagaan hoe domeinlogica binnen een .NET-project duidelijker gescheiden kan worden van infrastructuur zoals databanken en API's.
+    \item Hybride integratie: onderzoeken hoe C\#-modules via pythonnet beschikbaar gemaakt kunnen worden in een Python-omgeving.
+    \item Experimenteerruimte: bekijken hoe een onderzoeker een alternatieve implementatie kan testen zonder de officiële toepassing aan te passen.
+    \item Evaluatie: beoordelen in welke mate de PoC helpt om berekeningen begrijpelijker en beter testbaar te maken.
+\end{itemize}
 
-% \section{\IfLanguageName{dutch}{Opzet van deze bachelorproef}{Structure of this bachelor thesis}}%
-% \label{sec:opzet-bachelorproef}
+De rest van deze bachelorproef volgt de deelvragen. Eerst wordt in de stand van zaken bekeken welke bestaande technieken en werkwijzen relevant zijn, zoals Python.NET, computationele notebooks, literate programming en containerisatie. Daarna licht de methodologie toe hoe het probleem en de mogelijke oplossing onderzocht werden.
 
-% Het is gebruikelijk aan het einde van de inleiding een overzicht te
-% geven van de opbouw van de rest van de tekst. Deze sectie bevat al een aanzet
-% die je kan aanvullen/aanpassen in functie van je eigen tekst.
-
-% De rest van deze bachelorproef is als volgt opgebouwd:
-
-% In Hoofdstuk~\ref{ch:stand-van-zaken} wordt een overzicht gegeven van de stand van zaken binnen het onderzoeksdomein, op basis van een literatuurstudie.
-
-% In Hoofdstuk~\ref{ch:methodologie} wordt de methodologie toegelicht en worden de gebruikte onderzoekstechnieken besproken om een antwoord te kunnen formuleren op de onderzoeksvragen.
-
-% TODO: Vul hier aan voor je eigen hoofdstukken, één of twee zinnen per hoofdstuk
-
-% In Hoofdstuk~\ref{ch:conclusie}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de onderzoeksvragen. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek binnen dit domein.
+Vervolgens wordt de bestaande architectuur van het project besproken, met aandacht voor de databank, API en notebooks. Daarna volgen hoofdstukken over de huidige documentatie, de complexiteit van het project, veilig experimenteren en de verweving tussen code en documentatie. Ten slotte wordt de proof-of-concept besproken en wordt in de conclusie teruggekoppeld naar de onderzoeksvraag en deelvragen.
