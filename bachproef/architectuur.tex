@@ -1,2 +1,8 @@
 \chapter{\IfLanguageName{dutch}{Architectuur}{Architecture}}%
 \label{ch:architectuur}
+
+Om de voorgestelde oplossing voor de kloof tussen IT en onderzoek te valideren, is een specifieke architectuur ontworpen voor de Proof-of-Concept (PoC). In dit hoofdstuk wordt de technische opbouw van dit ecosysteem toegelicht, waarbij de focus ligt op het creëren van een veilige en flexibele omgeving waarin \text{.NET}-logica ontsloten wordt voor wetenschappelijke analyse. Deze PoC-architectuur dient als blauwdruk voor een werkwijze waarbij robuuste software-engineering hand in hand gaat met interactieve experimenteerruimte.
+
+De architectuur is opgedeeld in drie complementaire lagen die elk een specifieke rol spelen in het ondersteunen van de onderzoeker. Ten eerste is er de database-laag, die via gescheiden databronnen een veilige experimenteerruimte biedt zonder de operationele systemen te belasten. Ten tweede fungeert de API-laag als de centrale gateway voor businesslogica en data-uitwisseling. Ten slotte vormt de Jupyter-laag het hart van de interactieve documentatie, waar onderzoekers via Python rechtstreeks kunnen interageren met de onderliggende \text{.NET}-modules.
+
+In de volgende secties worden deze lagen technisch uitgediept, waarbij de nadruk ligt op de wijze waarop isolatie, veiligheid en interoperabiliteit binnen de PoC zijn gerealiseerd.

@@ -19,21 +19,21 @@ Dat werkt zolang het model stabiel blijft. Zodra een onderzoeker een formule wil
 
 De kern van het probleem is dat de berekeningslogica na verloop van tijd moeilijk zichtbaar wordt voor de onderzoeker. De code voert het model wel uit, maar de wetenschappelijke redenering zit verspreid over documentatie, broncode, overleg en voorbeeldbestanden. Daardoor kan de toepassing voor onderzoekers aanvoelen als een black box.
 
-Een bijkomend probleem is dat documentatie snel achterloopt op de implementatie. Wanneer code wijzigt maar de uitleg niet mee aangepast wordt, ontstaat documentation drift. Dat maakt het moeilijker om na te gaan of de software nog overeenkomt met het model zoals onderzoekers het bedoelen. Deze bachelorproef onderzoekt daarom hoe code, documentatie en experimenteerruimte dichter bij elkaar gebracht kunnen worden.
+Een bijkomend probleem is dat documentatie snel achterloopt op de implementatie. Wanneer code wijzigt maar de uitleg niet mee aangepast wordt, ontstaat "documentation drift". Dat maakt het moeilijker om na te gaan of de software nog overeenkomt met het model zoals onderzoekers het bedoelen. Deze bachelorproef onderzoekt daarom hoe code, documentatie en experimenteerruimte dichter bij elkaar gebracht kunnen worden.
 
 Deze bachelorproef probeert niet het volledige EMAV-project te herwerken. Ook het volledige emissiemodel zelf wordt niet opnieuw ontworpen. De scope ligt bij een proof-of-concept waarin wordt nagegaan hoe C\#-logica beschikbaar gemaakt kan worden in een Python-omgeving en hoe een alternatieve implementatie getest kan worden zonder de hoofdapplicatie rechtstreeks aan te passen.
 
-De nadruk ligt dus op de technische haalbaarheid en op de bruikbaarheid van de werkwijze voor onderzoekers. Beveiliging, performantie en integratie in een productieomgeving worden besproken waar ze nodig zijn om de PoC te beoordelen, maar ze worden niet volledig uitgewerkt.
+De nadruk ligt dus op de technische haalbaarheid en op de bruikbaarheid van de werkwijze voor onderzoekers. Beveiliging, performantie en integratie in een productieomgeving worden besproken waar ze nodig zijn om de PoC (proof-of-concept) te beoordelen, maar ze worden niet volledig uitgewerkt.
 
 Vanuit deze problematiek is de volgende centrale onderzoeksvraag geformuleerd:
-Hoe kunnen we de kloof tussen IT-logica en wetenschappelijke analyse verkleinen, zodat onderzoekers zonder diepgaande programmeerkennis inzicht krijgen in hun modellen en er zelf mee kunnen experimenteren?
+\textit{Hoe kunnen we de kloof tussen IT-logica en wetenschappelijke analyse verkleinen, zodat onderzoekers zonder diepgaande programmeerkennis inzicht krijgen in hun modellen en er zelf mee kunnen experimenteren?}
 
 Om deze hoofdvraag te beantwoorden, worden de volgende deelvragen onderzocht:
 
 \begin{enumerate}
     \item Welke onderdelen van de bestaande code en architectuur maken het moeilijk voor onderzoekers om de berekeningen te volgen?
     \item Waarom volstaat de huidige documentatie niet om het model en de implementatie samen duidelijk te maken?
-    \item Welke vormen van interactieve documentatie of notebooks zijn geschikt om berekeningen begrijpelijker te maken?
+    \item Welke vormen van interactieve documentatie of Jupyter-notebooks zijn geschikt om berekeningen begrijpelijker te maken?
     \item Hoe kan een onderzoeker veilig experimenteren met een alternatieve implementatie zonder de stabiliteit van de applicatie te schaden?
     \item Hoe kan een proof-of-concept aantonen dat C\#-logica en Python-code samen gebruikt kunnen worden binnen deze context?
 \end{enumerate}
@@ -51,4 +51,4 @@ De belangrijkste doelstellingen zijn:
 
 De rest van deze bachelorproef volgt de deelvragen. Eerst wordt in de stand van zaken bekeken welke bestaande technieken en werkwijzen relevant zijn, zoals Python.NET, computationele notebooks, literate programming en containerisatie. Daarna licht de methodologie toe hoe het probleem en de mogelijke oplossing onderzocht werden.
 
-Vervolgens wordt de bestaande architectuur van het project besproken, met aandacht voor de databank, API en notebooks. Daarna volgen hoofdstukken over de huidige documentatie, de complexiteit van het project, veilig experimenteren en de verweving tussen code en documentatie. Ten slotte wordt de proof-of-concept besproken en wordt in de conclusie teruggekoppeld naar de onderzoeksvraag en deelvragen.
+Vervolgens wordt de architectuur van het proof-of-concept besproken, met aandacht voor de databank, API en notebooks. Daarna volgen hoofdstukken over de huidige documentatie, de complexiteit van het project, veilig experimenteren en de verweving tussen code en documentatie. Ten slotte wordt de proof-of-concept besproken en wordt in de conclusie teruggekoppeld naar de onderzoeksvraag en deelvragen.

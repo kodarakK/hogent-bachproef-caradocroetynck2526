@@ -1,7 +1,7 @@
 \section{\IfLanguageName{dutch}{Jupyter laag}{Jupyter layer}}
 \label{ch:architecture-jupyter}
 
-Voor data-analyse en berekeningen wordt gebruikgemaakt van Jupyter Notebook-omgevingen die draaien binnen Docker-containers. Deze containers worden opgebouwd via een custom Docker image waarin zowel jupyterlab als pythonnet geïnstalleerd zijn.
+Voor data-analyse en berekeningen wordt gebruikgemaakt van Jupyter Notebook-omgevingen die draaien binnen Docker-containers. Deze containers worden opgebouwd via een custom Docker image waarin zowel Jupyterlab als pythonnet geïnstalleerd zijn.
 
 Binnen deze omgeving worden vooraf gecompileerde .NET DLL’s toegevoegd, die gebruikt kunnen worden om complexe berekeningen of domeinspecifieke logica uit te voeren. Via configuratie in sitecustomize.py worden deze DLL’s automatisch geladen bij het opstarten van de Python runtime, zodat ze onmiddellijk beschikbaar zijn binnen notebooks.
 
@@ -11,7 +11,12 @@ Om misbruik en overbelasting te voorkomen, worden resourcebeperkingen ingesteld 
 
 Ook op netwerkniveau worden restricties toegepast: de Jupyter containers kunnen enkel communiceren met de API-laag (de Razor server) binnen het Docker-netwerk. Toegang tot het internet of andere containers wordt geblokkeerd, zodat de omgeving strikt gecontroleerd blijft.
 
-Door gebruik te maken van .NET DLL’s binnen Python notebooks wordt hergebruik van bestaande businesslogica mogelijk, terwijl onderzoekers toch flexibel kunnen werken in een Python-gebaseerde analyseomgeving.
+Door gebruik te maken van .NET DLL’s binnen Python-notebooks wordt hergebruik van bestaande businesslogica mogelijk, terwijl onderzoekers toch flexibel kunnen werken in een Python-gebaseerde analyseomgeving.
 
 Ten slotte wordt de volledige setup lokaal getest om te verifiëren dat notebooks correct de DLL’s kunnen laden via pythonnet, en dat API-requests (GET) succesvol uitgevoerd kunnen worden.
+
+\section{Besluit}
+De gelaagde architectuur van de Proof-of-Concept biedt een gestructureerd antwoord op de uitdaging om complexe \text{.NET}-software toegankelijk te maken voor wetenschappelijk onderzoek. Door een strikte scheiding aan te brengen tussen de data-opslag, de logica-ontsluiting via de API en de interactieve analyse-omgeving in de Jupyter-laag, wordt een ecosysteem gecreëerd dat zowel veilig als functioneel is.
+
+Deze opzet garandeert dat de integriteit van de centrale EMAV-applicatie gewaarborgd blijft, terwijl onderzoekers de nodige autonomie krijgen om hypothesen te toetsen en modellen te valideren. De inzet van containerisatie en gecontroleerde data-cloning vormt hierbij de noodzakelijke beveiligingsschil. Hiermee is het architecturale fundament gelegd voor de feitelijke realisatie van de Proof-of-Concept, die in het volgende hoofdstuk in detail wordt beschreven.
 

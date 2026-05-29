@@ -7,6 +7,6 @@ De database-instanties zijn uitsluitend bedoeld voor het uitlezen van data; wijz
 
 Voor toegang tot de data wordt gebruikgemaakt van een gebruiker met uitsluitend read-only rechten. Deze gebruiker heeft enkel SELECT-permissies op vooraf gedefinieerde views of schema’s en beschikt niet over write- of DDL-rechten. Daarnaast worden extra restricties toegepast, zoals statement timeouts en limieten op het aantal rijen per query, om misbruik en overbelasting te voorkomen.
 
-Indien de belasting van de productieomgeving gevoelig is, kan er gebruik worden gemaakt van een read-replica. Deze replica dient als databron voor bijvoorbeeld Jupyter Notebook-omgevingen, zodat analytische workloads geen impact hebben op de performantie van de operationele systemen.
+Indien de belasting van de productieomgeving gevoelig is, kan er gebruik worden gemaakt van een read-replica. Deze replica dient als databron voor bijvoorbeeld Jupyter-notebook-omgevingen, zodat analytische workloads geen impact hebben op de performantie van de operationele systemen.
 
 Verder kunnen er specifieke views of API-klare datasets worden voorzien, zodat gebruikers nooit rechtstreeks met onderliggende tabellen werken. Dit zorgt voor extra abstractie, verhoogde veiligheid en een stabielere datastructuur voor analyse.

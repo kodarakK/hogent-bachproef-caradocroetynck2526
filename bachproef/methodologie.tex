@@ -5,41 +5,19 @@
 \chapter{\IfLanguageName{dutch}{Methodologie}{Methodology}}%
 \label{ch:methodologie}
 
-%% TODO: In dit hoofstuk geef je een korte toelichting over hoe je te werk bent
-%% gegaan. Verdeel je onderzoek in grote fasen, en licht in elke fase toe wat
-%% de doelstelling was, welke deliverables daar uit gekomen zijn, en welke
-%% onderzoeksmethoden je daarbij toegepast hebt. Verantwoord waarom je
-%% op deze manier te werk gegaan bent.
-%%
-%% Voorbeelden van zulke fasen zijn: literatuurstudie, opstellen van een
-%% requirements-analyse, opstellen long-list (bij vergelijkende studie),
-%% selectie van geschikte tools (bij vergelijkende studie, "short-list"),
-%% opzetten testopstelling/PoC, uitvoeren testen en verzamelen
-%% van resultaten, analyse van resultaten, ...
-%%
-%% !!!!! LET OP !!!!!
-%%
-%% Het is uitdrukkelijk NIET de bedoeling dat je het grootste deel van de corpus
-%% van je bachelorproef in dit hoofstuk verwerkt! Dit hoofdstuk is eerder een
-%% kort overzicht van je plan van aanpak.
-%%
-%% Maak voor elke fase (behalve het literatuuronderzoek) een NIEUW HOOFDSTUK aan
-%% en geef het een gepaste titel.
+Binnen een concrete casus bij het Instituut voor Landbouw-, Visserij- en Voedingsonderzoek (ILVO) wordt een toegepast, onderwerpgericht onderzoeksopzet gevolgd. De focus ligt op het analyseren van de huidige samenwerking tussen onderzoekers en softwareontwikkelaars rond een \text{.NET}-gebaseerd rekenmodel, en op het uitwerken van een haalbare oplossingsrichting die deze samenwerking ondersteunt. Het onderzoekstraject is opgedeeld in vijf fasen, waarbij de feitelijke uitvoering organisch evolueerde op basis van voortschrijdend inzicht.
 
-% \lipsum[21-25]
-Binnen een concrete casus bij het Instituut voor Landbouw-, Visserij- en Voedingsonderzoek (ILVO) wordt een toegepast, onderwerpgericht onderzoeksopzet gevolgd. De focus ligt op het analyseren van de huidige samenwerking tussen onderzoekers en softwareontwikkelaars rond een \text{.NET}-gebaseerd rekenmodel, en op het uitwerken van een haalbare oplossingsrichting die deze samenwerking ondersteunt. De methodologie is opgebouwd uit vijf opeenvolgende fasen, waarin zowel het probleemdomein als het oplossingsdomein systematisch worden onderzocht.
+\section{Eerste fase: Probleemanalyse}
+In de eerste fase werd het probleemdomein in kaart gebracht door middel van een verkennend gesprek met de copromotor en een grondige analyse van de bestaande documentatie. Aanvankelijk werd de problematiek gedefinieerd als een puur documentatieprobleem, maar gaandeweg werd duidelijk dat de kern van het probleem lag in de afstand tussen de wetenschappelijke logica en de technische implementatie in C\#. Door concrete use-cases van de EMAV-applicatie te bestuderen, werd vastgesteld dat onderzoekers beperkt worden door de \"black-box\" aard van de software.
 
-\section{Eerste fase}
-In de eerste fase wordt het probleemdomein in kaart gebracht. Hierbij wordt onderzocht hoe onderzoekers en ontwikkelaars momenteel samenwerken rond het bestaande model, waar verantwoordelijkheden liggen en op welke punten de workflows elkaar belemmeren. Deze analyse vertrekt vanuit concrete use-cases, zoals het aanpassen van emissieformules, het testen van alternatieve parameters en het uitvoeren van gevoeligheidsanalyses. De gegevens worden verzameld via documentanalyse en overlegmomenten met betrokkenen, met als doel inzicht krijgen in waar de kloof tussen wetenschappelijke logica en technische implementatie zich manifesteert.
+\section{Tweede fase: Requirement-analyse}
+De tweede fase richtte zich op het identificeren van de noden van zowel onderzoekers als ontwikkelaars. Voor dit onderzoekstraject is ervoor gekozen om de vereisten primair af te leiden uit de expertise van de copromotor, de analyse van eerdere samenwerkingsmomenten en de functionele behoeften van het EMAV-project. Deze aanpak bood een gerichte basis om de technische requirements te definiëren, waarbij de focus lag op transparantie, autonome experimenteerruimte en het voorkomen van documentation drift, met behoud van de stabiliteit van de productieomgeving.
 
-\section{Tweede fase}
-De tweede fase richt zich op het identificeren van noden en vereisten van beide doelgroepen. Voor onderzoekers gaat het onder meer om transparantie van berekeningen, experimenteerruimte en begrijpelijke documentatie; voor ontwikkelaars om onderhoudbaarheid, stabiliteit en controle over data en interfaces. Deze noden worden gestructureerd geformuleerd als functionele en niet-functionele requirements, die richtinggevend zijn voor het verdere onderzoek. Hierbij wordt expliciet rekening gehouden met organisatorische aspecten, zoals taakverdeling en communicatiestromen, in lijn met inzichten uit onder meer Conway's Law \autocite{conwayslaw}.
+\section{Derde fase: Literatuurstudie en technologische verkenning}
+In de derde fase werd gezocht naar technologische oplossingen die de kloof tussen code en documentatie kunnen overbruggen. Er werd een samenvatting opgesteld van de "Stand van zaken", waarbij concepten zoals Literate Programming en interactieve notebooks (zoals Jupyter en Quarto) werden onderzocht. Deze fase was cruciaal om te bepalen welke technologieën compatibel zijn met de bestaande \text{.NET}-architectuur van ILVO en hoe deze ingezet kunnen worden om berekeningen inzichtelijk te maken.
 
-\section{Derde fase}
-In de derde fase wordt het oplossingsdomein onderzocht aan de hand van een gerichte literatuurstudie en analyse van bestaande tools en workflows. Concepten zoals \textcite{LiterateProgramming}, computational notebooks ( bijvoorbeeld jupyter notebook \autocite{jupyternotebook} en quarto \autocite{quarto2025}), documentatieplatformen (zoals docFX \autocite{docfx}) en model life-cycle tools (zoals mlflow \autocite{mlflow}) worden bestudeerd op hun relevantie voor gelijkaardige samenwerkingsproblemen. Daarbij wordt nagegaan in welke mate deze benaderingen geschikt zijn binnen een \text{.NET}-context, en welke principes overdraagbaar zijn, ook wanneer de tools zelf technologisch niet rechtstreeks inzetbaar zijn.
+\section{Vierde fase: Ontwerp en selectie van de oplossingsrichting}
+Op basis van de technologische verkenning en een diepgaande analyse van de EMAV-broncode, werd in de vierde fase een specifieke oplossingsrichting gekozen. Er werd besloten om Python te integreren binnen de \text{.NET}-context. Het ontwerp voorzag in een 'switch'-mechanisme waarmee binnen de applicatie gewisseld kan worden tussen de officiële C\#-implementatie en een experimentele Python-versie. Deze hybride aanpak werd geselecteerd omdat het onderzoekers de vertrouwde Python-omgeving biedt zonder de robuustheid van de C\#-rekenmodules te ondermijnen.
 
-\section{Vierde fase}
-Op basis van de voorgaande fasen volgt in de vierde fase een selectie en ontwerp van een oplossingsrichting. De eerder geindentificeerde requirements worden gebruikt om mogelijke oplossingen af te wegen en te beperken tot een haalbare subset. Hierbij wordt bewust gekozen voor een beperkte scope, met focus op het verbeteren van transparantie, documentatie en experimenteermogelijkheden, zonder het bestaande model volledig te herontwerpen. Het resultaat van deze fase is een concreet concept voor een ondersteunende workflow of tool, afgestemd op de ILVO-casus.
-
-\section{Vijfde fase}
-In de vijfde en laatste fase wordt deze oplossingsrichting geconcretiseerd in een proof-of-concept. Dit prototype demonstreert hoe onderzoekers inzicht kunnen krijgen in modelberekeningen en parameters, en hoe zij op een gecontroleerde manier kunnen experimenteren zonder diepgaande programmeerkennis. Het proof-of-concept wordt geevalueerd aan de hand van de eerder gedefinieerde use-cases en requirements. De bevindingen uit deze evaluatie vormen de basis voor conclusies en aanbevelingen over toepasbaarheid en meerwaarde van de voorgestelde aanpak binnen ILVO en gelijkaardige onderzoekscontexten.
+\section{Vijfde fase: Proof-of-concept en evaluatie}
+In de laatste fase werd de voorgestelde oplossing gerealiseerd in een proof-of-concept. Dit prototype diende als validatie voor de technische haalbaarheid van de Python-integratie en de inzet van notebooks als interface. De evaluatie vond plaats door de deelvragen van de bachelorproef stapsgewijs te beantwoorden op basis van de bevindingen uit de PoC. Hierbij werd getoetst in welke mate de voorgestelde werkwijze effectief bijdraagt aan de autonomie van de onderzoeker en de traceerbaarheid van de berekeningen, wat de basis vormde voor de uiteindelijke conclusies.

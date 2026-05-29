@@ -1,13 +1,13 @@
-\chapter{Proof of Concept: Hybride Implementatiestrategie}
+\chapter{Proof of Concept: hybride implementatiestrategie}
 \label{ch:poc}
 
-Om de theoretische concepten rond onderzoeksautonomie en de nauwe verweving van code en documentatie te valideren, is een uitgebreide Proof of Concept (PoC) ontwikkeld. Het hoofddoel van deze PoC is om aan te tonen dat het technisch haalbaar is om binnen een robuuste C\#-omgeving dynamisch te wisselen tussen een gecompileerde C\#-implementatie en een interpretatieve, door onderzoekers aangestuurde Python-implementatie. Dit hoofdstuk biedt een diepgaand overzicht van de infrastructuur, de architecturale keuzes en de uiteindelijke resultaten van deze proefopstelling, waarbij de nadruk ligt op de granulaire switch-strategie voor toekomstige integratie in EMAV-web.
+Om de theoretische concepten rond onderzoeksautonomie en de nauwe verweving van code en documentatie te valideren, is een geïntegreerd systeem ontwikkeld als Proof of Concept (PoC). Dit systeem fungeert als een georkestreerd ecosysteem waarbij de robuuste \text{.NET}-backend van ILVO de regie voert over interactieve Jupyter-omgevingen. De kern van de oplossing ligt in een hybride, 'switchable' architectuur: een opzet die het mogelijk maakt om op granulair niveau te wisselen tussen de officieel gecompileerde C\#-implementatie en een interpretatieve, door de onderzoeker aangestuurde Python-omgeving. Hiermee wordt een dynamische samenwerkingsvorm gerealiseerd waarbij de stabiliteit van de backend gewaarborgd blijft, terwijl de onderzoeker de vrijheid krijgt om direct op de actuele rekenmodellen te experimenteren. Dit hoofdstuk biedt een diepgaand overzicht van de infrastructuur, de architecturale keuzes en de technische realisatie van deze proefopstelling.
 
-\section{Infrastructuur: Docker-Orchestratie}
+\section{Infrastructuur: docker-orchestratie}
 
 De PoC rust op een volledig geautomatiseerde infrastructuur die ervoor zorgt dat elke onderzoeker over een identieke, geïsoleerde en reproduceerbare analyseomgeving beschikt. Het handmatig opzetten van dergelijke omgevingen door onderzoekers zelf zou leiden tot versieconflicten en configuratiefouten. Daarom is gekozen voor orchestratie direct vanuit de C\#-backend van de applicatie.
 
-\subsection{Geautomatiseerde DLL-collectie en Versiebeheer}
+\subsection{Geautomatiseerde DLL-collectie en versiebeheer}
 Een fundamentele uitdaging bij het werken met hybride talen is het garanderen dat de Python-scripts opereren op exact dezelfde versie van de domeinlogica als de hoofdapplicatie. Binnen de \texttt{JupyterSetup}-klasse is een robuust mechanisme geïmplementeerd voor DLL-collectie. 
 
 De methode \texttt{SetupDLL} berekent eerst de root van de solution op basis van de locatie van de uitvoerende assembly (\nolinkurl{Assembly.GetExecutingAssembly().Location}). Vervolgens doorzoekt het mechanisme alle \texttt{obj}-directories. De complexiteit hierbij ligt in het filteren van de juiste bestanden: enkel de effectief gecompileerde bibliotheken van de EMAV-kern en data-projecten worden geselecteerd. Referentie-assemblies, debug-symbolen en platformspecifieke runtimes worden expliciet uitgesloten. Door dit proces te automatiseren, is de analyseomgeving altijd gesynchroniseerd met de laatst gebouwde versie van de applicatie, wat de \textquotedbl Single Source of Truth\textquotedbl \@ op binair niveau waarborgt.
@@ -17,14 +17,14 @@ Voor de eigenlijke orchestratie van de containers wordt gebruikgemaakt van de bi
 
 {\sloppy Een cruciaal onderdeel van de implementatie is de platformonafhankelijke communicatielaag. De applicatie detecteert op welk besturingssysteem zij draait en past de verbindingsmethode hierop aan. Op Windows-ontwikkelmachines wordt gebruikgemaakt van named pipes (\nolinkurl{npipe://./pipe/docker\_engine}), terwijl op de Linux-gebaseerde productieservers van ILVO rechtstreeks via Unix-sockets (\nolinkurl{unix:///var/run/docker.sock}) wordt gecommuniceerd. De backend zorgt niet alleen voor het aanmaken van de container, maar configureert ook de noodzakelijke netwerkisolatie en resource-limieten.\par}
 
-\subsection{Log-parsing en Dynamische Token-extractie}
+\subsection{Log-parsing en dynamische token-extractie}
 Wanneer een Jupyter-container opstart, genereert deze automatisch een unieke beveiligingstoken voor authenticatie. {\sloppy Om de ervaring voor de onderzoeker zo drempelloos mogelijk te maken, wordt deze token automatisch geëxtraheerd. De C\#-backend monitort de log-stream van de container. \par}
 
 Aangezien de Docker-daemon de logs in een gemultiplexed binair formaat verstuurt, is een gespecialiseerde \texttt{DemultiplexStream}-methode geïmplementeerd om dit te vertalen naar leesbare tekst. Met behulp van de reguliere expressie \texttt{token=([a-f0-9]+)} wordt de token geïsoleerd. Samen met de dynamisch door Docker toegewezen poort vormt dit een unieke URL die direct in de webinterface aan de onderzoeker wordt gepresenteerd.
 
 \section{Jupyter-container configuratie}
 
-De container fungeert als het laboratorium van de onderzoeker. De inrichting ervan is cruciaal om de technische barrière tussen de gecompileerde .NET-wereld en de interactieve Python-wereld weg te nemen.
+De container fungeert als het laboratorium van de onderzoeker. De inrichting ervan is cruciaal om de technische barrière tussen de gecompileerde .NET-wereld en de interactieve Python-wereld weg te nemen. Voordat de backend een container kan instantiëren, moet de bijbehorende Docker-image beschikbaar zijn in de lokale image-registry. Deze ``jupyter-image'' wordt gebouwd met het commando \texttt{docker build -t jupyter-image .}, waarbij de Dockerfile uit Bijlage \ref{lst:dockerfile} als blauwdruk dient. Dit build-proces zorgt voor de pre-installatie van alle afhankelijkheden en het inbedden van de verzamelde DLL's, waardoor de opstarttijd van individuele containers minimaal blijft en de reproduceerbaarheid wordt gegarandeerd.
 
 \subsection{De .NET 10.0 Runtime en Python-omgeving}
 De Docker-image is opgebouwd rond de \nolinkurl{mcr.microsoft.com/dotnet/runtime:10.0} base-image van Microsoft. Door de officiële .NET runtime als basis te nemen, is native ondersteuning voor de C\#-DLL's gegarandeerd. Bovenop deze image worden Python 3 en de noodzakelijke pakketten zoals \texttt{jupyterlab} en \texttt{pythonnet} geïnstalleerd.

@@ -1,24 +1,28 @@
 \chapter{\IfLanguageName{dutch}{Stand van zaken}{State of the art}}%
 \label{ch:stand-van-zaken}
 
+In dit hoofdstuk worden de technologische bouwstenen onderzocht die de basis vormen voor de voorgestelde hybride strategie. 
+Dit begint bij een analyse van bridge-technologieën voor taal-interoperabiliteit, zoals Python.NET en IronPython, om de interactie tussen C\# en Python mogelijk te maken. 
+Vervolgens wordt het concept van \textit{Literate Programming} uitgediept, waarbij de evolutie van Knuths oorspronkelijke principes naar moderne computationele notebooks (zoals Jupyter en RMarkdown) centraal staat. 
+Ten slotte worden de infrastructurele aspecten en design patterns besproken die nodig zijn om deze technologieën veilig en schaalbaar te orkestreren. 
+Deze theoretische en technische verkenning vormt het noodzakelijke fundament voor de architecturale uitwerking die in het volgende hoofdstuk aan bod komt.
 
 \section{Pythonnet}
-Naast de bedoeling om de code te documenteren, is het ook de bedoeling om de codebase die in \texttt{C\#} is geschreven te laten interageren met python. 
-De onderzoekers kennen geen \texttt{C\#} maar wel python. Omdat zij groten deels beslissen wat de berekeningen zijn kunnen ze dat wel in python zetten.
+Naast de bedoeling om de code te documenteren, is het ook de bedoeling om de codebase die in C\# is geschreven te laten interageren met python. 
+Op basis van gesprekken met medewerkers kennen de onderzoekers geen C\# maar wel python. Omdat zij groten deels beslissen wat de berekeningen zijn, kunnen ze dat wel in python zetten.
 Pythonnet zorgt voor een integratie van \textcite{Cpython} engine en de .NET runtime. 
-Het compiled geen python naar IL (Intermediate Language), een assembler achtige taal die wordt gebruikt als een brug tussen high-end \texttt{c\#} code en low-end machine code.
+Het compileert geen python naar IL (Intermediate Language), een assembler achtige taal die wordt gebruikt als een brug tussen high-end C\# code en low-end machine code.
 Het kan dan CLR (Common Language Runtime) services aanspreken, bestaande python code gebruiken en C-API extensies gebruiken met de normale uitvoer snelheden van python.
 Het zal automatisch op windows het .NET Framework kiezen en op Linux en MacOS zal het \textcite{MonoProject} gebruiken.
 
 De CLR \autocite{clr} is een runtime om .NET code uit te voeren. De talen die op deze runtime kunnen worden uitgevoerd zijn C\#, VB.NET en F\#.
-Andere talen kunnen ook worden uitgevoerd via de .NET runtime, maar zijn niet direct ondersteund door \textcite{clr}.
+Andere talen kunnen ook worden uitgevoerd via de .NET runtime, maar worden niet direct ondersteund door \textcite{clr}.
 De compiler vormt de code om naar IL, erachter voert de CLR een JIT-compilatie (Just In Time compilatie) uit om de code naar machine code te vertalen.
 
 Een runtime is de softwarelaag die een programma uitvoert en tijdens die uitvoering diensten aanbiedt zoals geheugenbeheer, typecontrole, exception handling en het laden van code. 
-In het geval van Microsoft .NET is de Common Language Runtime (CLR) de runtime die beheerde code omzet naar machinecode en die uitvoering coördineert.
-\autocite{clr}
+In het geval van Microsoft .NET is de Common Language Runtime (CLR) de runtime die beheerde code omzet naar machinecode en die uitvoering coördineert. \autocite{clr}
 
-Via pythonnet \autocite{pythonnet} kan python dll's lezen, importeren en gebruiken:
+Via pythonnet \autocite{pythonnet} kan python dll's lezen, importeren en gebruiken, zoals in het codefragment \ref{lst:winformdemo} dat een Windows Forms Applicatie maakt vanuit python.
 
 \begin{listing}
 	\begin{minted}{python}
@@ -28,44 +32,7 @@ Via pythonnet \autocite{pythonnet} kan python dll's lezen, importeren en gebruik
   \end{minted}
 	\caption[pythonnet officeel codefragment]{Codefragment van de website}
 \end{listing}
-\begin{listing}
-	\begin{minted}{python}
-    import clr
-    clr.AddReference("System.Windows.Forms")
-    clr.AddReference("System.Drawing")
-    clr.AddReference("System")
-    clr.AddReference("System.Windows")
-    from pythonnet import load
-    from System import *
-    from System.Drawing import Color, Point, Size
-    from System.Windows.Forms import Application, Button, Form, MessageBox, TextBox
-    from System.Windows import Clipboard, DataFormats, Window
-    from System.Windows.Threading import Dispatcher
-class MainForm(Form):
-    def __init__(self):
-        super().__init__()
-        self.Text = ".NET in python"
-        self.Size = Size(400, 600)
-def simple_form():
-    global _application_initialized
-
-    try:
-        if not _application_initialized:
-            Application.EnableVisualStyles()
-            Application.SetCompatibleTextRenderingDefault(False)
-            _application_initialized = True
-
-        Application.Run(MainForm())
-    except Exception as e:
-        print(f"Error in simple_form: {e}")
-        return None
-
-
-  \end{minted}
-	\caption[pythonnet codefragment]{Codefragment gemaakt als voorbeeld}
-\end{listing}
-
-Het toffe van pythonnet is dat men naast \texttt{c\#} python kan aanroepen, het ook omgekeerd kan.
+Het toffe van pythonnet is dat men naast C\# python kan aanroepen, het ook omgekeerd kan.
 
 \begin{listing}
 	\begin{minted}{csharp}
@@ -84,12 +51,12 @@ Het toffe van pythonnet is dat men naast \texttt{c\#} python kan aanroepen, het 
     }
 
   \end{minted}
-	\caption[c\# code fragment]{c\# code dat een python file inleest en beschikbaar maakt voor uitvoer}
+	\caption[C\# code fragment]{C\# code die een python file inleest en beschikbaar maakt voor uitvoer}
 \end{listing}
 
 \section{IronPython}
 
-IronPython \autocite{IronPython} is een open source implementatie van de Python programmeer taal dat is geintegreerd met .NET.
+IronPython \autocite{IronPython} is een open source implementatie van de Python programmeer taal die is geïntegreerd met .NET.
 IronPython kan zoals pythonnet .NET dll's aanspreken via de CLR en kan andere python code ook gebruiken.
 In tegenstelling tot pythonnet kan IronPython niet aangeroepen worden vanuit .NET gebaseerde talen.
 
@@ -134,23 +101,25 @@ Babel verbetert de src-blocks door een paar zaken te voorzien:
 	\item bestanden exporteren voor literate programming
 \end{itemize}
 
-\section{Jupyter notebook}
-Jupyter notebooks zijn gemaakt voor python. Deze notebooks worden door vele mensen gebruikt en in verschillende omgevingen.
+\section{Jupyter-notebooks}
+Jupyter-notebooks
+ zijn gemaakt voor python. Deze notebooks worden door vele mensen gebruikt en in verschillende omgevingen.
 Dit kan gaan van een student die python leert en zijn notities er bij wil schrijven tot een volledige data analyse door professionele onderzoekers.
 Dit is een standaard voor computationeel onderzoek en datascience \autocite{jupyternotebook}.
 Het werkt met verschillende `cellen`: de markdown cellen en de python cellen.
 De python cellen verbinden met een virtuele omgeving en voeren hierop telkens hun code uit.
 Aangezien ze werken op dezelfde omgeving zijn de cellen verbonden aan elkaar.
 Het grootste verschil met org-mode is dat een \text{.}org bestand een plain tekst bestand is. Het is mogelijk om dit bestand te bekijken in eender welke editor.
-Jupyter notebooks niet. Je hebt een editor nodig die jupyter notebooks ondersteunt. Het bekentste is VsCode van Microsoft.
+Jupyter-notebooks
+ niet. Je hebt een editor nodig die Jupyter-notebooks ondersteunt. Het bekentste is VsCode van Microsoft.
 Er bestaat ook de officiele command en app van jupyter zelf die een server opstart en dan in de browser beschikbaar is.
 
-Maar jupyter notebooks hebben zeker hun minpunten.
-\textcite{Rule2018} tonen aan dat Jupyter Notebooks niet-lineaire uitvoergeschiedenis hebben, wat reproduceerbaarheid ernstig bemoeilijkt.
+Maar Jupyter-notebooks hebben zeker hun minpunten.
+\textcite{Rule2018} tonen aan dat Jupyter-notebooks niet-lineaire uitvoergeschiedenis hebben, wat reproduceerbaarheid ernstig bemoeilijkt.
 Ook omdat de cellen in een willekeurige volgorde kunnen worden uitgevoerd, moet er opgelet worden met de run volgorde.
 De notebooks hebben ook een onzichtbare global state.
 Het zijn json bestanden, dus versie controle beheer kan hier ook moeilijk mee doen.
-Aangezien dat alles ook in 1 bestand zit, kan het snel het groot bestand zijn.
+Aangezien alles ook in 1 bestand zit, kan het snel het groot bestand zijn.
 
 \section{RMarkdown}
 \texttt{RMarkdown} \autocite{RStudio2020} is ook een computational notebook zoals Jupyter Notebooks,
@@ -160,7 +129,7 @@ een transparante engine voor het genereren van dynamische rapporten in R, ontwik
 softwareomgeving voor statistische computing \texttt{R} \autocite{RFoundation}.
 
 \texttt{Knitr} voert alle code blokken uit en maakt een nieuw Markdown bestand aan met alle code en hun uitkomsten.
-Het gemaakte Markdown bestand wordt dan geevalueerd door pandoc \autocite{pandoc}, die dan het finale product maakt.
+Het gemaakte Markdown bestand wordt dan geëvalueerd door pandoc \autocite{pandoc}, die dan het gewenste product maakt.
 Vb:
 \begin{listing}[H]
 \begin{minted}{markdown}
@@ -184,11 +153,13 @@ image(volcano, col = viridis(200))
 
 \section{Jupyter in Docker}
 
-Een jupyter notebook is een RCE (Remote Code Execution), dit is perfect voor een hacker om de volledige infrastructuur neer te halen.
+In een Jupyter-notebook kan men code uitvoeren die direct op de server kan worden uitgevoerd, dit is perfect voor een hacker om de volledige infrastructuur neer te halen via een RCE (Remote Code Execution).
+Hierbij kan een hacker, eens toegang tot de Jupyter-notebook, gevaarlijke code of commando's uitvoeren om admin access te krijgen via python.
+Eens dat gebeurt kan de hacker de server besturen en zitten ze in het intern netwerk.
 Als dit in een bedrijf gebruikt wordt op een server moet er dus een zware beveiliging op zitten.
 Een goede start is isolatie.
 
-Aangezien dat er dll's nodig gaan zijn en mogelijks C\# code gaat moeten uitvoeren, wordt er gestart in de DockerFile vanuit een Microsoft runtime image.
+Aangezien er dll's nodig gaan zijn en mogelijks C\# code gaat moeten uitvoeren, wordt er gestart in de DockerFile vanuit een Microsoft runtime image.
 
 \begin{listing}[H]
 	\begin{minted}{dockerfile}
@@ -205,11 +176,21 @@ COPY startup.py /root/.ipython/profile_default/ipython_config.py
 EXPOSE 8888
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", "--notebook-dir=/app/notebooks"]
 	\end{minted}
-\caption[Dockerfile voor jupyter notebook in docker]{Dockerfile voor jupyter notebook in docker}
+\caption[Dockerfile voor Jupyter-notebook in docker]{Dockerfile voor Jupyter-notebook in docker}
 \end{listing}
 
 
-Deze dockerfile downloadt de nodige packages, kopieert de dlls in de dlls folder en de notebooks uit de notebook folder en start de jupyter notebook server.
+Deze dockerfile downloadt de nodige packages, kopieert de dlls in de dlls folder en de notebooks uit de notebook folder en start de Jupyter-notebook server.
+
+De dockerfile kan gebuild worden door dit commando:
+\begin{listing}
+\begin{minted}{shell}
+  docker build -t jupyter-image .
+\end{minted}
+  \label{lst:dockerbuildimagecommand}
+  \caption[docker build image commando]{docker build image commando van de dockerfile in de huidige directory}
+\end{listing}
+Hierdoor is deze image beschikbaar op de server en kan die gevonden worden door de C\# code.
 
 De startup.py is een python bestand dat bij het maken van de docker image code uitvoert tijdens dat de kernel start. \autocite{ipython_startup_files}
 Hierdoor kunnen er dll's geladen worden voordat de gebruiker toegang heeft en veel boilerplate mag weglaten.
@@ -227,7 +208,7 @@ c.InteractiveShellApp.exec_lines = [
   'from <imported namespace> import *'
 ]
 	\end{minted}
-\caption[startup.py bij dockerfile]{startup.py dat wordt geladen tijdens de kernel opstart van de jupyter notebook kernel}
+\caption[startup.py bij dockerfile]{startup.py dat wordt geladen tijdens de kernel opstart van de Jupyter-notebook kernel}
 \end{listing}
 
 \section{Programmatische Orchestratie en Docker SDK's}
@@ -240,15 +221,12 @@ De communicatie tussen de orchestrerende applicatie en de Docker-daemon vindt lo
 
 Op Linux-gebaseerde systemen zijn Unix Sockets de standaard. Deze bieden een hoogperformant communicatiekanaal met minimale overhead, omdat zij de volledige netwerkstack omzeilen. Op Windows-omgevingen wordt echter gebruikgemaakt van Named Pipes (\nolinkurl{//./pipe/docker_engine}). Hoewel de technologische implementatie verschilt, abstraheren moderne SDK's deze complexiteit weg, waardoor dezelfde C\#-codebase zowel op een Windows-ontwikkelmachine als op een Linux-productieserver kan opereren.
 
-\section{Design Patterns voor Hybride Systemen}
-De integratie van een scripttaal in een gecompileerde applicatie vereist een doordachte architectuur om te voorkomen dat de codebase rigide of foutgevoelig wordt. \textcite{Ousterhout1998} introduceerde hiervoor het \textquotedbl Two-Level\textquotedbl \@ architectuurmodel, waarbij een krachtige systeemtaal (C\#) de basiscomponenten voorziet en een flexibele scripttaal (Python) fungeert als de \textquotedbl glue code\textquotedbl.
+\section{Besluit}
+Uit de verkenning van de huidige stand van zaken blijkt dat de technologische fundamenten voor een nauwere verweving tussen IT-implementatie en wetenschappelijk onderzoek ruimschoots aanwezig zijn. De combinatie van krachtige bridge-technologieën zoals Python.NET en de volwassenheid van computationele Jupyter-notebooks biedt een realistisch pad om de gecompileerde \text{.NET}-wereld toegankelijk te maken voor onderzoekers zonder de robuustheid van de backend te ondermijnen.
 
-Om deze twee werelden te overbruggen, worden vaak klassieke design patterns toegepast \autocite{Zdun2004}:
-\begin{itemize}
-    \item \textbf{Factory Pattern:} Dit patroon fungeert als een abstractielaag die bepaalt welke implementatie (C\# of Python) moet worden gebruikt. De aanroepende code hoeft de details van de interop niet te kennen.
-    \item \textbf{Proxy Pattern:} De Python-bridge fungeert als een proxy die method-calls van de C\#-wereld vertaalt naar de Python-engine en vice versa, inclusief het beheer van de Global Interpreter Lock (GIL).
-    \item \textbf{Facade Pattern:} Door een vereenvoudigde interface aan de Python-kant aan te bieden, wordt de complexe interne structuur van de .NET-assemblies verborgen voor de onderzoeker.
-\end{itemize}
+Daarbij is vastgesteld dat de inzet van containerisatie via Docker niet louter een infrastructurele keuze is, maar een essentiële voorwaarde om de risico’s van Remote Code Execution te beheersen en een consistente, reproduceerbare analyse-omgeving te garanderen. De besproken design patterns (zoals Factory en Proxy) vormen hierbij de architecturale lijm die ervoor zorgt dat de integratie tussen beide talen gestructureerd en onderhoudbaar verloopt.
+
+De technologische bouwstenen die in dit hoofdstuk zijn geanalyseerd, worden in het volgende hoofdstuk samengebracht. Daar zal worden toegelicht hoe deze componenten zijn georkestreerd in een specifieke architectuur die de basis vormt voor de Proof of Concept binnen het EMAV-project.
 
 
 
