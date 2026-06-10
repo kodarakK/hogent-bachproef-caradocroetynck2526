@@ -27,7 +27,8 @@ De autonomie van de wetenschapper is volledig verdwenen."
 
 * De Oplossing: Een Hybride Brug (3 min)
 ** Visual
-Een versimpelde versie van je PlantUML: toon een brug die 'Python' verbindt met '.NET Core'.
+Een versimpelde versie van je PlantUML:
+toon een brug die 'Python' verbindt met '.NET Core'.
 ** Script
 "Mijn onderzoeksvraag was: Hoe kunnen we die Black Box openbreken? 
 Ik heb gekozen voor een hybride aanpak. We gebruiken de kracht en stabiliteit van de bestaande .NET backend, maar we ontsluiten die via een interface die onderzoekers wél kennen: Python en Jupyter Notebooks.

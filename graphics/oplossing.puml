@@ -1,0 +1,31 @@
+@startuml
+skinparam componentStyle uml2
+skinparam backgroundColor white
+skinparam NoteBackgroundColor #FEFFD2
+
+title Een hybride brug
+
+package "Isolated Jupyter Container" #F9F9F9 {
+        component [IPython Kernel] as Kernel
+        component [pythonnet Bridge] as PythonNet
+        component [CoreCLR Runtime] as CoreCLR
+}
+
+package "Host Systeem (C# Backend / EMAV-Web)" {
+        package "Business Logic Layer" {
+                interface ICustomerListTransformer as Interface
+                component [CSCustomerListTransformer] as CsImpl
+                component [PyCustomerListTransformer] as PyBridge
+                component [TransformerFactory] as Factory
+        }
+}
+
+Factory --> Interface : Creates
+Factory --> CsImpl : default
+Factory --> PyBridge : if toggled
+
+PyBridge --> PythonNet : Interop Call
+PythonNet --> CoreCLR : Manages GIL
+Kernel --> PythonNet : User Scripting
+
+@enduml
