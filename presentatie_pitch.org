@@ -1,0 +1,78 @@
+#+TITLE: Bachelorproef Verdediging: Pitch & Visuals Plan
+#+AUTHOR: Caradoc Roetynck
+#+DATE: June 2026
+#+OPTIONS: toc:nil
+
+* Introductie (2 min)
+** Visual
+Slide met titel, jouw naam, logo van HOGENT en ILVO.
+** Script
+"Goedenavond/morgen, mijn naam is Caradoc Roetynck en ik neem u vandaag mee naar de wereld van ILVO. 
+Binnen het EMAV-project draait alles om complexe rekenmodellen voor emissies. 
+Deze modellen zijn het hart van de wetenschappelijke werking van ILVO. 
+Maar er is een probleem: de mensen die de modellen bedenken — de wetenschappers — en de mensen die de software bouwen — de developers — spreken een fundamenteel andere taal. 
+Mijn bachelorproef focust op het dichten van die kloof."
+
+* Het Probleem: De "Black Box" (3 min)
+** Visual
+Een afbeelding (bijv. met Excalidraw) die een "muur" toont tussen een onderzoeker (met een Excel-formule) en een developer (met C#-code).
+** Script
+"In de huidige situatie worden rekenmodellen vaak over de spreekwoordelijke muur gegooid. 
+Onderzoekers leveren documentatie aan, developers vertalen dit naar C#. 
+Zodra die code in productie gaat, wordt het voor de onderzoeker een 'Black Box'. 
+Ze kunnen de berekening niet meer stap voor stap volgen. 
+Wilt een onderzoeker een kleine aanpassing testen? Dan moet er een IT-ticket aangemaakt worden. 
+Dit proces is traag, foutgevoelig en zorgt voor 'documentation drift': de documentatie zegt A, maar de code doet ondertussen B. 
+De autonomie van de wetenschapper is volledig verdwenen."
+
+* De Oplossing: Een Hybride Brug (3 min)
+** Visual
+Een versimpelde versie van je PlantUML: toon een brug die 'Python' verbindt met '.NET Core'.
+** Script
+"Mijn onderzoeksvraag was: Hoe kunnen we die Black Box openbreken? 
+Ik heb gekozen voor een hybride aanpak. We gebruiken de kracht en stabiliteit van de bestaande .NET backend, maar we ontsluiten die via een interface die onderzoekers wél kennen: Python en Jupyter Notebooks.
+Het hart van deze oplossing is **Python.NET**. Hiermee kunnen we echte, gecompileerde C#-DLL's inladen in een Python-omgeving. 
+Dit is geen herschreven versie van het model, dit IS het model. 
+Dezelfde code die de officiële emissies berekent, wordt nu transparant en interactief beschikbaar voor de onderzoeker."
+
+* Architectuur: Server-Side Orchestratie (5 min)
+** Visual
+Je volledige PlantUML schema uit de PoC hoofdstuk.
+** Script
+"Dit draait niet zomaar op de laptop van een onderzoeker. 
+We hebben gekozen voor een server-side architectuur die volledig web-based is. 
+Wanneer een onderzoeker via de EMAV-interface een experiment wil starten, treedt mijn orchestratie-systeem in werking:
+1. De server gebruikt de **Docker.DotNet API** om een volledig geïsoleerde zandbak op te spinnen.
+2. Mijn systeem scant de build-folders van het hoofdproject en injecteert de meest recente DLL's rechtstreeks in die container.
+3. Via volume mapping worden de notebooks en de benodigde data veilig gekoppeld.
+De onderzoeker krijgt in zijn browser toegang tot een Jupyter-omgeving die al volledig is geconfigureerd met de juiste Python-omgeving en de geladen C#-libraries. Niets installeren, direct experimenteren."
+
+* Veiligheid en Validatie (3 min)
+** Visual
+Een screenshot van een Jupyter Notebook waar een grafiek (matplotlib) de resultaten van C# en Python vergelijkt.
+** Script
+"Innovatie mag nooit ten koste gaan van stabiliteit. 
+Daarom heb ik drie veiligheidslagen ingebouwd. 
+Ten eerste: **Isolatie**. Door Docker kan een onderzoeker nooit de server of de hoofdapplicatie laten crashen. 
+Ten tweede: **Data-integriteit**. Experimenten gebeuren op een tijdelijke kloon van de data (via SQLite of tijdelijke CSV's). 
+Ten derde: **Validatie**. De onderzoeker kan in zijn notebook de resultaten van de 'officiële' C#-implementatie direct vergelijken met zijn eigen experimentele aanpassingen in Python. 
+Zo bewijzen we zwart-op-wit dat een modelverandering ook echt doet wat het moet doen."
+
+* Eigen Inbreng & Meerwaarde (2 min)
+** Visual
+Lijstje met 3 punten: "Technisch fundament", "Research-as-a-Service", "Bridging the Gap".
+** Script
+"Wat was mijn specifieke bijdrage? 
+Ik heb niet alleen een brug gebouwd; ik heb een architecturale methode ontworpen. 
+Ik heb aangetoond dat je via **Clean Architecture** de business logica zo kunt isoleren dat deze herbruikbaar wordt voor wetenschappelijke analyse. 
+Mijn Proof-of-Concept bij ILVO bewijst dat we de tijd tussen 'nieuw wetenschappelijk inzicht' en 'gevalideerde software-aanpassing' kunnen verkorten van weken naar uren. 
+Dit is 'Research-as-a-Service': de IT-afdeling faciliteert, de wetenschapper innoveert."
+
+* Conclusie (2 min)
+** Visual
+Slide met "Vragen?" en je contactgegevens.
+** Script
+"Concluderend: De kloof tussen IT en wetenschap is geen onoverkomelijk probleem, maar een uitdaging in architectuur en tooling. 
+Door .NET, Docker en Jupyter slim te combineren, geven we de controle terug aan de mensen die de modellen begrijpen. 
+De technische fundering ligt er; de weg naar een flexibeler en transparanter EMAV-platform is hiermee geopend. 
+Ik dank u voor uw aandacht en beantwoord graag uw vragen."
