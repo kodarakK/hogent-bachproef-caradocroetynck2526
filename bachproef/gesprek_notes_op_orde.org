@@ -30,11 +30,14 @@
 5. conclusie
 
 
+
 Maak simpele versie, een paar stappen van EMAV simuleren als speeltuin
 
 1. wat gebeurt er juist
 2. aanpassen van resultaten
 3. klopt het, valideren
+
+
 
 
 stappen in beeld brengen
