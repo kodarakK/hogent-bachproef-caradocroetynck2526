@@ -1,16 +1,23 @@
-\chapter{\IfLanguageName{dutch}{Probleem Stelling}{Problem}}%
+\chapter{\IfLanguageName{dutch}{Probleem Stelling}{Problem}}
 \label{ch:probleem_stelling}
 
 \section{Huidige situatie}
-Het Emissie Model voor Ammoniak in Vlaanderen (EMAV) begon als een excel bestand.
-Terwijl bij het Instituut voor Landbouw en Visserij Onderzoek (ILVO) meer en meer data wordt verzameld,
+Het Emissie Model voor Ammoniak in Vlaanderen (EMAV).
+Een programma dat op basis van gegevens van landbouwers wiskundige berekeningen uitvoert en de ammoniak emmissies berekend.
+De Vlaamse Milieumaatschappij (VMM) gebruikt het model als hun standaard rapporterings en voorspellings applicatie.
+\autocite{DemeyerPEMAV}
+
+Wat de vlaamse overheid exact wilt doen is beschreven door de VMM en de Vlaamse Landmaatschappij (VLM) in dit protocol \textcite{vlm_vmm_2022_emav}.
+
+EMAV begon als een excel bestand.
+Terwijl bij het Instituut voor Landbouw-, Visserij- en Voedingsonderzoek (ILVO) meer en meer data wordt verzameld,
 begon de excel te groot te worden en niet meer onderhoudbaar.
 Naast de grootte zijn er constant nieuwe wetenschappelijke inzichten die gevonden worden.
 Hierdoor is een excel bestand niet genoeg meer.
 
 Om dat probleem op te lossen is ILVO overgestapt naar een Windows Forms app, geschreven in C\#.
-Over de jaren heen zijn er verschillende aanpassingen gebeurt.
-Door verschillende benodigdheden is de codebase van EMAV zeer gecompliceerd.
+Dit is al een oud project en is al meerdere keren aangepast naar een betere, meer complexe versie.
+
 
 De onderzoekers zijn vooral gekend in python. Ze hebben een basis van C\#, maar het is zeker niet makkelijk voor hun om de code van EMAV te navigeren.
 Zij vinden problemen, foutjes in de resultaten, maar zij kunnen niet zomaar opzoeken waar het probleem zit.
