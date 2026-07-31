@@ -6,7 +6,6 @@
 \label{ch:gesprekken}
 
 \section{Samuel Bosch}
-
 Het begon als een excel bestand.
 Op een duur was dit niet meer onderhoudbaar en zijn ze overgestapt naar een app geschreven in C\#.
 Er werdt telkens meer en meer data verzameld.
@@ -30,7 +29,70 @@ De flow beschrijven, de zaken die gebeuren.
 Dan een grote vraag, zou het leesbaarder zijn als het in python is geschreven?
 Is er betere documentatie nodig?
 Zou een flow tracer handig zijn?
-Helpen leesbare unittesten.
+Helpen leesbare unittesten?
+Deze unittesten tonen wat er allemaal mogelijk is.
+Zij hebben alle soorten inputs, outputs en edge cases.
+Zou het dan goed zijn om deze testen in python te schrijven zodat de onderzoekers deze met weinig problemen ook kunnen verstaan?
+Dan zou code als documentatie zeker een optie zijn. Voor de onderzoekers zo veel mogelijk in python.
+De testen kunnen zeker overgenomen worden per release.
+Het is momenteel moeilijk om te weten als het doet wat het zou moeten doen. Checken als de logica juist zit en opzoeken waar de mogelijke fouten zitten.
+Het valideren van de logica.
+
+Voor betere documentatie:
+de huidige word documenten, maar met meer uitgebreide flowcharts.
+De verschillen tussen versies kunnen helpen met te begrijpen wat er is veranderd per release.
+
+Ideeen voor de BP:
+\begin{itemize}
+\item probleem stellen
+\item oplossing formuleren
+\item resultaten en feedback
+\item vervolg andere zoektoch / volgende fase
+\item conclusie
+\end{itemize}
+
+als oplossing:
+maak een simpele versie, 3 a 4 stappen als speeltuin.
+\begin{itemize}
+  \item wat gebeurt er juist
+  \item aanpassen van resultaat
+  \item validatie
+\end{itemize}
+
+De stappen moeten in beeld gebracht worden.
+Zaken maken en feedback vragen.
+
+Access en privacy niet een groot probleem, bijna alles gebeurt via het ILVO netwerk.
 \section{Onderzoekers}
+Het is geen constant model.
+Ze willen details, regelmatige updates (documentatie en implementatie).
+Een toegankelijke manier om de code te begrijpen.
+
+De onderzoekers hebben weinig ervaring met C\#, sommige meer, bijvoorbeeld via avond school, andere hebben zogoed als geen kennis.
+De documentatie samen onderhouden kan helpen.
+Unit testen zijn handig, zeker om alle mogelijke opties te bekijken.
+Flowcharts die correct zijn, ze moeten niet elk detail bevatten, maar zoveel mogelijk toch.
+
+Code als documentatie, duidelijk en leesbaar voor iedereen.
+De onderzoekers kennen python, onderdelen van EMAV (die onderzoekers moeite hebben om te verstaan) naar python omvormen is zeker een goede optie.
+De communicatie moet zeker ook verbeteren.
+Zodat er geen verschillen zitten in wat de onderzoekers willen en wat de it'ers implementeren.
+Concreet stellen wat er moet gebeuren.
+
+Bij de overgang van versies, de details en de impact van de nieuwe onderdelen.
+
 
 \section{Jan Willem}
+Een mogelijke oplossing kan mlflow of het paradigm MLOps te gebruiken.
+Onderdelen eruit halen en implementeren voor deze use case.
+Inderdaad tracer programmas gebruiken.
+
+Voor alle extra data bij te houden zijn data lakes perfect.
+Stukjes van Samuels droom waar maken.
+Zoeken wat mlops oplost.
+
+Het concept guard clauses zou handig zijn.
+Onderdelen van EMAV in python.
+De stappen van emav in beeld brengen.
+
+preprossesen van input.
