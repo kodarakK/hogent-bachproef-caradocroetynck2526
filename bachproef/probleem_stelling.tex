@@ -2,20 +2,19 @@
 \label{ch:probleem_stelling}
 
 \section{Huidige situatie}
-Het Emissie Model Ammoniak Vlaanderen (EMAV) is het officiele Vlaamse model voor de berekening van ammoniakemissies uit de land- en tuinbouw.
+Het Emissie Model Ammoniak Vlaanderen (EMAV) is het officiele Vlaamse model voor de berekening van ammoniakemissies uit de landbouw.
 Het model werd ontwikkeld om op een uniforme en wetenschappelijke onderbouwde manier de ammoniakuitstoot van verschillende landbouwactiviteiten te berekenen.
 Hiervoor combineert EMAV gegevens over onder meer dieraantallen, stalsystemen, mestopslag, mestaanwending en beweiding met emissiefactoren om de totale ammoniakemissie te bepalen \autocite{DemeyerPEMAV}.
 De berekende emissies vormen de basis voor de Vlaamse emissie-inventaris en worden gebruikt in modellen die de verspreiding en depositie van stikstof simuleren, waardoor EMAV een belangrijke rol speelt in het Vlaamse stikstofbeleid en milieubeheer.
 
 Sinds de ontwikkeling van het model wordt EMAV gezamenlijk beheerd door de Vlaamse Milieumaatschappij (VMM) en de Vlaamse Landmaatschappij (VLM).
-De VMM staat in voor de wetenschappelijke methodologie en de verdere ontwikkeling van het model, terwijl de VLM de noodzakelijke landbouwkundige gegevens en domeinexpertise aanlevert.
+De VMM staat in voor de wetenschappelijke methodologie en de verdere ontwikkeling van het model, terwijl de VLM de noodzakelijke landbouwkundige gegevens (data) aanlevert.
 Door deze samenwerking blijft EMAV actueel en wetenschappelijk onderbouwd, zodat het model betrouwbare emissieberekeningen kan leveren ter ondersteuning van beleidsvorming, vergunningverlening en wetenschappelijk onderzoek \autocite{vlm_vmm_2022_emav}.
 
 Uit een gesprek met een van de ontwikkelaars van EMAV is het uitgekomen dat EMAV begon als een excel bestand.
-Omdat bij het Instituut voor Landbouw-, Visserij- en Voedingsonderzoek (ILVO) meer en meer data wordt verzameld,
-begon de excel te groot te worden en niet meer onderhoudbaar.
-Naast de grootte vindt ILVO  constant nieuwe wetenschappelijke inzichten.
-Hierdoor is een excel bestand niet genoeg meer.
+Hoe meer data de VLM aanleverde, hoe minder onderhoudbaar de excel werd.
+Naast de grootte vondt ILVO en de VMM constant nieuwe wetenschappelijke inzichten.
+Hierdoor was een excel bestand niet genoeg meer.
 
 Om dat probleem op te lossen is ILVO overgestapt naar een Windows Forms app, geschreven in C\#.
 
@@ -26,7 +25,7 @@ Ze hebben een basis van C\#, maar het is zeker niet makkelijk voor hun om in de 
 Zij vinden problemen, foutjes in de resultaten, maar zij kunnen niet zomaar opzoeken waar het probleem zit.
 Voorlopig maken ze Tickets aan via devops van Azure. Ze kunnen al veel info doorgeven via die beschrijving, maar het is nog steeds een zoektocht voor de it'ers om het probleem te vinden.
 
-Zoals bij nieuwe features, tijdens het overbrengen van de info, gaat die communicatie niet altijd zo goed.
+Bij het ontwikkelen van nieuwe features, wat de onderzoekers willen is niet altijd exact wat er wordt ge\"{\i}mplementeerd.
 Vele onduidelijkheden vinden hun weg in de lijn van communicatie.
 
 De documentatie wordt onderhouden door de onderzoekers,dit is een word bestand met een paar flowcharts.
