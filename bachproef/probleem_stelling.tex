@@ -11,27 +11,18 @@ Sinds de ontwikkeling van het model wordt EMAV gezamenlijk beheerd door de Vlaam
 De VMM staat in voor de wetenschappelijke methodologie en de verdere ontwikkeling van het model, terwijl de VLM de noodzakelijke landbouwkundige gegevens en domeinexpertise aanlevert.
 Door deze samenwerking blijft EMAV actueel en wetenschappelijk onderbouwd, zodat het model betrouwbare emissieberekeningen kan leveren ter ondersteuning van beleidsvorming, vergunningverlening en wetenschappelijk onderzoek \autocite{vlm_vmm_2022_emav}.
 
-<<<<<<< HEAD
-Uit een gesprek ;et <<< een vqn de ontzikkelqqrs vqn <<< EMAV begon als een excel bestand.
-TerwijlO;dqt    bij het Instituut voor Landbouw-, Visserij- en Voedingsonderzoek (ILVO) meer en meer data wordt verzameld,
-=======
-EMAV begon als een excel bestand.
-Terwijl bij het Instituut voor Landbouw-, Visserij- en Voedingsonderzoek (ILVO) meer en meer data wordt verzameld,
->>>>>>> origin/master
+Uit een gesprek met een van de ontwikkelaars van EMAV is het uitgekomen dat EMAV begon als een excel bestand.
+Omdat bij het Instituut voor Landbouw-, Visserij- en Voedingsonderzoek (ILVO) meer en meer data wordt verzameld,
 begon de excel te groot te worden en niet meer onderhoudbaar.
-Naast de grootte vindt ILVO  constant nieuwe wetenschappelijke inzichtenm 
+Naast de grootte vindt ILVO  constant nieuwe wetenschappelijke inzichten.
 Hierdoor is een excel bestand niet genoeg meer.
 
 Om dat probleem op te lossen is ILVO overgestapt naar een Windows Forms app, geschreven in C\#.
-<<<<<<< HEAD
-Dit is al een oud project en is al meerdere keren aangepast naar een betere, meer complexe versie.BOSCHm 5persoonlijke infor;qtie m dqtu;
-=======
-Dit is al een oud project en is al meerdere keren aangepast naar een betere, meer complexe versie.
 
->>>>>>> origin/master
+Dit is al een oud project en is al meerdere keren aangepast naar een betere, meer complexe versie. (Bosch 2026, Persoonlijke informatie)
 
-
-uit een gesprek ;et dDe onderzoekers5nqq; persoonlijke infor;qtie-  leerde ik dqt wij zijn vooral bgekend in;et python. Ze hebben een basis van C\#, maar het is zeker niet makkelijk voor hun om in de code van EMAV te navigeren.
+Uit persoonlijke communicatie met de onderzoekers is gebleken dat zij voornamelijk vertrouwd zijn met de programmeertaal Python.
+Ze hebben een basis van C\#, maar het is zeker niet makkelijk voor hun om in de code van EMAV te navigeren.
 Zij vinden problemen, foutjes in de resultaten, maar zij kunnen niet zomaar opzoeken waar het probleem zit.
 Voorlopig maken ze Tickets aan via devops van Azure. Ze kunnen al veel info doorgeven via die beschrijving, maar het is nog steeds een zoektocht voor de it'ers om het probleem te vinden.
 
@@ -40,11 +31,8 @@ Vele onduidelijkheden vinden hun weg in de lijn van communicatie.
 
 De documentatie wordt onderhouden door de onderzoekers,dit is een word bestand met een paar flowcharts.
 Zij weten dus niet exact hoe EMAV in elkaar zit.
-<<<<<<< HEAD
+
 Door die communicatie problemen kan het zijn dat wat de onderzoekers willen beschrijven in de documentatie, mogelijks niet is hoe het is ge\"{\i}mplementeerd.
-=======
-Door die communicatie problemen kan het zijn dat wat de onderzoekers willen beschrijven in de documentatie mogelijks niet is hoe het is ge\"{\i}mplementeerd.
->>>>>>> origin/master
 Zeker bij het overstappen naar nieuwe versies van het model.
 Hierdoor is er zeker sprake van Documentatie drift.
 
@@ -56,7 +44,7 @@ Om dit hoofddoel te bereiken, richt het onderzoek zich op meerdere samenhangende
 Ten eerste wordt onderzocht in hoeverre het herschrijven of overzetten van cruciale, complexe onderdelen van EMAV naar Python, de vertrouwde taal van de onderzoekers, kan bijdragen aan een beter begrip van de rekenlogica.
 In het verlengde hiervan wordt de haalbaarheid verkend van `code als documentatie`.
 Dit gebeurt door het opzetten van heldere, goed leesbare unittests in Python die functioneren als levende documentatie.
-Deze testen moeten randgevallen, verwachte invoerwaarden en uitvoerresultaten expliciet inzichtelijk maken voor niet-IT-professionals.
+Deze testen moeten randgevallen, verwachte invoerwaarden en uitvoerresultaten expliciet inzichtelijk maken voor niet IT professionals.
 
 Ten tweede richt het onderzoek zich op de visuele ondersteuning van de rekenprocessen.
 Door de interne rekenstappen in kaart te brengen met geactualiseerde stroomdiagrammen en het gebruik van hulpmiddelen zoals een flow tracer te verkennen, wordt geprobeerd de verwerking van tussenresultaten en de logica per stap transparant te maken.
@@ -66,9 +54,6 @@ Ten slotte wordt bekeken welke principes uit het MLOps-paradigma, zoals het gebr
 \label{sec:scope}
 Om de haalbaarheid binnen de duur van de bachelorproef te garanderen, wordt de voorgestelde methodiek uitgewerkt op basis van een afgebakend prototype, een zogenaamd playground.
 Deze vereenvoudigde testomgeving omvat drie tot vier representatieve verwerkingsstappen van het EMAV-model.
-<<<<<<< HEAD
+
 Binnen deze speeltuinomgeving worden de voorgestelde concepten, zoals Python-implementaties, die visuele feedbackmechanismen en de unittests, demonstreerbaar gemaakt en iteratief ge\"{\e}valueerd in overleg met de betrokken onderzoekers en ontwikkelaars.
-=======
-Binnen deze speeltuinomgeving worden de voorgestelde concepten, zoals Python-implementaties, die visuele feedbackmechanismen en de unittests, demonstabel gemaakt en iteratief ge\"{\e}valueerd in overleg met de betrokken onderzoekers en ontwikkelaars.
->>>>>>> origin/master
 Aangezien het ontwikkelproces en de dataverwerking vrijwel volledig binnen het afgeschermde netwerk van het ILVO plaatsvinden, vallen complexe externe privacy- en toegangsrestricties buiten de primaire scope van dit onderzoek.
