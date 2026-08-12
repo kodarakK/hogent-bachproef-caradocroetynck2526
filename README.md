@@ -1,5 +1,17 @@
 # Bachelorproef toegepaste informatica
 
+- [] abstract
+- [] intro
+- [] die bepaalde dingen
+- [] unittesten herschrijven in python
+- [] emav onderdelen herschrijven in python
+- [] die doorsturen aan onderzoekers
+- [] docu onderdeel schrijven
+- [] duidelijke code onderdeel schrijvens
+- [] playground idk what yet
+
+
+
 Deze repository bevat LaTeX sjablonen voor gebruik bij het opmaken van je bachelorproef toegepaste informatica:
 
 - [Het onderzoeksvoorstel](./voorstel/)
