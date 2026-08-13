@@ -1,4 +1,5 @@
 # Bachelorproef toegepaste informatica
+## shit todo
 
 - [] abstract
 - [] intro
@@ -11,6 +12,17 @@
 - [] playground idk what yet
 
 
+## vragen op 13 aug
+
+- unit testen werken of leesbaar?
+- emav code naar python ook werken of leesbaar?
+- wtf is die playground?
+- waar playground storen?
+- wat mag ik tonen?
+
+Dag Samuel, ik heb nog enkele vraagjes, voor die unittesten in python, is het belangrijker dat ze leesbaar zijn? Zodat ze makkelijker te verstaan zijn dan C#? vooraleer ze werken. En hetzelfde voor de implementaties in EMAV zelf, eerst kijken dat Annelise en Marte ze kunnen verstaan vooraleer ze geconnecteerd worden. ik zit ook vast met wat je bedoelde met die "playground". De code overnemen van bijvoorbeeld de transportlogica en omzetten in python? Of meer? een volledige berekenstap? met daar dan de unittesten ook in python? stuur ik dan code via mail of een gitlab project waar dat alles is upgeload? En voor het tonen van code in de bp, gewoon de details niet, mogen unittesten er dan wel instaan? Alvast bedankt bij voorbaat.
+
+## rest van README
 
 Deze repository bevat LaTeX sjablonen voor gebruik bij het opmaken van je bachelorproef toegepaste informatica:
 
