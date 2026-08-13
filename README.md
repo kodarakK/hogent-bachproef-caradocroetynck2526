@@ -11,14 +11,35 @@
 - [] duidelijke code onderdeel schrijvens
 - [] playground idk what yet
 
+leesbaarder: 
+- feature: code ervoor schrijven + testen
+
+onderzoekers doen manuele checks
+wat je manueel doet kan je programmeer
+
+integration tests: realistische voorbeelden insteken op basis van 
+heb pythonnet (dll's) data laag aanspreken -> input data aankunnen. configureren dat doet berekening van dit jaar. berekening voor specifiek jaar en rekenfactor set, uit input data alle diercats, hebben die een waarde gekregen.
+
+zijn alle output bestanden er
+
+voorbeeld van probelemen dat samuel heeft doorgestuurd
+
+voor code 1 functie om zetten
+
+beweizen dat het kan
+
+docs door 
+te veel werk, niet hoofd prior
+de waarom weten de it'ers
 
 ## vragen op 13 aug
 
-- unit testen werken of leesbaar?
-- emav code naar python ook werken of leesbaar?
-- wtf is die playground?
-- waar playground storen?
+- unit testen werken of leesbaar? hceck
+- emav code naar python ook werken of leesbaar? check
+- wtf is die playground? parameters veranderen
+- waar playground storen? of omgezette onderdelen: via mail aparte pagina's of attachment
 - wat mag ik tonen?
+van claude vragen achter een weideemissie code fragment in C# en python en beetje inzetten in onze huidige infrastructuur
 
 Dag Samuel, ik heb nog enkele vraagjes, voor die unittesten in python, is het belangrijker dat ze leesbaar zijn? Zodat ze makkelijker te verstaan zijn dan C#? vooraleer ze werken. En hetzelfde voor de implementaties in EMAV zelf, eerst kijken dat Annelise en Marte ze kunnen verstaan vooraleer ze geconnecteerd worden. ik zit ook vast met wat je bedoelde met die "playground". De code overnemen van bijvoorbeeld de transportlogica en omzetten in python? Of meer? een volledige berekenstap? met daar dan de unittesten ook in python? stuur ik dan code via mail of een gitlab project waar dat alles is upgeload? En voor het tonen van code in de bp, gewoon de details niet, mogen unittesten er dan wel instaan? Alvast bedankt bij voorbaat.
 
