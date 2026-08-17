@@ -1,4 +1,29 @@
 # Bachelorproef toegepaste informatica
+## code as doc books
+- clean code
+- Docs Like Code (Anne Gentle)
+- A philosophy of software design (John ousterhout)
+- the art of readable code (dustin boswell & trevor foucher)
+- Docs for Developers: An Engineer's Field Guide to Technical Writing (Jared Bhatti, e.a.)
+- Living Documentation: Continuous Knowledge Sharing with Domain-Driven Design (Cyrille Martraire)
+- Modern Technical Writing: An Introduction to Software Documentation (Andrew Etter)
+- The Pragmatic Programmer (David Thomas & Andrew Hunt)
+- Refactoring: Improving the Design of Existing Code (Martin Fowler)
+
+## doc drift books
+- Living Documentation: Continuous Knowledge Sharing by Design (boek) — behandelt hoe documentatie meegroeit met de softwarelevenscyclus.
+- Living Documentation (auteur Cyrille Martraire) — aanvullende informatie en kernideeën samengevat.
+- Drift and Erosion in Software Architecture: Summary and Prevention Strategies ( ACM paper) — bespreekt drift/erosie in software-architectuur en preventie.
+- Capturing and Understanding the Drift Between Design, Implementation, and Documentation (Romeo et al., 2024) — specifieke focus op drift tussen ontwerp, implementatie en documentatie.
+- Agile Documentation: A Pattern Guide to Producing Lightweight Documents for Software Projects (Stettina & Staples) — patroongerichte benadering voor lichte documentatie.
+- Software Evolution and Maintenance: A Practitioner’s Approach (boek) — bredere context over software-evolutie en onderhoud, inclusief documentatie-aspecten.
+- Romeo, J., Raglianti, M., Nagy, C., & Lanza, M. (2024). “Capturing and Understanding the Drift Between Design, Implementation, and Documentation.”
+Proceedings of the 32nd IEEE/ACM International Conference on Program Comprehension (ICPC ’24).
+DOI: 10.1145/3643916.3644399
+- Mohamed, A. (2025). “A Review on Detecting and Managing Documentation Drift in Software Development.”
+- Theunissen et al. (2022). “A Mapping Study on Documentation in Continuous Software Development.”
+Information and Software Technology, 142, 106733.
+DOI: 10.1016/j.infsof.2021.106733
 ## shit todo
 
 - [] abstract

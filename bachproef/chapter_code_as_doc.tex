@@ -1,0 +1,105 @@
+% ===================================
+% Chapter1: Code as Documentation
+% ===================================
+\chapter{Code als Documentatie}
+\label{ch:code-as-documentatie}
+
+\section{Inleiding}
+\label{sec:cad-intro}
+
+In moderne softwareontwikkeling worden onderhoudbaarheid en kennisoverdracht steeds belangrijker naarmate systemen complexer worden.
+Software evolueert continue: nieuwe functionaliteiten worden toegevoegd, bestaande code wordt herstructureerd en bugs worden verholpen.
+Onderhoud en evolutie van software vormen bovendien het grootste deel van de totale kost van een softwaresysteem over zijn volledige levenscyclus \autocite{tripathy2014softwareevolution}.
+Traditionele documentatie, zoals losse wiki's en tekstverwerkingsdocumenten, raakt echter snel verouderd omdat ze los staat van de codebase.
+\textcite{gentle2017docslikecode} stelt dat documentatie die niet in hetzelfde versiebeheersysteem leeft als de code, onvermijdelijk losgekoppeld raakt van de werkelijkheid van het systeem.
+
+\textit{Code als Documentatie} is een benadering waarbij de code zelf, samen met lichtgewicht documentatie dicht bij de code, de primaire bron van kennis wordt.
+Dit idee wordt door meerdere auteurs onderschreven.
+\textcite{boswell2011readablecode} argumenteren dat goed geschreven code in hoge mate zelf-documenterend is: duidelijke namen, logische structuur en beperkte complexiteit verminderen de nood aan externe toelichting.
+\textcite{martraire2019livingdocumentation} gaat nog een stap verder en introduceert het concept van \textit{living documentation}: documentatie die van bij ontwerp mee-evolueert met het systeem en die het systeem zelf als bron van waarheid gebruikt.
+Ook \textcite{ousterhout2018philosophy} benadrukt dat commentaar een integraal onderdeel is van het ontwerpproces, geen achteraf toegevoegde vereiste.
+
+Dit hoofdstuk behandelt de definitie en achtergrond van code als documentatie, de redenen waarom deze benadering waardevol is, de onderliggende principes, praktische technieken en patronen, de tools en workflows die dit ondersteunen, en de valkuilen en beperkingen.
+Het legt tevens de basis voor het volgende hoofdstuk over documentatie drift, dat ingaat op de risico's van verouderde documentatie.
+
+
+\section{Definitie en achtergrond}
+\label{sec:cad-definitie}
+
+\subsection{Code documentatie}
+Code als documentatie is het proces van het beschrijven en uitleggen van broncode \autocite{bhatti2021docsdevelopers}.
+Dit kan verschillende vormen aannemen, vari\"{e}rend van inline commentaar en docstrings tot README-bestanden, API-documentatie en architectuurbeschrijvingen.
+\textcite{bhatti2021docsdevelopers} beschrijven documentatie als een engineeringdiscipline op zich, met een eigen levenscyclus die parallel loopt met de software-ontwikkelingscyclus: plannen, schrijven, reviewen, publiceren en onderhouden.
+Zij benadrukken dat engineeers eigenaarschap moeten nemen over hun documentatie, net zoals ze eigenaarschap nemen over hun code.
+
+\subsection{Documentatie als code}
+\textit{Documentatie als code} of (docs-as-code) houdt in dat documentatie wordt geschreven in dezelfde tools en workflows als code: versiebeheer met Git, Markdown of andere lichtgewicht opmaaktalen, pull requests voor reviews, en CI/CD-pipelines voor automatisering \autocite{gentle2017docslikecode}.
+\textcite{etter2016moderntechwriting} pleit voor deze aanpak en stelt dat traditionele documentatietools zoals tekstverwerkers en wiki's fundamenteel tekortschieten omdat ze geen versiebeheer, review-processen of automatisering ondersteunen.
+Hij beargumenteert dat documentatie in Git-repositories thuishoort, in Markdown of vergelijkbare formaten moet worden geschreven, en met statische sitegeneratoren moet worden gebouwd.
+
+\textcite{gentle2017docslikecode} beschrijft het docs-as-code paradigma in detail: documentatie doorloopt dezelfde cycli als code, schrijven, reviewen, testen, mergen, bouwen en deployen.
+Door documentatie in dezelfde repository als de code te bewaren en via pull requests te laten reviewen, wordt documentatie een first-class deliverable die dezelfde kwaliteitsgaranties geniet als code.
+
+\subsection{Code als documentatie}
+De benadering \textit{code als documentatie} gaat nog verder dan docs-als-code.
+Het idee is dat goed geschreven code zelf al een vorm van documentatie is \autocite{boswell2011readablecode}.
+\textcite{boswell2011readablecode} formuleren dit als volgt: code moet zo geschreven zijn dat een lezer deze snel kan begrijpen zonder externe hulp.
+Dit betekent dat naamgeving, structuur en commentaar zodanig worden gekozen dat de intentie van de code zo veel mogelijk uit de code zelf spreekt.
+Extra documentatie moet dicht bij de code leven en mee-evolueren met wijzigingen.
+
+\textcite{martraire2019livingdocumentation} introduceert het gerelateerde concept van \textit{living documentation}: documentatie die altijd actueel, accuraat en bruikbaar is doordat ze van bij ontwerp in het systeem is ingebouwd.
+Hij onderscheidt meerdere bronnen van levende documentatie, waaronder de code zelf, domeinmodellen, uitvoerings specificaties en geannoteerde content.
+Door het systeem zelf als bron van waarheid te gebruiken, kan documentatie automatisch worden gegenereerd of gevalideerd, wat de kans op drift minimaliseert.
+\textcite{ousterhout2018philosophy} tenslotte benadrukt dat commentaar geen achteraf gedachte is, maar een essentieel onderdeel van softwareontwerp.
+Hij stelt dat commentaar informatie moet vastleggen die in het hoofd van de ontwerper zat, maar die niet direct in code kan worden uitgedrukt.
+Dit sluit aan bij het bredere idee dat code en documentatie niet gescheiden zijn, maar samen de kennis over het systeem vormen.
+
+\section{Waarom code als documentatie}
+\label{sec:cad-waarom}
+
+\subsection{Minder drift tussen code en documentatie}
+Wanneer documentatie in dezelfde repository staat en via dezelfde pull requests wordt bijgewerkt, is de kans kleiner dat ze verouderd raakt \autocite{gentle2017docslikecode}.
+\textcite{gentle2017docslikecode} stelt dat door documentatie en code in hetzelfde versiebeheersysteem te bewaren, elke code-wijziging direct gepaard kan gaan met de bijhorende doc-update. Dit maakt het bovendien mogelijk om in code reviews na te gaan of documentatie al dan niet is bijgewerkt.
+
+\textcite{martraire2019livingdocumentation} argumenteert dat levende documentatie van bij ontwerp drift voorkomt: door documentatie te koppelen aan de code of aan uitvoerings specificaties, wordt het onmogelijk om de code te wijzigingen zonder dat de documentatie automatisch mee verandert of een waarschuwing genereert.
+Hij stelt: ``Hoe meer we documentatie uit de code zelf kunnen extraheren, hoe minder drift we zullen hebben.''
+Dit principe wordt ook onderschreven door \textcite{theunissen2022mappingdocumentation}, die in hun mapping studie vaststellen dat documentatie die dicht bij de code leeft en via CI/CD-pipelines wordt gevalideerd, aanzienlijk minder snel drift vertoont.
+
+\subsection{Snellere onboarding en kennisoverdracht}
+Nieuwe developers kunnen direct vanuit de codebasis leren hoe het systeem werkt, zonder naar externe, mogelijk verouderde documentatie te moeten zoeken \autocite{bhatti2021docsdevelopers}.
+\textcite{bhatti2021docsdevelopers} benadrukken dat goede documentatie een kritieke rol speelt bij het onboarden van nieuwe teamleden: het verkort de tijd die nodig is om productief te worden en vermindert de afhankelijkheid van \textit{tribal knowledge}, de informele kennis die enkel bij individuele teamleden leeft.
+
+\textcite{martin2008clean} stelt dat leesbare, goed gestructureerde code met duidelijke namen en beperkte verantwoordelijkheden per functie, aanzienlijk bijdraagt aan de begrijpelijkheid van een systeem.
+Wanneer code zelf al veel vertelt over wat het systeem doet, heeft een nieuwe developer minder externe context nodig om aan de slag te kunnen.
+Dit wordt bevestigd door \textcite{boswell2011readablecode}, die stellen dat het primaire doel van code-esthetiek en naamgeving is om de leestijd en het begrip te optimaliseren, niet om de schrijftijd.
+
+\subsection{Betere onderhoudbaarheid}
+Duidelijke namen, gestructureerde modules en documentatie dicht bij de code maken refactoring en bugfixes makkelijker \autocite{fowler2018refactoring}.
+\textcite{fowler2018refactoring} beschrijft refactoring als het herstructureren van bestaande code zonder het externe gedrag te wijzigen, met als doel de interne structuur te verbeteren.
+Goede code-leesbaarheid en documentatie zijn hierbij essentieel: ze maken het mogelijk om veilig te refactoren met de zekerheid dat men begrijpt wat de code doet en waarom bepaalde keuzes zijn gemaakt.
+
+\subsection{Documentatie als first-class deliverable}
+Door documentatie dezelfde review- en testprocessen te geven als code, wordt de kwaliteit en actualiteit hoger \autocite{gentle2017docslikecode}.
+\textcite{etter2016moderntechwriting} stelt dat documentatie die door dezelfde pipelines loopt als code vanzelf een hogere kwaliteitsstandaard bereikt.
+Documentatie wordt niet langer gezien als een optionele extra taak, maar als een integraal onderdeel van het ontwikkelproces.
+
+\textcite{bhatti2021docsdevelopers} beschrijven dit als een verschuiving in mindset: engineers moeten documentatie beschouwen als een product, niet als een bijproduct.
+Zij presenteren een documentatie-levenscyclus die parallel loopt met de software development lifecycle, met fasen voor planning, schrijven, reviewen, publiceren en onderhouden.
+Door documentatie expliciet te plannen en te schedulen binnen sprints, wordt ze een first-class deliverable in plaats van een afterthought.
+
+\section{Principes van code als documentatie}
+\label{sec:cad-principes}
+
+\subsection{Schrijf leesbare, zelf-documenterende code}
+Het fundament van code als documentatie is code die zichzelf verklaart.
+\textcite{boswell2011readablecode} stellen dat het primaire doel bij het schrijven van code niet moet zijn om de computer te instrueren, maar om menselijke lezers duidelijk te communiceren wat de code doet.
+Zij introduceren talrijke heuristieken voor zelf-documenterende code, waaronder:
+
+\begin{itemize}
+\item \textbf{Kies specifieke en informatieve namen.} \textcite{boswell2011readablecode} raden aan om informatie te verpakken in namen. Een naam als \texttt{calculateMonthlyInterest} communiceert veel meer dan \texttt{calc} of \texttt{foo}. Vermijd vage, generieke namen zoals \texttt{temp}, \texttt{retval} of \texttt{data}, tenzij de variabele werkenlijk geen specifiekere betekenis heeft.
+\item \textbf{Vermijd magische nummers en cryptische afkortingen.} \textcite{boswell2011readablecode} adviseren om constante waarden een beschrijvende naam te geven (bijv. \texttt{MAX\_CONNECTIONS\_PER\_USER = 5}) in plaats van het getal letterlijk in de code te gebruiken.
+
+\item 
+\end{itemize}
+
+
