@@ -1,0 +1,527 @@
+% ============================================================
+% BibTeX-entry voor Modern Technical Writing (niet in originele lijst)
+% Voeg toe aan je .bib-bestand:
+%
+% @book{etter2016moderntechwriting,
+%   author    = {Etter, Andrew},
+%   title     = {Modern Technical Writing: An Introduction to Software Documentation},
+%   year      = {2016},
+%   publisher = {Self-published},
+%   isbn      = {9780986309708},
+%   url       = {https://www.amazon.com/Modern-Technical-Writing-Introduction-Documentation-ebook/dp/B01A2QL9SS}
+% }
+% ============================================================
+
+% ============================================================
+% Chapter 1: Code as Documentation
+% ============================================================
+\chapter{Code as Documentation}
+\label{chap:code-as-documentation}
+
+\section{Inleiding}
+\label{sec:cad-intro}
+
+In moderne softwareontwikkeling worden onderhoudbaarheid en kennisoverdracht steeds belangrijker naarmate systemen complexer worden. Software evolueert continu: nieuwe functionaliteiten worden toegevoegd, bestaande code wordt gerefactord en bugs worden verholpen. Onderhoud en evolutie van software vormen bovendien het grootste deel van de totale kost van een softwaresysteem over zijn volledige levenscyclus \autocite{tripathy2014softwareevolution}. Traditionele documentatie, zoals losse wiki's en tekstverwerkingsdocumenten, raakt echter snel verouderd omdat ze losstaat van de codebase. \textcite{gentle2017docslikecode} stelt dat documentatie die niet in hetzelfde versiebeheersysteem leeft als de code, onvermijdelijk uit sync raakt met de werkelijkheid van het systeem.
+
+\textit{Code as documentation} is een benadering waarbij de code zelf, samen met lichtgewicht documentatie dicht bij de code, de primaire bron van kennis wordt. Dit idee wordt door meerdere auteurs onderschreven. \textcite{boswell2011readablecode} argumenteren dat goed geschreven code in hoge mate zelf-documenterend is: duidelijke namen, logische structuur en beperkte complexiteit verminderen de nood aan externe toelichting. \textcite{martraire2019livingdocumentation} gaat nog een stap verder en introduceert het concept van \textit{living documentation}: documentatie die van bij ontwerp mee-evolueert met het systeem en die het systeem zelf als bron van waarheid gebruikt. Ook \textcite{ousterhout2018philosophy} benadrukt dat commentaar een integraal onderdeel is van het ontwerpproces, niet een achteraf toegevoegd vereiste.
+
+Dit chapter behandelt de definitie en achtergrond van code as documentation, de redenen waarom deze benadering waardevol is, de onderliggende principes, praktische technieken en patronen, de tools en workflows die dit ondersteunen, en de valkuilen en beperkingen. Het legt tevens de basis voor het volgende chapter over documentation drift, dat ingaat op de risico's van verouderde documentatie.
+
+\section{Definitie en achtergrond}
+\label{sec:cad-definitie}
+
+\subsection{Code documentation}
+Code documentation is het proces van het beschrijven en uitleggen van broncode \autocite{bhatti2021docsdevelopers}. Dit kan verschillende vormen aannemen, variërend van inline commentaar en docstrings tot README-bestanden, API-documentatie en architectuurbeschrijvingen. \textcite{bhatti2021docsdevelopers} beschrijven documentatie als een engineeringdiscipline op zich, met een eigen levenscyclus die parallel loopt met de software-ontwikkelingscyclus: plannen, schrijven, reviewen, publiceren en onderhouden. Zij benadrukken dat engineers eigenaarschap moeten nemen over hun documentatie, net zoals ze eigenaarschap nemen over hun code.
+
+\subsection{Documentation as code}
+\textit{Documentation as code} (of docs-as-code) houdt in dat documentatie wordt geschreven in dezelfde tools en workflows als code: versiebeheer met Git, Markdown of andere lichtgewicht opmaaktalen, pull requests voor reviews, en CI/CD-pipelines voor automatisering \autocite{gentle2017docslikecode}. \textcite{etter2016moderntechwriting} pleit voor deze aanpak en stelt dat traditionele documentatietools zoals tekstverwerkers en wiki's fundamenteel tekortschieten omdat ze geen versiebeheer, review-processen of automatisering ondersteunen. Hij beargumenteert dat documentatie in Git-repositories thuishoort, in Markdown of vergelijkbare formaten moet worden geschreven, en met statische sitegeneratoren moet worden gebouwd.
+
+\textcite{gentle2017docslikecode} beschrijft het docs-as-code paradigma in detail: documentatie doorloopt dezelfde cycli als code --- schrijven, reviewen, testen, mergen, bouwen en deployen. Door documentatie in dezelfde repository als de code te bewaren en via pull requests te laten reviewen, wordt documentatie een first-class deliverable die dezelfde kwaliteitsgaranties geniet als code.
+
+\subsection{Code as documentation}
+De benadering \textit{code as documentation} gaat nog verder dan docs-as-code. Het idee is dat goed geschreven code zelf al een vorm van documentatie is \autocite{boswell2011readablecode}. \textcite{boswell2011readablecode} formuleren dit als volgt: code moet zo geschreven zijn dat een lezer deze snel kan begrijpen zonder externe hulp. Dit betekent dat naamgeving, structuur en commentaar zodanig worden gekozen dat de intentie van de code zo veel mogelijk uit de code zelf spreekt. Extra documentatie moet dicht bij de code leven en mee-evolueren met wijzigingen.
+
+\textcite{martraire2019livingdocumentation} introduceert het gerelateerde concept van \textit{living documentation}: documentatie die altijd actueel, accuraat en bruikbaar is doordat ze van bij ontwerp in het systeem is ingebouwd. Hij onderscheidt meerdere bronnen van living documentation, waaronder de code zelf, domeinmodellen, executable specifications en geannoteerde content. Door het systeem zelf als bron van waarheid te gebruiken, kan documentatie automatisch worden gegenereerd of gevalideerd, wat de kans op drift minimaliseert.
+
+\textcite{ousterhout2018philosophy} tenslotte benadrukt dat commentaar geen achteraf gedachte is, maar een essentieel onderdeel van softwareontwerp. Hij stelt dat commentaar informatie moet vastleggen die in het hoofd van de ontwerper zat, maar die niet direct in code kan worden uitgedrukt. Dit sluit aan bij het bredere idee dat code en documentatie niet gescheiden zijn, maar samen de kennis over het systeem vormen.
+
+\section{Waarom code als documentatie?}
+\label{sec:cad-waarom}
+
+\subsection{Minder drift tussen code en documentatie}
+Wanneer documentatie in dezelfde repository staat en via dezelfde pull requests wordt bijgewerkt, is de kans kleiner dat ze verouderd raakt \autocite{gentle2017docslikecode}. \textcite{gentle2017docslikecode} stelt dat door documentatie en code in hetzelfde versiebeheersysteem te bewaren, elke code-wijziging direct gepaard kan gaan met de bijbehorende doc-update. Dit maakt het bovendien mogelijk om in code reviews na te gaan of documentatie al dan niet is bijgewerkt.
+
+\textcite{martraire2019livingdocumentation} argumenteert dat living documentation van bij ontwerp drift voorkomt: door documentatie te koppelen aan de code of aan executable specifications, wordt het onmogelijk om de code te wijzigen zonder dat de documentatie automatisch mee verandert of een waarschuwing genereert. Hij stelt: ``Hoe meer we documentatie uit de code zelf kunnen extraheren, hoe minder drift we zullen hebben.'' Dit principe wordt ook onderschreven door \textcite{theunissen2022mappingdocumentation}, die in hun mapping study vaststellen dat documentatie die dicht bij de code leeft en via CI/CD-pipelines wordt gevalideerd, aanzienlijk minder snel drift vertoont.
+
+\subsection{Snellere onboarding en kennisoverdracht}
+Nieuwe developers kunnen direct vanuit de codebasis leren hoe het systeem werkt, zonder naar externe, mogelijk verouderde documentatie te moeten zoeken \autocite{bhatti2021docsdevelopers}. \textcite{bhatti2021docsdevelopers} benadrukken dat goede documentatie een kritieke rol speelt bij het onboarden van nieuwe teamleden: het verkort de tijd die nodig is om productief te worden en vermindert de afhankelijkheid van \textit{tribal knowledge}, de informele kennis die enkel bij individuele teamleden leeft.
+
+\textcite{martin2008clean} stelt dat leesbare, goed gestructureerde code met duidelijke namen en beperkte verantwoordelijkheden per functie, aanzienlijk bijdraagt aan de begrijpelijkheid van een systeem. Wanneer code zelf al veel vertelt over wat het systeem doet, heeft een nieuwe developer minder externe context nodig om aan de slag te kunnen. Dit wordt bevestigd door \textcite{boswell2011readablecode}, die stellen dat het primaire doel van code-esthetiek en naamgeving is om de leestijd en het begrip te optimaliseren, niet om de schrijftijd.
+
+\subsection{Betere onderhoudbaarheid}
+Duidelijke namen, gestructureerde modules en documentatie dicht bij de code maken refactoring en bugfixes makkelijker \autocite{fowler2018refactoring}. \textcite{fowler2018refactoring} beschrijft refactoring als het herstructureren van bestaande code zonder het externe gedrag te wijzigen, met als doel de interne structuur te verbeteren. Goede code-leesbaarheid en documentatie zijn hierbij essentieel: ze maken het mogelijk om veilig te refactoren met de zekerheid dat men begrijpt wat de code doet en waarom bepaalde keuzes zijn gemaakt.
+
+\textcite{ousterhout2018philosophy} introduceert het concept van \textit{deep modules}: modules met een eenvoudige interface maar krachtige functionaliteit. Hij stelt dat diepe modules de complexiteit verbergen en zo het systeem gemakkelijker begrijpelijk en onderhoudbaar maken. Wanneer modules goed zijn ontworpen en hun interfaces helder gedocumenteerd zijn, hoeft een ontwikkelaar niet de interne implementatie te lezen om de module te kunnen gebruiken. Dit vermindert de cognitieve last en maakt onderhoud efficiënter.
+
+\textcite{tripathy2014softwareevolution} benadrukken dat onderhoud en evolutie de grootste kostenvormen zijn in de levenscyclus van software. Goede documentatie en leesbare code verlagen deze kosten aanzienlijk doordat wijzigingen sneller en veiliger kunnen worden doorgevoerd.
+
+\subgection{Documentatie als first-class deliverable}
+Door documentatie dezelfde review- en testprocessen te geven als code, wordt de kwaliteit en actualiteit hoger \autocite{gentle2017docslikecode}. \textcite{etter2016moderntechwriting} stelt dat documentatie die door dezelfde pipelines loopt als code --- versiebeheer, reviews, geautomatiseerde builds --- vanzelf een hogere kwaliteitsstandaard bereikt. Documentatie wordt niet langer gezien als een optionele extra taak, maar als een integraal onderdeel van het ontwikkelproces.
+
+\textcite{bhatti2021docsdevelopers} beschrijven dit als een verschuiving in mindset: engineers moeten documentatie beschouwen als een product, niet als een bijproduct. Zij presenteren een documentatie-levenscyclus die parallel loopt met de software development lifecycle, met fasen voor planning, schrijven, reviewen, publiceren en onderhouden. Door documentatie expliciet te plannen en te schedulen binnen sprints, wordt ze een first-class deliverable in plaats van een afterthought.
+
+\section{Principes van code as documentation}
+\label{sec:cad-principes}
+
+\subsection{Schrijf leesbare, zelf-documenterende code}
+Het fundament van code as documentation is code die zichzelf verklaart. \textcite{boswell2011readablecode} stellen dat het primaire doel bij het schrijven van code niet moet zijn om de computer te instrueren, maar om menselijke lezers duidelijk te communiceren wat de code doet. Zij introduceren talrijke heuristieken voor zelf-documenterende code, waaronder:
+
+\begin{itemize}
+    \item \textbf{Kies specifieke en informatieve namen.} \textcite{boswell2011readablecode} raden aan om informatie te \textit{verpakken} in namen. Een naam als \texttt{calculateMonthlyInterest} communiceert veel meer dan \texttt{calc} of \texttt{foo}. Vermijd vage, generieke namen zoals \texttt{tmp}, \texttt{retval} of \texttt{data}, tenzij de variabele werkelijk geen specifiekere betekenis heeft.
+    \item \textbf{Vermijd magic numbers en cryptische afkortingen.} \textcite{boswell2011readablecode} adviseren om constante waarden een beschrijvende naam te geven (bijv. \texttt{MAX\_CONNECTIONS\_PER\_USER = 5}) in plaats van het getal letterlijk in de code te gebruiken.
+    \item \textbf{Houd functies klein en gefocust.} \textcite{martin2008clean} stelt dat functies kort moeten zijn en precies één ding moeten doen. Hoe korter en gefocuster een functie, hoe gemakkelijk ze te begrijpen, te testen en te hergebruiken is.
+\end{itemize}
+
+Ook \textcite{ousterhout2018philosophy} benadrukt het belang van precieze naamgeving. Hij stelt dat namen zowel nauwkeurig als betekenisvol moeten zijn: een naam die te vaag is, geeft aanleiding tot misverstanden; een naam die te specifiek is voor een tijdelijke implementatie, raakt snel verouderd. Hij adviseert om namen te kiezen die het \textit{concept} beschrijven, niet de \textit{implementatie}.
+
+\textcite{thomas2019pragmatic} dragen bij met het principe van \textit{ETC} (Easy to Change): code moet zo geschreven zijn dat wijzigingen makkelijk door te voeren zijn. Dit houdt in dat code modulair, los gekoppeld en goed benoemd moet zijn, zodat een wijziging in één deel van het systeem geen onverwachte neveneffecten heeft in andere delen.
+
+\subsection{Documenteer het ``waarom'', niet alleen het ``wat''}
+Code laat vaak zien \textit{wat} er gebeurt, maar niet \textit{waarom} bepaalde keuzes zijn gemaakt. \textcite{boswell2011readablecode} formuleren dit als volgt: het doel van commentaar is om dingen uit te leggen die de code zelf niet kan uitdrukken. Zij onderscheiden verschillende soorten commentaar:
+
+\begin{itemize}
+    \item \textbf{Intentie-commentaar}: legt uit wat de code probeert te bereiken en waarom een bepaalde aanloop is gekozen.
+    \item \textbf{Waarschuwingen}: maakt andere ontwikkelaars attent op randgevallen of valkuilen.
+    \item \textbf{TODO's en FIXME's}: markeert onvolledige of tijdelijke code die nog aandacht vereist.
+    \item \textbf{Verduidelijking van complexe logica}: legt uit hoe een ingewikkeld algoritme werkt wanneer de code alleen niet voldoende zelfverklarend is.
+\end{itemize}
+
+\textcite{ousterhout2018philosophy} stelt dat commentaar informatie moet vastleggen die in het hoofd van de ontwerper aanwezig was, maar die niet direct in de code kan worden uitgedrukt. Hij stelt: ``Het doel van commentaar is om dingen te beschrijven die niet voor de hand liggen vanuit de code.'' Voorbeelden van zulke informatie zijn:
+
+\begin{itemize}
+    \item De redenering achter een specifieke architecturale keuze.
+    \item De voor- en nadelen van een gekozen oplossing ten opzichte van alternatieven.
+    \item Beperkingen of assumpties waarvan de code afhankelijk is.
+    \item De context van een beslissing (bijv. waarom een bepaalde datastructuur werd gekozen).
+\end{itemize}
+
+Hij benadrukt dat commentaar een ontwerpproces is, geen documentatieproces: commentaar helpt bij het nadenken over het ontwerp, niet alleen bij het vastleggen ervan \autocite{ousterhout2018philosophy}.
+
+Dit staat in contrast met de visie van \textcite{martin2008clean}, die stelt dat ``commentaar altijd een fout is'' --- niet in de zin dat commentaar verboden is, maar in de zin dat de nood aan commentaar vaak wijst op code die niet duidelijk genoeg is geschreven. Beide visies komen echter overeen op één punt: commentaar moet waarde toevoegen en mag geen herhaling zijn van wat de code al zegt.
+
+Voor het vastleggen van architecturale beslissingen raadt men \textit{Architecture Decision Records} (ADRs) aan. Een ADR is een kort document dat vastlegt: welke beslissing is genomen, welke alternatieven er waren, waarom deze keuze is gemaakt, en wat de gevolgen zijn \autocite{martraire2019livingdocumentation}. ADRs leven in de repository en worden versiebeheerd samen met de code.
+
+\subsection{Houd documentatie dicht bij de code}
+\textcite{gentle2017docslikecode} stelt dat documentatie het dichtst bij de code moet leven die ze beschrijft. Wanneer documentatie en code in dezelfde repository staan, is de kans kleiner dat de één verandert zonder de ander. \textcite{ruping2005agiledocumentation} had dit principe al eerder geformuleerd in de context van agile documentatie: hij stelt dat documentatie \textit{dicht bij de code} moet worden bewaard en dat er een duidelijke relatie moet zijn tussen een document en de code die het beschrijft.
+
+\textcite{martraire2019livingdocumentation} gaat nog verder door te stellen dat documentatie idealiter \textit{uit} de code wordt gehaald, niet ernaast wordt geplaatst. Dit betekent dat code-annotaties, domeinmodellen en executable specifications fungeren als primaire bron voor documentatie, die vervolgens automatisch kan worden gegenereerd. Hierdoor is het onmogelijk om de code te wijzigen zonder dat de documentatie automatisch meestapt of een waarschuwing genereert.
+
+Praktisch betekent dit:
+\begin{itemize}
+    \item README's, docstrings, inline commentaar en ontwerpnota's in dezelfde Git-repository als de code \autocite{gentle2017docslikecode}.
+    \item Documentatie wijzigen in dezelfde commit of pull request als de code-wijziging \autocite{etter2016moderntechwriting}.
+    \item Een expliciete koppeling leggen tussen documentatie en code, bijvoorbeeld via links, tags of structuur \autocite{bhatti2021docsdevelopers}.
+\end{itemize}
+
+\subsection{Behandel documentatie als code}
+\textcite{gentle2017docslikecode} stelt dat documentatie door dezelfde workflows moet lopen als code: versiebeheer met Git, pull requests met reviews, geautomatiseerde builds en deployments, en kwaliteitschecks. \textcite{etter2016moderntechwriting} pleit voor het gebruik van lichtgewicht opmaaktalen zoals Markdown, AsciiDoc of reStructuredText, die leesbaar zijn in platte tekst en tegelijkertijd kunnen worden omgezet naar HTML, PDF of andere formaten.
+
+\textcite{bhatti2021docsdevelopers} beschrijven hoe engineers documentatie kunnen inrichten volgens het docs-as-code paradigma:
+
+\begin{itemize}
+    \item \textbf{Versiebeheer}: alle documentatie in Git, met dezelfde branch-strategie als de code.
+    \item \textbf{Reviews}: documentatie-wijzigingen via pull requests, met dezelfde review-standaarden als code.
+    \item \textbf{Stijl- en structuurgidsen}: definieer standaarden voor schrijfstijl, opmaak en structuur, net zoals code style guides.
+    \item \textbf{CI/CD-pipelines}: bouw, test en deploy documentatie automatisch bij elke merge, met checks op gebroken links, stijl en volledigheid.
+\end{itemize}
+
+\textcite{martin2008clean} stelt dat net als bij code, consistentie in documentatie belangrijk is: een uniforme stijl en structuur maken documentatie voorspelbaar en gemakkelijker te raadplegen.
+
+\subsection{Wees beknopt en relevant}
+\textcite{boswell2011readablecode} waarschuwen voor \textit{noise comments}: commentaar dat geen informatie toevoegt aan wat de code al uitdrukt. Voorbeelden zijn commentaar dat gewoon de functienaam herhaalt, voor de hand liggende dingen uitlegt, of achterhaald is. Zij adviseren om dergelijk commentaar actief te verwijderen.
+
+\textcite{martin2008clean} stelt dat over-documentatie even schadelijk kan zijn als geen documentatie: het creëert ruis die het lezen van de code vertraagt en de lezer afleidt van wat echt belangrijk is. Hij raadt aan om commentaar te gebruiken als verduidelijking, niet als excuus voor slechte code.
+
+\textcite{ruping2005agiledocumentation} introduceert het principe van \textit{documentation fitness}: documentatie moet \textit{juist voldoende} zijn --- niet te veel en niet te weinig. Hij stelt dat de waarde van documentatie moet opwegen tegen de kost van het schrijven en onderhouden ervan. Documentatie die niet wordt gelezen of onderhouden, heeft geen waarde en kan beter worden verwijderd.
+
+\textcite{martraire2019livingdocumentation} sluit hierbij aan en stelt dat verouderde of irrelevante documentatie (\textit{dead documentation}) actief moet worden opgespoord en verwijderd. Hij introduceert het concept van \textit{documentation debt}: de opgebouwde achterstand in documentatie-onderhoud die vergelijkbaar is met technische schuld in code.
+
+\section{Praktische technieken en patronen}
+\label{sec:cad-technieken}
+
+\subsection{Naamgeving en structuur}
+\textcite{boswell2011readablecode} besteden een heel hoofdstuk aan naamgeving en stellen dat namen de belangrijkste bron van zelf-documentatie in code zijn. Hun belangrijkste richtlijnen zijn:
+
+\begin{itemize}
+    \item \textbf{Kies specifieke woorden.} \texttt{getPageSize} is beter dan \texttt{getSize}; \texttt{calculateMonthlyInterest} is beter dan \texttt{calc}. Hoe specifieker de naam, hoe minder commentaar nodig is \autocite{boswell2011readablecode}.
+    \item \textbf{Vermijd generieke namen} zoals \texttt{tmp}, \texttt{retval}, \texttt{data}, \texttt{foo}, tenzij er een specifieke reden is (zoals een lusvariabele met een zeer beperkte scope).
+    \item \textbf{Gebruik namen die de eenheid of type communiceren.} \texttt{delayMillis} is beter dan \texttt{delay}; \texttt{userAgeInYears} is beter dan \texttt{age} \autocite{boswell2011readablecode}.
+    \item \textbf{Wees consistent} in naamgevingsconventies binnen een project. Inconsistentie leidt tot verwarring en bugs \autocite{martin2008clean}.
+\end{itemize}
+
+\textcite{ousterhout2018philosophy} voegt hieraan toe dat namen nauwkeurig moeten zijn: als een naam een indruk geeft die niet overeenkomt met het werkelijke gedrag van de code, is dat erger dan geen naam. Hij stelt ook dat namen \textit{consistent} moeten zijn: als dezelfde term in verschillende delen van het systeem verschillende betekenissen heeft, leidt dit tot verwarring.
+
+\textcite{martin2008clean} benadrukt het belang van een consistente, modulaire structuur. Hij stelt dat code moet worden georganiseerd in modules met een duidelijke, enkele verantwoordelijkheid (het \textit{Single Responsibility Principle}). Een duidelijke scheiding tussen lagen --- zoals API, business logic en data access --- maakt het systeem gemakkelijker begrijpelijk en onderhoudbaar.
+
+\textcite{ousterhout2018philosophy} introduceert het concept van \textit{deep modules}: een module is diep wanneer de interface eenvoudig is maar de functionaliteit krachtig. Diepe modules verbergen complexiteit achter een eenvoudige interface, waardoor de gebruiker van de module niet belast wordt met implementatiedetails. Dit staat in contrast met \textit{shallow modules}, die weinig functionaliteit bieden maar een complexe interface hebben. Ousterhout stelt dat shallow modules leiden tot code die moeilijk te begrijpen en te onderhouden is.
+
+\subsection{Inline commentaar en docstrings}
+\textcite{boswell2011readablecode} onderscheiden nuttige van nutteloze commentaar. Nuttige commentaar:
+
+\begin{itemize}
+    \item Legt uit \textit{waarom} iets wordt gedaan, niet \textit{wat} er wordt gedaan.
+    \item Verduidelijkt complexe of niet-intuïtieve logica.
+    \item Waarschuwt voor valkuilen of randgevallen.
+    \item Vastlegt van beslissingen en hun redenering.
+\end{itemize}
+
+Nutteloze commentaar (\textit{noise comments}) herhaalt wat de code al zegt, verduidelijkt niets, en neemt plaats in zonder waarde toe te voegen. \textcite{boswell2011readablecode} raden aan om dergelijke commentaar actief te verwijderen.
+
+\textcite{ousterhout2018philosophy} stelt dat er een onderscheid moet worden gemaakt tussen \textit{interface commentaar} (die de publieke interface van een module of functie beschrijft) en \textit{implementatiecommentaar} (die interne details verduidelijkt). Interface commentaar is cruciaal omdat het de gebruiker vertelt hoe de module te gebruiken zonder de implementatie te hoeven lezen. Hij stelt: ``Als gebruikers de code van een methode moeten lezen om ze te kunnen gebruiken, dan is er geen abstractie'' \autocite{ousterhout2018philosophy}.
+
+Voor het schrijven van docstrings adviseren \textcite{bhatti2021docsdevelopers} om een consistente stijl te volgen, zoals Google-style docstrings in Python, JSDoc in JavaScript, of JavaDoc in Java. Een goede docstring bevat:
+
+\begin{itemize}
+    \item Een korte beschrijving van wat de functie of klasse doet.
+    \item Een beschrijving van de parameters (naam, type, betekenis).
+    \item Een beschrijving van de retourwaarde (type, betekenis).
+    \item Eventuele side-effects of uitzonderingen die de functie kan opwerpen.
+    \item Eventuele pre- of postcondities.
+\end{itemize}
+
+\textcite{martraire2019livingdocumentation} stelt dat docstrings niet alleen voor mensen moeten worden geschreven, maar ook zodanig dat tools ze kunnen verwerken: docstrings kunnen dienen als bron voor automatisch gegenereerde API-documentatie, voor validatie in CI-pipelines, of zelfs voor het genereren van executable specifications.
+
+\subsection{README en project-overzicht}
+Een goede README is het eerste wat een nieuwe ontwikkelaar of gebruiker leest bij het openen van een repository. \textcite{bhatti2021docsdevelopers} beschrijven een README als de \textit{voordeur} van een project. Een goede README bevat:
+
+\begin{itemize}
+    \item Doel van het project: wat het doet en waarom het bestaat.
+    \item Installatie- en configuratie-instructies.
+    \item Een snelstartgids of voorbeeld van het basisgebruik.
+    \item Een overzicht van de belangrijkste componenten en hun rol.
+    \item Bijdragerichtlijnen (\textit{contributing guidelines}).
+    \item Licentie-informatie.
+\end{itemize}
+
+\textcite{gentle2017docslikecode} stelt dat de README in de root van de repository moet staan en dat ze bij grote wijzigingen moet worden bijgewerkt. \textcite{etter2016moderntechwriting} raadt aan om de README beknopt te houden en te linken naar meer gedetailleerde documentatie in submappen, om zo een hiërarchie te creëren waarin de lezer stap voor stap dieper kan gaan.
+
+\textcite{bhatti2021docsdevelopers} introduceren het concept van \textit{documentation types} gebaseerd op het Diátaxis-framework: tutorials (leren), how-to guides (taken uitvoeren), referentie (informatie opzoeken) en uitleg (begrijpen). Zij stellen dat elk type document een ander doel en een ander publiek heeft, en dat het belangrijk is om deze types niet te mengen in één document.
+
+\subsection{Architecture Decision Records (ADRs)}
+ADRs zijn korte documenten die architecturale beslissingen vastleggen. \textcite{martraire2019livingdocumentation} beschrijft ADRs als een vorm van \textit{living documentation}: ze leven in de repository, worden versiebeheerd samen met de code, en evolueren mee met het systeem. Een ADR bevat typisch:
+
+\begin{itemize}
+    \item \textbf{Titel en status}: een korte beschrijving van de beslissing en haar status (voorgesteld, geaccepteerd, vervangen, \ldots).
+    \item \textbf{Context}: de situatie die de beslissing noodzakelijk maakte.
+    \item \textbf{Beslissing}: de gekozen optie, duidelijk geformuleerd.
+    \item \textbf{Alternatieven}: welke andere opties werden overwogen en waarom niet gekozen.
+    \item \textbf{Gevolgen}: wat zijn de implicaties van deze beslissing (zowel positief als negatief).
+\end{itemize}
+
+\textcite{bhatti2021docsdevelopers} stellen dat ADRs vooral waardevol zijn voor het vastleggen van \textit{waarom}-beslissingen: de redenering achter architecturale keuzes is vaak niet zichtbaar in de code, maar is cruciaal voor toekomstige ontwikkelaars die het systeem moeten begrijpen of uitbreiden.
+
+ADRs worden bewaard in een specifieke map in de repository (bijv. \texttt{/docs/adr/}) en worden genummerd of gedateerd om een chronologisch overzicht te bieden. Omdat ze in dezelfde repository leven als de code, zijn ze altijd toegankelijk voor iedereen die met de codebase werkt \autocite{gentle2017docslikecode}.
+
+\subsection{Voorbeelden en use cases}
+\textcite{bhatti2021docsdevelopers} benadrukken dat code-voorbeelden een van de meest effectieve vormen van documentatie zijn: ze laten zien hoe een API of functie in de praktijk moet worden gebruikt, wat vaak duidelijker is dan een tekstuele beschrijving. \textcite{martraire2019livingdocumentation} gaat nog verder en stelt dat voorbeelden \textit{executable} moeten zijn: wanneer voorbeelden kunnen worden uitgevoerd en automatisch worden gevalideerd, worden ze een vorm van living documentation die niet kan verouderen.
+
+Praktisch kunnen voorbeelden worden opgenomen in:
+\begin{itemize}
+    \item Docstrings, als korte code-snippets.
+    \item De README, als snelstart-voorbeelden.
+    \item Een aparte \texttt{/examples}-map, voor meer uitgebreide use cases.
+    \item Geautomatiseerde tests, die tegelijkertijd dienen als documentatie en als validatie \autocite{martraire2019livingdocumentation}.
+\end{itemize}
+
+\section{Tools en workflows}
+\label{sec:cad-tools}
+
+\subsection{Versiebeheer}
+\textcite{gentle2017docslikecode} stelt dat versiebeheer (Git) het fundament is van docs-as-code: het maakt het mogelijk om wijzigingen in documentatie te tracken, te reviewen en te herstellen. \textcite{etter2016moderntechwriting} beargumenteert dat versiebeheer voor documentatie zelfs essentieel is: zonder versiebeheer is er geen manier om te weten wie wat wanneer heeft gewijzigd, en is er geen mogelijkheid om reviews uit te voeren of wijzigingen terug te draaien.
+
+Praktisch betekent dit dat alle documentatie --- README's, ADRs, architectuurdocs, API-referentie --- in dezelfde Git-repository als de code wordt bewaard \autocite{gentle2017docslikecode}. Documentatie-wijzigingen doorlopen dezelfde branch-strategie en dezelfde pull request-workflow als code-wijzigingen.
+
+\subsection{Opmaaktalen}
+\textcite{etter2016moderntechwriting} pleit voor het gebruik van lichtgewicht opmaaktalen zoals Markdown, AsciiDoc of reStructuredText. Deze formaten zijn:
+\begin{itemize}
+    \item Leesbaar in platte tekst, zonder speciale software.
+    \item Geschikt voor versiebeheer: wijzigingen zijn duidelijk zichtbaar in diffs.
+    \item Converteerbaar naar HTML, PDF of andere formaten met statische sitegeneratoren.
+    \item Ondersteund door code-hostingplatforms zoals GitHub en GitLab, die Markdown automatisch renderen.
+\end{itemize}
+
+\textcite{gentle2017docslikecode} stelt dat de keuze van opmaaktaal minder belangrijk is dan de keuze voor een \textit{lichtgewicht} formaat dat in versiebeheer kan worden bewaard. Zij raadt Markdown aan als de meest toegankelijke en breed ondersteunde optie.
+
+\subsection{Review-proces}
+\textcite{gentle2017docslikecode} stelt dat het review-proces voor documentatie hetzelfde moet zijn als voor code: documentatie-wijzigingen worden voorgesteld via pull requests, worden gereviewed door mede-ontwikkelaars, en worden pas gemerged nadat ze zijn goedgekeurd. Dit zorgt voor:
+
+\begin{itemize}
+    \item \textbf{Kwaliteitscontrole}: fouten, onduidelijkheden en onnauwkeurigheden worden opgemerkt voordat ze in de hoofdbranch terechtkomen.
+    \item \textbf{Kennisdeling}: reviewers leren over delen van het systeem die ze niet zelf hebben geschreven.
+    \item \textbf{Eigenaarschap}: het review-proces creëert een gedeelde verantwoordelijkheid voor de kwaliteit van documentatie.
+\end{itemize}
+
+\textcite{bhatti2021docsdevelopers} raden aan om review-checklists te gebruiken voor documentatie, met aandachtspunten zoals accuraatheid, volledigheid, leesbaarheid en actualiteit.
+
+\subsection{Automatisering}
+\textcite{etter2016moderntechwriting} stelt dat automatisering de sleutel is tot schaalbaarheid van documentatie: naarmate een project groeit, wordt het onmogelijk om documentatie handmatig te onderhouden. Hij beveelt het gebruik van statische sitegeneratoren aan (zoals Sphinx, MkDocs, Hugo, Docusaurus of Jekyll) die documentatie in lichtgewicht opmaaktalen omzetten naar professionele websites.
+
+\textcite{gentle2017docslikecode} beschrijft hoe CI/CD-pipelines kunnen worden ingezet voor documentatie:
+
+\begin{itemize}
+    \item \textbf{Bouwen}: bij elke merge naar de hoofdbranch wordt de documentatie automatisch gebouwd en gepubliceerd.
+    \item \textbf{Testen}: checks op gebroken links, ontbrekende afbeeldingen, stijlovertredingen en andere kwaliteitsaspecten.
+    \item \textbf{Genereren van API-documentatie}: tools zoals Sphinx (Python), Javadoc (Java) of TypeDoc (TypeScript) zetten docstrings om in gestructureerde API-referentie.
+    \item \textbf{Validatie}: sommige teams gebruiken tools die de code analyseren en waarschuwen wanneer publieke API's niet of onvolledig zijn gedocumenteerd.
+\end{itemize}
+
+\textcite{martraire2019livingdocumentation} stelt dat automatische generatie van documentatie uit code een van de krachtigste vormen van living documentation is: de documentatie kan niet verouderen omdat ze bij elke build opnieuw wordt gegenereerd uit de actuele code. Hij noemt dit \textit{documentation by extraction}.
+
+\textcite{theunissen2022mappingdocumentation} bevestigen in hun mapping study dat geautomatiseerde documentatie-generatie en CI/CD-validatie behoren tot de meest effectieve strategieën om documentatie actueel te houden in continuous software development.
+
+\section{Valkuilen en beperkingen}
+\label{sec:cad-valkuilen}
+
+\subsection{Documentatie kan tóch verouderen}
+Zelfs met goede processen kan documentatie verouderen als ze niet structureel wordt onderhouden \autocite{tripathy2014softwareevolution}. \textcite{tripathy2014softwareevolution} benadrukken dat software-evolutie een inherent en onvermijdelijk proces is: elk systeem verandert, en elke verandering biedt de mogelijkheid dat documentatie niet meegaat. \textcite{martraire2019livingdocumentation} erkent dit en stelt dat zelfs living documentation aandacht vereist: geautomatiseerde documentatie lost het probleem van veroudering grotendeels op, maar handmatig geschreven documentatie blijft een risico vormen.
+
+\subsection{Te veel documentatie}
+\textcite{boswell2011readablecode} waarschuwen voor \textit{noise comments} en over-documentatie: commentaar dat te veel is, of dat dingen uitlegt die voor de hand liggen, creëert ruis die het lezen van code vertraagt. \textcite{martin2008clean} stelt dat over-documentatie zelfs schadelijker kan zijn dan geen documentatie, omdat het een valse zin van volledigheid geeft: de lezer veronderstelt dat alles is gedocumenteerd en stopt met kritisch nadenken.
+
+\textcite{ruping2005agiledocumentation} introduceert het principe van \textit{documentation fitness}: documentatie moet voldoende zijn voor haar doel, maar niet meer dan dat. De kost van het schrijven en onderhouden van documentatie moet in verhouding staan tot haar waarde. Documentatie die niemand leest, kost tijd en aandacht zonder iets op te leveren.
+
+\subsection{Code alleen is niet genoeg}
+\textcite{ousterhout2018philosophy} stelt dat, hoewel leesbare code belangrijk is, code alleen niet volstaat om alle aspecten van een systeem te begrijpen. Complexe architectuur, business-regels, kruisende concerns en historische context vragen vaak extra uitleg naast de code. Hij benadrukt dat commentaar nodig is om informatie vast te leggen die niet in de code kan worden uitgedrukt, zoals de redenering achter ontwerpkeuzes.
+
+\textcite{bhatti2021docsdevelopers} bevestigen dit: zij stellen dat verschillende soorten documentatie verschillende doelen dienen en dat code as documentation niet alle vormen van documentatie kan vervangen. Tutorials, how-to guides en architectuurdocumentatie hebben een eigen waarde die niet kan worden vervangen door leesbare code alleen.
+
+\textcite{martraire2019livingdocumentation} stelt dat living documentation niet betekent dat \textit{alle} documentatie uit de code wordt gehaald: sommige kennis, zoals business context en gebruikersscenario's, moet expliciet worden gedocumenteerd. Living documentation betekent wel dat deze expliciete documentatie wordt gekoppeld aan het systeem en wordt gevalideerd.
+
+\subsection{Leercurve en cultuur}
+\textcite{bhatti2021docsdevelopers} benadrukken dat de overstap naar docs-as-code en code as documentation een cultuurverandering vereist. Teams moeten wennen aan het idee dat documentatie net zo belangrijk is als code, en dat review-tijd ook voor documentatie nodig is. Dit vereist leiderschap en het stellen van verwachtingen.
+
+\textcite{gentle2017docslikecode} stelt dat de invoering van docs-as-code het best stapsgewijs gebeurt: begin met het in versiebeheer plaatsen van een README, voeg vervolgens pull request-reviews toe voor documentatie, en bouw pas daarna CI/CD-pipelines uit. Een te ambitieuze invoering kan leiden tot weerstand en onrealistische verwachtingen.
+
+\section{Conclusie}
+\label{sec:cad-conclusie}
+
+Code as documentation is een benadering die code en documentatie dichter bij elkaar brengt. Door leesbare, zelf-documenterende code te schrijven \autocite{boswell2011readablecode}, documentatie dicht bij de code te bewaren \autocite{gentle2017docslikecode}, commentaar te gebruiken om het ``waarom'' vast te leggen \autocite{ousterhout2018philosophy}, en documentatie als first-class deliverable te behandelen \autocite{etter2016moderntechwriting}, kunnen teams de onderhoudbaarheid en kennisoverdracht verbeteren.
+
+Living documentation \autocite{martraire2019livingdocumentation} biedt een raamwerk om dit idee verder door te voeren: door documentatie van bij ontwerp in het systeem in te bouwen en te koppelen aan de code, kan drift worden geminimaliseerd en kan documentatie altijd actueel blijven.
+
+De principes en technieken uit dit chapter vormen de basis voor het volgende chapter over documentation drift, dat ingaat op de risico's en gevolgen van verouderde documentatie. Waar code as documentation zich richt op het \textit{voorkomen} van drift, behandelt het volgende chapter het fenomeen zelf: hoe drift ontstaat, welke gevolgen ze heeft, en welke strategieën er zijn om ze te detecteren en aan te pakken.
+
+% ============================================================
+% Chapter 2: Documentation Drift
+% ============================================================
+\chapter{Documentation Drift}
+\label{chap:documentation-drift}
+
+\section{Inleiding}
+\label{sec:drift-intro}
+
+In moderne softwareontwikkeling verandert code continu: nieuwe functionaliteiten worden toegevoegd, bestaande code wordt gerefactord en bugs worden verholpen. \textcite{tripathy2014softwareevolution} benadrukken dat software-evolutie een inherent en onvermijdelijk proces is: elk softwaresysteem verandert gedurende zijn levenscyclus, en deze veranderingen zijn de drijvende kracht achter onderhoud en aanpassing. Documentatie blijft echter vaak achter; ze wordt niet bij elke wijziging even grondig onderhouden. Dit leidt tot \textit{documentation drift}: een groeiende kloof tussen wat de documentatie zegt en wat het systeem werkelijk doet \autocite{whiting2020drifterosion}.
+
+\textcite{romeo2024didrift} bevestigen dit fenomeen in hun empirisch onderzoek: zij stellen vast dat er systematisch drift optreedt tussen enerzijds het ontwerp van een systeem, anderzijds de implementatie en de documentatie ervan. Hun studie toont aan dat deze drift niet beperkt is tot specifieke projecten of domeinen, maar een wijdverspreid fenomeen is in software-engineering.
+
+\textcite{theunissen2022mappingdocumentation} voerden een systematische mapping study uit naar documentatie in continuous software development en stelden vast dat documentatie-actualiteit een van de grootste uitdagingen is in moderne ontwikkelingspraktijken, waarbij DevOps en CI/CD de snelheid van verandering verder hebben opgevoerd zonder dat de documentatie-praktijken mee zijn geëvolueerd.
+
+Dit chapter behandelt de definitie van documentation drift, hoe het ontstaat, welke gevolgen het heeft, hoe het kan worden gesignaleerd, welke strategieën er zijn om het te voorkomen, en hoe het relateert aan code as documentation. Het bouwt voort op het vorige chapter en laat zien waarom goede documentatie-praktijken essentieel zijn om drift te voorkomen.
+
+\section{Definitie van documentation drift}
+\label{sec:drift-definitie}
+
+\subsection{Het concept drift}
+Documentation drift is de geleidelijke divergentie tussen geschreven documentatie en de werkelijke staat van de codebase of het product die deze documentatie beschrijft \autocite{whiting2020drifterosion}. Het ontstaat wanneer code, infrastructuur of processen wijzigen zonder dat de bijbehorende documentatie evenredig wordt bijgewerkt. \textcite{whiting2020drifterosion} plaatsen dit fenomeen in de bredere context van \textit{architectural drift} en \textit{architectural erosion}: drift verwijst naar de geleidelijke afwijking van het oorspronkelijke ontwerp, terwijl erosie verwijst naar de afbraak van de architecturale structuur over tijd. Beide fenomenen zijn gerelateerd: wanneer de architectuur drift, raakt ook de documentatie die deze architectuur beschrijft, uit sync.
+
+\textcite{romeo2024didrift} definiëren drift formeler als de situatie waarin er een inconsistentie is tussen de drie representaties van een softwaresysteem: het ontwerp (zoals vastgelegd in diagrammen en specificaties), de implementatie (de daadwerkelijke code), en de documentatie (de beschrijvingen en handleidingen). Zij onderscheiden meerdere soorten drift:
+
+\begin{itemize}
+    \item \textbf{Design-to-implementation drift}: de implementatie wijkt af van het oorspronkelijke ontwerp.
+    \item \textbf{Implementation-to-documentation drift}: de documentatie beschrijft niet langer wat de code daadwerkelijk doet.
+    \item \textbf{Design-to-documentation drift}: de documentatie komt niet meer overeen met het ontwerp.
+\end{itemize}
+
+Elke wijziging in de code die niet wordt weerspiegeld in de documentatie, vergroot de kloof een beetje meer \autocite{romeo2024didrift}. Drift is dus geen eenmalige fout, maar een cumulatief proces: het accumuleert ``per commit'' of ``per release'' \autocite{whiting2020drifterosion}.
+
+\subsection{Drift versus veroudering}
+Het is belangrijk om onderscheid te maken tussen documentation drift en gewone veroudering. \textcite{tripathy2014softwareevolution} beschrijven software-evolutie als een continu proces waarbij het systeem zich aanpast aan veranderende vereisten. Veroudering is het gevolg van dit proces: de wereld verandert en de software moet meeveranderen. Drift is specifieker: het is de kloof die ontstaat wanneer de ene representatie (de code) verandert, maar de andere (de documentatie) niet.
+
+\textcite{martraire2019livingdocumentation} stelt dat drift niet onvermijdelijk is: wanneer documentatie van bij ontwerp in het systeem is ingebouwd en wordt gekoppeld aan de code, wordt het onmogelijk of althans zeer onwaarschijnlijk om de code te wijzigen zonder dat de documentatie meestapt. Living documentation adresseert daarmee de kernoorzaak van drift.
+
+\section{Hoe documentation drift ontstaat}
+\label{sec:drift-oorzaken}
+
+\subsection{Gescheiden systemen en workflows}
+Een van de belangrijkste oorzaken van documentation drift is de scheiding tussen code en documentatie in verschillende systemen en workflows. \textcite{gentle2017docslikecode} stelt dat wanneer documentatie in een apart systeem leeft (zoals Confluence, Notion of een wiki) en code in een Git-repository, er geen technisch mechanisme is dat beide koppelt. Een pull request voor code vereist geen doc-update; de documentatie kan in theorie onafhankelijk worden bijgewerkt, maar in de praktijk wordt dit vaak vergeten of uitgesteld.
+
+\textcite{etter2016moderntechwriting} beargumenteert dat deze scheiding fundamenteel is: zolang documentatie niet in hetzelfde versiebeheersysteem leeft als code, zal ze altijd achteroplopen. Hij stelt dat het gebruik van traditionele documentatietools (zoals tekstverwerkers en wiki's) structureel bijdraagt aan drift, omdat deze tools geen integratie bieden met de development-workflow.
+
+\textcite{theunissen2022mappingdocumentation} bevestigen in hun mapping study dat het gebruik van gescheiden systemen voor code en documentatie een van de meest genoemde oorzaken van drift is in de literatuur. Zij stellen vast dat teams die docs-as-code toepassen --- waarbij documentatie in dezelfde repository leeft als code --- aanzienlijk minder drift ervaren.
+
+\subsection{Prioriteit en planning}
+\textcite{bhatti2021docsdevelopers} beschrijven hoe documentatie vaak als een optionele taak wordt beschouwd: features en bugfixes hebben een duidelijk pad naar productie, terwijl documentatie-updates geen eigen workflow hebben. Onder druk van deadlines wordt documentatie beschouwd als \textit{nice to have} en uitgesteld. Zij stellen dat dit een cultuurprobleem is: zolang documentatie niet expliciet wordt gepland en gescheduld in sprints, zal ze systematisch achteroplopen.
+
+\textcite{ruping2005agiledocumentation} stelt dat dit probleem bijzonder acuut is in agile ontwikkeling: de nadruk op het leveren van werkende software kan leiden tot een verwaarlozing van documentatie, vooral wanneer er geen expliciete afspraken zijn over wat moet worden gedocumenteerd en wanneer. Hij introduceert het concept van \textit{documentation fitness}: documentatie moet voldoende zijn voor haar doel, maar de drempel om ze actueel te houden moet zo laag mogelijk zijn.
+
+\textcite{tripathy2014softwareevolution} benadrukken dat onderhoud en evolutie de grootste kostenvormen zijn in software-ontwikkeling, en dat documentatie-onderhoud daar een essentieel onderdeel van is. Wanneer documentatie niet als onderdeel van het onderhoudsproces wordt beschouwd, ontstaat er een achterstand die zich cumulatief opbouwt.
+
+\subsection{Snelheid van verandering}
+\textcite{theunissen2022mappingdocumentation} stellen vast dat moderne ontwikkelingspraktijken --- met name continuous integration, continuous delivery en DevOps --- de snelheid van verandering aanzienlijk hebben opgevoerd. Waar teams vroeger een paar keer per jaar releasten, deployen ze nu meerdere keren per dag. Deze versnelde cadence betekent dat er meer wijzigingen per tijdseenheid zijn, en dus meer mogelijkheden voor drift.
+
+Code verandert veel sneller dan documentatie: meerdere commits per dag tegenover incidentele doc-updates. \textcite{romeo2024didrift} bevestigen dit fenomeen empirisch: hun studie toont aan dat de kloof tussen code en documentatie groeit naarmate er meer wijzigingen worden doorgevoerd zonder dat de documentatie wordt bijgewerkt. De impact van moderne tooling, zoals AI-assistenten die code genereren, versterkt dit probleem: er wordt nog meer code per week geschipt, terwijl documentatie-onderhoud niet evenredig schaalt \autocite{theunissen2022mappingdocumentation}.
+
+\subsection{Menselijke factoren}
+\textcite{bhatti2021docsdevelopers} identificeren meerdere menselijke factoren die bijdragen aan drift:
+
+\begin{itemize}
+    \item De persoon die de code wijzigt, is niet altijd dezelfde als degene die verantwoordelijk is voor de documentatie.
+    \item Er is vaak geen expliciete eigenaar voor specifieke documentatie: documentatie wordt gezien als een gedeelde verantwoordelijkheid, wat in de praktijk betekent dat niemand er verantwoordelijk voor is.
+    \item Nieuwe teamleden bouwen kennis op via \textit{tribal knowledge} --- informele, mondelinge kennisoverdracht --- in plaats van via documentatie, waardoor de cultuur ontstaat dat docs niet betrouwbaar zijn en dus ook niet worden geraadpleegd of bijgewerkt.
+\end{itemize}
+
+\textcite{gentle2017docslikecode} stelt dat dit een vicieuze cirkel vormt: zodra documentatie als onbetrouwbaar wordt beschouwd, stop ontwikkelaars met het raadplegen ervan; omdat ze het niet raadplegen, merken ze ook niet dat het verouderd is; en omdat ze het niet raadplegen, voelen ze zich ook niet verantwoordelijk om het bij te werken. Deze vicieuze cirkel versterkt drift en maakt het steeds moeilijker om de kloof te dichten.
+
+Samengevat is drift geen kwestie van luiheid of onwil, maar een systeemprobleem in proces, tools en verantwoordelijkheden \autocite{theunissen2022mappingdocumentation}. De structuur van de ontwikkeling organisatie en de workflow maakt drift bijna onvermijdelijk, tenzij er expliciete maatregelen worden genomen om het tegen te gaan.
+
+\section{Gevolgen van documentation drift}
+\label{sec:drift-gevolgen}
+
+\subsection{Verlies van vertrouwen}
+\textcite{bhatti2021docsdevelopers} stellen dat het meest directe gevolg van drift verlies van vertrouwen is: zodra ontwikkelaars of gebruikers merken dat documentatie foutieve informatie bevat, stoppen ze met het raadplegen ervan. Dit is een rationele reactie: als men niet kan vertrouwen op documentatie, is het efficiënter om direct de code te lezen of een collega te vragen. Het gevolg is echter dat kennis informeel wordt gedeeld (via Slack, mondeling, of in code reviews), wat op zijn beurt weer meer drift veroorzaakt: de formele documentatie wordt steeds minder relevant en steeds minder actueel.
+
+\textcite{martraire2019livingdocumentation} noemt dit het \textit{trust problem}: documentatie die niet wordt vertrouwd, heeft geen waarde, ongeacht hoeveel tijd erin is gestoken. Hij stelt dat het herstellen van vertrouwen moeilijker is dan het opbouwen ervan: eens het vertrouwen in documentatie is beschaadigd, is het een aanzienlijke inspanning om het te herstellen.
+
+\subsection{Verhoogde kosten en inefficiëntie}
+\textcite{tripathy2014softwareevolution} benadrukken dat onderhoud de grootste kostenvorm is in de levenscyclus van software. Documentation drift verhoogt deze kosten op meerdere manieren:
+
+\begin{itemize}
+    \item \textbf{Supportlast}: supportteams moeten meer tickets behandelen omdat zelfbediening via documentatie niet werkt \autocite{bhatti2021docsdevelopers}.
+    \item \textbf{Ontwikkelingstijd}: ontwikkelaars besteden tijd aan het uitzoeken van hoe het systeem echt werkt, omdat de documentatie niet klopt. \textcite{boswell2011readablecode} stellen dat leesbare code dit deels vermindert, maar dat externe documentatie (zoals architectuurbeschrijvingen en API-referenties) toch nodig is voor complexe systemen.
+    \item \textbf{Onboarding}: onboarding van nieuwe collega's duurt langer; ze kunnen niet op de documentatie vertrouwen en moeten beroep doen op collega's voor uitleg \autocite{bhatti2021docsdevelopers}.
+\end{itemize}
+
+\subsection{Foutieve beslissingen en implementaties}
+\textcite{romeo2024didrift} tonen in hun onderzoek aan dat drift kan leiden tot foutieve beslissingen: ontwikkelaars baseren implementaties op verouderde API-beschrijvingen of architectuurbeschrijvingen, wat leidt tot bugs en technische schuld. Wanneer de documentatie een API-endpoint beschrijft dat niet meer bestaat of anders werkt dan gedocumenteerd, leidt dit tot integratiefouten die pas in een laat stadium worden ontdekt.
+
+\textcite{whiting2020drifterosion} plaatsen dit in de bredere context van architecturale erosie: drift tussen ontwerp en implementatie leidt tot een systeem dat niet langer voldoet aan de architecturale intenties, wat op zijn beurt leidt tot technische schuld, verminderde prestaties en hogere onderhoudskosten.
+
+\textcite{tripathy2014softwareevolution} stellen dat technische schuld, inclusief documentatie-achterstand, zich cumulatief ophoopt: elke wijziging die niet correct wordt gedocumenteerd, voegt een kleine hoeveelheid schuld toe die in de loop der tijd exponentieel groeit en steeds moeilijker af te lossen is.
+
+\subsection{Impact op AI en automatisering}
+\textcite{theunissen2022mappingdocumentation} wijzen op een relatief nieuwe dimensie van het drift-probleem: AI-assistenten en chatbots gebruiken documentatie als kennisbron. Wanneer documentatie verouderd of foutief is, leidt dit tot zelfverzekerde maar foute antwoorden van AI-systemen. Dit versterkt het probleem doordat foutieve antwoorden zich snel verspreiden en autoritair lijken: een ontwikkelaar die een vraag stelt aan een AI-assistent krijgt een antwoord dat gebaseerd is op verouderde documentatie, en bouwt voort op die foute basis zonder het te weten.
+
+Dit is bijzonder problematisch omdat AI-assistenten vaak worden ingezet om de onboarding van nieuwe ontwikkelaars te versnellen: juist de groep die het meest baat heeft bij betrouwbare documentatie, krijgt nu potentieel verouderde informatie aangereikt \autocite{bhatti2021docsdevelopers}.
+
+\section{Signalen dat er drift is}
+\label{sec:drift-signalen}
+
+Het herkennen van documentation drift is de eerste stap naar het aanpakken ervan. \textcite{bhatti2021docsdevelopers} beschrijven een aantal herkenbare symptomen:
+
+\begin{itemize}
+    \item \textbf{Vertrouwen in informele kanalen}: ontwikkelaars zeggen dingen als ``De wiki klopt toch niet, vraag het even aan X.'' Dit wijst erop dat de formele documentatie niet meer wordt vertrouwd en dat kennis informeel circuleert.
+    \item \textbf{Niet-werkende instructies}: README's beschrijven commands of configuraties die niet meer werken. API-voorbeelden in de documentatie geven foutmeldingen bij uitvoeren.
+    \item \textbf{Verouderde screenshots}: screenshots in de documentatie tonen een gebruikersinterface die niet meer bestaat.
+    \item \textbf{Support neemt alles over}: supportmedewerkers linken niet meer naar documentatie, maar leggen alles handmatig uit, omdat ze weten dat de documentatie onbetrouwbaar is.
+\end{itemize}
+
+\textcite{romeo2024didrift} beschrijven meer technische signalen:
+
+\begin{itemize}
+    \item Publieke API's in de code die niet in de documentatie voorkomen (of omgekeerd).
+    \item Functies of klassen in de documentatie die niet meer in de code bestaan.
+    \item Parameter-namen of types in de documentatie die niet overeenkomen met de daadwerkelijke code.
+    \item Beschreven gedrag dat niet overeenkomt met de geïmplementeerde logica.
+\end{itemize}
+
+Zij ontwikkelden tools om dit soort drift automatisch te detecteren door code en documentatie te analyseren en inconsistenties op te sporen. \textcite{whiting2020drifterosion} stellen dat dergelijke detectie-tools een belangrijk onderdeel vormen van een strategie tegen drift.
+
+\textcite{martraire2019livingdocumentation} stelt dat een ander signaal van drift de aanwezigheid van \textit{dead documentation} is: documentatie die verwijst naar componenten, functies of processen die niet meer bestaan. Het actief opsporen en verwijderen van dergelijke documentatie is een belangrijk onderdeel van drift-management.
+
+\section{Strategieën om documentation drift te voorkomen}
+\label{sec:drift-preventie}
+
+\subsection{Docs-as-code: documentatie in dezelfde repo als code}
+\textcite{gentle2017docslikecode} stelt dat docs-as-code de meest fundamentele strategie tegen drift is: door documentatie in dezelfde Git-repository als de code te bewaren, wordt het mogelijk om documentatie-wijzigingen te koppelen aan code-wijzigingen in dezelfde pull request. Dit maakt het moeilijker om code te mergen zonder dat de bijbehorende documentatie meegaat.
+
+\textcite{etter2016moderntechwriting} beargumenteert dat docs-as-code niet alleen een technische keuze is, maar ook een culturele: het stuurt het signaal dat documentatie even belangrijk is als code en dezelfde zorgvuldigheid verdient. Wanneer documentatie in dezelfde repository leeft, zien ontwikkelaars ze bij het openen van de repo, en worden ze herinnerd aan het bijwerken ervan bij code-wijzigingen.
+
+\textcite{theunissen2022mappingdocumentation} bevestigen in hun mapping study dat docs-as-code behoort tot de meest effectieve strategieën tegen drift in continuous software development. Zij stellen vast dat teams die docs-as-code toepassen, aanzienlijk minder drift ervaren dan teams die documentatie in aparte systemen bewaren.
+
+\subsection{Documentatie koppelen aan releases en pull requests}
+\textcite{bhatti2021docsdevelopers} raden aan om documentatie expliciet te koppelen aan het release-proces:
+
+\begin{itemize}
+    \item Maak het een regel: geen feature-PR zonder bijbehorende doc-update, waar relevant. Dit kan worden afgedwongen via PR-templates met een veld ``Welke documentatie is bijgewerkt?''
+    \item Koppel doc-taken aan release-planning: elke release heeft een ``doc checklist'' die moet worden afgewerkt voordat de release kan doorgaan.
+    \item Gebruik CI-checks die waarschuwen wanneer een PR code wijzigt in een module waarvan de documentatie niet is bijgewerkt.
+\end{itemize}
+
+\textcite{gentle2017docslikecode} stelt dat PR-templates een eenvoudige maar effectieve maatregel zijn: een veld in de PR-template dat vraagt ``Heeft deze wijziging impact op documentatie? Zo ja, welke documentatie is bijgewerkt?'' herinnert ontwikkelaars eraan om documentatie niet te vergeten en maakt het voor reviewers mogelijk om dit na te gaan.
+
+\subsection{Duidelijke eigenaarschap en verantwoordelijkheid}
+\textcite{bhatti2021docsdevelopers} benadrukken dat expliciet eigenaarschap cruciaal is: wijs per document of sectie een eigenaar toe (bijv. ``eigenaar van README'', ``eigenaar van API docs''). Zorg dat die eigenaar in de review-loop zit bij wijzigingen die hun domein raken. Maak expliciet wie verantwoordelijk is voor het signaleren en oplossen van drift.
+
+\textcite{ruping2005agiledocumentation} stelt dat in agile teams, waar de nadruk ligt op gedeelde verantwoordelijkheid, het risico bestaat dat documentatie ``iedereans verantwoordelijkheid'' wordt en dus ``niemands verantwoordelijkheid.'' Het toewijzen van specifieke eigenaars voorkomt dit probleem.
+
+\textcite{martraire2019livingdocumentation} stelt dat eigenaarschap niet alleen betekent dat iemand verantwoordelijk is voor het bijwerken van documentatie, maar ook voor het valideren ervan: de eigenaar moet periodiek controleren of de documentatie nog accuraat is en actief drift opsporen en verhelpen.
+
+\subsection{Automatisering en detectie}
+\textcite{martraire2019livingdocumentation} stelt dat automatisering de krachtigste strategie tegen drift is: door documentatie automatisch te genereren uit de code, wordt het onmogelijk om de code te wijzigen zonder dat de documentatie meestapt. Hij noemt dit \textit{documentation by extraction}: documentatie wordt niet handmatig geschreven, maar uit de code gehaald. Voorbeelden zijn:
+
+\begin{itemize}
+    \item API-documentatie gegenereerd uit docstrings (bijv. met Sphinx, Javadoc of TypeDoc).
+    \item Databaseschema-documentatie gegenereerd uit migrations.
+    \item Architectuurdiagrammen gegenereerd uit code-structuur.
+    \item Voorbeelden en use cases die executable zijn en automatisch worden gevalideerd.
+\end{itemize}
+
+\textcite{romeo2024didrift} ontwikkelden tools die automatisch drift detecteren door code en documentatie te analyseren en inconsistenties op te sporen. Zij stellen dat dergelijke tools een belangrijk onderdeel vormen van een CI/CD-pipeline: bij elke merge wordt gecontroleerd of de documentatie nog overeenkomt met de code, en zo niet, dan wordt een waarschuwing gegenereerd.
+
+\textcite{gentle2017docslikecode} stelt dat CI-checks voor documentatie meerdere vormen kunnen aannemen:
+
+\begin{itemize}
+    \item Checks op gebroken links.
+    \item Checks op stijlovertredingen (zoals een linter voor documentatie).
+    \item Checks op ontbrekende documentatie voor nieuwe publieke API's.
+    \item Checks op verouderde voorbeelden (bijv. door code-voorbeelden uit te voeren en te controleren of ze nog werken).
+\end{itemize}
+
+\textcite{theunissen2022mappingdocumentatie} bevestigen dat geautomatiseerde detectie en CI/CD-validatie behoren tot de meest effectieve strategieën om drift te beperken in continuous software development.
+
+\subsection{Proces en cultuur}
+\textcite{bhatti2021docsdevelopers} benadrukken dat technische oplossingen alleen niet volstaan: er is ook een cultuurverandering nodig. Teams moeten documentatie beschouwen als een integraal onderdeel van de development-workflow, niet als een optionele extra taak. Dit vereist:
+
+\begin{itemize}
+    \item Het plannen van tijd in sprints voor documentatie-onderhoud, en het zien van deze tijd als investering in onderhoudbaarheid \autocite{tripathy2014softwareevolution}.
+    \item Het aanmoedigen van een cultuur waarin het normaal is om documentatie bij te werken als je code aanraakt, en waarin collega's elkaar daarop aanspreken \autocite{gentle2017docslikecode}.
+    \item Het stellen van verwachtingen in onboarding: nieuwe teamleden leren vanaf dag één dat documentatie een gedeelde verantwoordelijkheid is \autocite{bhatti2021docsdevelopers}.
+\end{itemize}
+
+\textcite{ruping2005agiledocumentation} stelt dat in agile omgevingen, waar documentatie lichtgewicht moet zijn, het vooral belangrijk is om de drempel voor documentatie-onderhoud zo laag mogelijk te maken: documentatie moet gemakkelijk te vinden, te wijzigen en te valideren zijn. Hoe hoger de drempel, hoe meer drift.
+
+\textcite{martraire2019livingdocumentation} stelt dat cultuurverandering het moeilijkste aspect is van drift-preventie: terwijl tools en processen relatief snel kunnen worden ingevoerd, vergt het veranderen van gewoonten en attitudes tijd en volharding. Hij raadt aan om te beginnen met kleine, haalbare stappen: begin met het in versiebeheer plaatsen van een README, voeg vervolgens pull request-reviews toe voor documentatie, en bouw pas daarna geavanceerde automatisering uit.
+
+\section{Relatie met code as documentation}
+\label{sec:drift-relatie-cad}
+
+Code as documentation en documentation drift zijn twee kanten van dezelfde medaille. Waar code as documentation zich richt op het \textit{voorkomen} van drift door code en documentatie dichter bij elkaar te brengen, behandelt documentation drift het fenomeen dat ontstaat wanneer dit niet of onvoldoende gebeurt.
+
+\textcite{boswell2011readablecode} stellen dat zelf-documenterende code de oppervlakte waar drift kan optreden verkleint: wanneer code zelf al duidelijk communiceert wat het doet, is er minder externe documentatie nodig die kan verouderen. \textcite{ousterhout2018philosophy} voegt hieraan toe dat goed ontworpen \textit{deep modules} met heldere interfaces de nood aan externe documentatie verminderen: de interface zelf communiceert voldoende om de module te kunnen gebruiken zonder aanvullende docs.
+
+\textcite{martraire2019livingdocumentation} stelt dat living documentation drift niet alleen verkleint, maar in veel gevallen \textit{elimineert}: door documentatie te koppelen aan de code of aan executable specifications, wordt het onmogelijk om de code te wijzigen zonder dat de documentatie automatisch meestapt of een waarschuwing genereert. Living documentation verandert de aard van het probleem: in plaats van drift te \textit{bestrijden} met processen en reviews, wordt drift \textit{structuurlijk onmogelijk gemaakt} door de architectuur van het systeem.
+
+\textcite{gentle2017docslikecode} stelt dat docs-as-code en code as documentation elkaar versterken: code die goed leesbaar is, heeft minder uitgebreide externe toelichting nodig, en documentatie die dicht bij de code staat en via dezelfde pull requests wordt bijgewerkt, blijft langer accuraat. Samen vormen ze een raamwerk waarin documentatie altijd actueel en bruikbaar is.
+
+\textcite{theunissen2022mappingdocumentation} bevestigen in hun mapping study dat de integratie van documentatie in de ontwikkeling-workflow --- via docs-as-code, geautomatiseerde generatie en CI/CD-validatie --- de meest effectieve aanpak is om drift te voorkomen in continuous software development.
+
+\section{Conclusie}
+\label{sec:drift-conclusie}
+
+Documentation drift is een systematisch, bijna onvermijdelijk fenomeen in teams die snel code wijzigen zonder documentatie als first-class deliverable te behandelen \autocite{whiting2020drifterosion}. \textcite{romeo2024didrift} hebben empirisch aangetoond dat drift optreedt tussen ontwerp, implementatie en documentatie, en dat dit fenomeen wijdverspreid is. \textcite{theunissen2022mappingdocumentation} stellen vast dat de uitdaging in moderne ontwikkelingspraktijken, met hun hoge snelheid van verandering, alleen maar groter is geworden.
+
+De gevolgen zijn concreet: verlies van vertrouwen \autocite{bhatti2021docsdevelopers}, hogere kosten \autocite{tripathy2014softwareevolution}, foutieve implementaties \autocite{romeo2024didrift}, en versterking door AI-systemen die verouderde documentatie als kennisbron gebruiken \autocite{theunissen2022mappingdocumentation}.
+
+Oplossingen liggen in het koppelen van documentatie aan code via docs-as-code \autocite{gentle2017docslikecode}, het gebruik van living documentation die van bij ontwerp in het systeem is ingebouwd \autocite{martraire2019livingdocumentation}, duidelijk eigenaarschap \autocite{bhatti2021docsdevelopers}, en automatisering die drift detecteert en beperkt \autocite{romeo2024didrift}. Voor een onderhoudbaar systeem is het daarom essentieel om documentatie niet als los product te zien, maar als integraal onderdeel van de codebase en het ontwikkelproces \autocite{gentle2017docslikecode}.
+
+Dit chapter sluit aan bij het vorige chapter over code as documentation: samen vormen ze een raamwerk voor het schrijven en onderhouden van documentatie die accuraat, bruikbaar en duurzaam is. Waar code as documentation zich richt op het \textit{voorkomen} van drift door goede praktijken, behandelt dit chapter het fenomeen zelf en de strategieën om het te detecteren, te beperken en uiteindelijk te elimineren.
