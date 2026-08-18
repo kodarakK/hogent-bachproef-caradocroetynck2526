@@ -1,0 +1,214 @@
+% ============================================================
+% Chapter 2: Documentation Drift
+% ============================================================
+\chapter{Documentation Drift}
+\label{chap:documentation-drift}
+
+\section{Inleiding}
+\label{sec:drift-intro}
+
+In moderne softwareontwikkeling verandert code continu: nieuwe functionaliteiten worden toegevoegd, bestaande code wordt gerefactord en bugs worden verholpen. \textcite{tripathy2014softwareevolution} benadrukken dat software-evolutie een inherent en onvermijdelijk proces is: elk softwaresysteem verandert gedurende zijn levenscyclus, en deze veranderingen zijn de drijvende kracht achter onderhoud en aanpassing. Documentatie blijft echter vaak achter; ze wordt niet bij elke wijziging even grondig onderhouden. Dit leidt tot \textit{documentation drift}: een groeiende kloof tussen wat de documentatie zegt en wat het systeem werkelijk doet \autocite{whiting2020drifterosion}.
+
+\textcite{romeo2024didrift} bevestigen dit fenomeen in hun empirisch onderzoek: zij stellen vast dat er systematisch drift optreedt tussen enerzijds het ontwerp van een systeem, anderzijds de implementatie en de documentatie ervan. Hun studie toont aan dat deze drift niet beperkt is tot specifieke projecten of domeinen, maar een wijdverspreid fenomeen is in software-engineering.
+
+\textcite{theunissen2022mappingdocumentation} voerden een systematische mapping study uit naar documentatie in continuous software development en stelden vast dat documentatie-actualiteit een van de grootste uitdagingen is in moderne ontwikkelingspraktijken, waarbij DevOps en CI/CD de snelheid van verandering verder hebben opgevoerd zonder dat de documentatie-praktijken mee zijn geëvolueerd.
+
+Dit hoofdstuk behandelt de definitie van documentation drift, hoe het ontstaat, welke gevolgen het heeft, hoe het kan worden gesignaleerd, welke strategieën er zijn om het te voorkomen, en hoe het relateert aan code as documentation. Het bouwt voort op het vorige chapter en laat zien waarom goede documentatie-praktijken essentieel zijn om drift te voorkomen.
+
+\section{Definitie van documentation drift}
+\label{sec:drift-definitie}
+
+\subsection{Het concept drift}
+Documentation drift is de geleidelijke divergentie tussen geschreven documentatie en de werkelijke staat van de codebase of het product die deze documentatie beschrijft \autocite{whiting2020drifterosion}. Het ontstaat wanneer code, infrastructuur of processen wijzigen zonder dat de bijbehorende documentatie evenredig wordt bijgewerkt. \textcite{whiting2020drifterosion} plaatsen dit fenomeen in de bredere context van \textit{architectural drift} en \textit{architectural erosion}: drift verwijst naar de geleidelijke afwijking van het oorspronkelijke ontwerp, terwijl erosie verwijst naar de afbraak van de architecturale structuur over tijd. Beide fenomenen zijn gerelateerd: wanneer de architectuur drift, raakt ook de documentatie die deze architectuur beschrijft, niet meer synchroon.
+
+\textcite{romeo2024didrift} definiëren drift formeler als de situatie waarin er een inconsistentie is tussen de drie representaties van een softwaresysteem: het ontwerp (zoals vastgelegd in diagrammen en specificaties), de implementatie (de daadwerkelijke code), en de documentatie (de beschrijvingen en handleidingen). Zij onderscheiden meerdere soorten drift:
+
+\begin{itemize}
+    \item \textbf{Design-to-implementation drift}: de implementatie wijkt af van het oorspronkelijke ontwerp.
+    \item \textbf{Implementation-to-documentation drift}: de documentatie beschrijft niet langer wat de code daadwerkelijk doet.
+    \item \textbf{Design-to-documentation drift}: de documentatie komt niet meer overeen met het ontwerp.
+\end{itemize}
+
+Elke wijziging in de code die niet wordt weerspiegeld in de documentatie, vergroot de kloof een beetje meer \autocite{romeo2024didrift}. Drift is dus geen eenmalige fout, maar een cumulatief proces: het accumuleert ``per commit'' of ``per release'' \autocite{whiting2020drifterosion}.
+
+\subsection{Drift versus veroudering}
+Het is belangrijk om onderscheid te maken tussen documentation drift en gewone veroudering. \textcite{tripathy2014softwareevolution} beschrijven software-evolutie als een continu proces waarbij het systeem zich aanpast aan veranderende vereisten. Veroudering is het gevolg van dit proces: de wereld verandert en de software moet meeveranderen. Drift is specifieker: het is de kloof die ontstaat wanneer de ene representatie (de code) verandert, maar de andere (de documentatie) niet.
+
+\textcite{martraire2019livingdocumentation} stelt dat drift niet onvermijdelijk is: wanneer documentatie van bij ontwerp in het systeem is ingebouwd en wordt gekoppeld aan de code, wordt het onmogelijk of althans zeer onwaarschijnlijk om de code te wijzigen zonder dat de documentatie meestapt. Living documentation adresseert daarmee de kernoorzaak van drift.
+
+\section{Hoe documentation drift ontstaat}
+\label{sec:drift-oorzaken}
+
+\subsection{Gescheiden systemen en workflows}
+Een van de belangrijkste oorzaken van documentation drift is de scheiding tussen code en documentatie in verschillende systemen en workflows. \textcite{gentle2017docslikecode} stelt dat wanneer documentatie in een apart systeem leeft (zoals Confluence, Notion of een wiki) en code in een Git-repository, er geen technisch mechanisme is dat beide koppelt. Een pull request voor code vereist geen doc-update; de documentatie kan in theorie onafhankelijk worden bijgewerkt, maar in de praktijk wordt dit vaak vergeten of uitgesteld.
+
+\textcite{etter2016moderntechwriting} beargumenteert dat deze scheiding fundamenteel is: zolang documentatie niet in hetzelfde versiebeheersysteem leeft als code, zal ze altijd achteroplopen. Hij stelt dat het gebruik van traditionele documentatietools (zoals tekstverwerkers en wiki's) structureel bijdraagt aan drift, omdat deze tools geen integratie bieden met de development-workflow.
+
+\textcite{theunissen2022mappingdocumentation} bevestigen in hun mapping study dat het gebruik van gescheiden systemen voor code en documentatie een van de meest genoemde oorzaken van drift is in de literatuur. Zij stellen vast dat teams die docs-as-code toepassen - waarbij documentatie in dezelfde repository leeft als code - aanzienlijk minder drift ervaren.
+
+\subsection{Prioriteit en planning}
+\textcite{bhatti2021docsdevelopers} beschrijven hoe documentatie vaak als een optionele taak wordt beschouwd: features en bugfixes hebben een duidelijk pad naar productie, terwijl documentatie-updates geen eigen workflow hebben. Onder druk van deadlines wordt documentatie beschouwd als \textit{nice to have} en uitgesteld. Zij stellen dat dit een cultuurprobleem is: zolang documentatie niet expliciet wordt gepland en gescheduld in sprints, zal ze systematisch achteroplopen.
+
+\textcite{ruping2005agiledocumentation} stelt dat dit probleem bijzonder acuut is in agile ontwikkeling: de nadruk op het leveren van werkende software kan leiden tot een verwaarlozing van documentatie, vooral wanneer er geen expliciete afspraken zijn over wat moet worden gedocumenteerd en wanneer. Hij introduceert het concept van \textit{documentation fitness}: documentatie moet voldoende zijn voor haar doel, maar de drempel om ze actueel te houden moet zo laag mogelijk zijn.
+
+\textcite{tripathy2014softwareevolution} benadrukken dat onderhoud en evolutie de grootste kostenvormen zijn in software-ontwikkeling, en dat documentatie-onderhoud daar een essentieel onderdeel van is. Wanneer documentatie niet als onderdeel van het onderhoudsproces wordt beschouwd, ontstaat er een achterstand die zich cumulatief opbouwt.
+
+\subsection{Snelheid van verandering}
+\textcite{theunissen2022mappingdocumentation} stellen vast dat moderne ontwikkelingspraktijken - met name continuous integration, continuous delivery en DevOps - de snelheid van verandering aanzienlijk hebben opgevoerd. Waar teams vroeger een paar keer per jaar releasten, deployen ze nu meerdere keren per dag. Deze versnelde cadence betekent dat er meer wijzigingen per tijdseenheid zijn, en dus meer mogelijkheden voor drift.
+
+Code verandert veel sneller dan documentatie: meerdere commits per dag tegenover incidentele doc-updates. \textcite{romeo2024didrift} bevestigen dit fenomeen empirisch: hun studie toont aan dat de kloof tussen code en documentatie groeit naarmate er meer wijzigingen worden doorgevoerd zonder dat de documentatie wordt bijgewerkt. De impact van moderne tooling, zoals AI-assistenten die code genereren, versterkt dit probleem: er wordt nog meer code per week geschipt, terwijl documentatie-onderhoud niet evenredig schaalt \autocite{theunissen2022mappingdocumentation}.
+
+\subsection{Menselijke factoren}
+\textcite{bhatti2021docsdevelopers} identificeren meerdere menselijke factoren die bijdragen aan drift:
+
+\begin{itemize}
+    \item De persoon die de code wijzigt, is niet altijd dezelfde als degene die verantwoordelijk is voor de documentatie.
+    \item Er is vaak geen expliciete eigenaar voor specifieke documentatie: documentatie wordt gezien als een gedeelde verantwoordelijkheid, wat in de praktijk betekent dat niemand er verantwoordelijk voor is.
+    \item Nieuwe teamleden bouwen kennis op via \textit{tribal knowledge} - informele, mondelinge kennisoverdracht - in plaats van via documentatie, waardoor de cultuur ontstaat dat docs niet betrouwbaar zijn en dus ook niet worden geraadpleegd of bijgewerkt.
+\end{itemize}
+
+\textcite{gentle2017docslikecode} stelt dat dit een vicieuze cirkel vormt: zodra documentatie als onbetrouwbaar wordt beschouwd, stop ontwikkelaars met het raadplegen ervan; omdat ze het niet raadplegen, merken ze ook niet dat het verouderd is; en omdat ze het niet raadplegen, voelen ze zich ook niet verantwoordelijk om het bij te werken. Deze vicieuze cirkel versterkt drift en maakt het steeds moeilijker om de kloof te dichten.
+
+Samengevat is drift geen kwestie van luiheid of onwil, maar een systeemprobleem in proces, tools en verantwoordelijkheden \autocite{theunissen2022mappingdocumentation}. De structuur van de ontwikkeling organisatie en de workflow maakt drift bijna onvermijdelijk, tenzij er expliciete maatregelen worden genomen om het tegen te gaan.
+
+\section{Gevolgen van documentation drift}
+\label{sec:drift-gevolgen}
+
+\subsection{Verlies van vertrouwen}
+\textcite{bhatti2021docsdevelopers} stellen dat het meest directe gevolg van drift verlies van vertrouwen is: zodra ontwikkelaars of gebruikers merken dat documentatie foutieve informatie bevat, stoppen ze met het raadplegen ervan. Dit is een rationele reactie: als men niet kan vertrouwen op documentatie, is het efficiënter om direct de code te lezen of een collega te vragen. Het gevolg is echter dat kennis informeel wordt gedeeld (via Slack, mondeling, of in code reviews), wat op zijn beurt weer meer drift veroorzaakt: de formele documentatie wordt steeds minder relevant en steeds minder actueel.
+
+\textcite{martraire2019livingdocumentation} noemt dit het \textit{trust problem}: documentatie die niet wordt vertrouwd, heeft geen waarde, ongeacht hoeveel tijd erin is gestoken. Hij stelt dat het herstellen van vertrouwen moeilijker is dan het opbouwen ervan: eens het vertrouwen in documentatie is beschaadigd, is het een aanzienlijke inspanning om het te herstellen.
+
+\subsection{Verhoogde kosten en inefficiëntie}
+\textcite{tripathy2014softwareevolution} benadrukken dat onderhoud de grootste kostenvorm is in de levenscyclus van software. Documentation drift verhoogt deze kosten op meerdere manieren:
+
+\begin{itemize}
+    \item \textbf{Supportlast}: supportteams moeten meer tickets behandelen omdat zelfbediening via documentatie niet werkt \autocite{bhatti2021docsdevelopers}.
+    \item \textbf{Ontwikkelingstijd}: ontwikkelaars besteden tijd aan het uitzoeken van hoe het systeem echt werkt, omdat de documentatie niet klopt. \textcite{boswell2011readablecode} stellen dat leesbare code dit deels vermindert, maar dat externe documentatie (zoals architectuurbeschrijvingen en API-referenties) toch nodig is voor complexe systemen.
+    \item \textbf{Onboarding}: onboarding van nieuwe collega's duurt langer; ze kunnen niet op de documentatie vertrouwen en moeten beroep doen op collega's voor uitleg \autocite{bhatti2021docsdevelopers}.
+\end{itemize}
+
+\subsection{Foutieve beslissingen en implementaties}
+\textcite{romeo2024didrift} tonen in hun onderzoek aan dat drift kan leiden tot foutieve beslissingen: ontwikkelaars baseren implementaties op verouderde API-beschrijvingen of architectuurbeschrijvingen, wat leidt tot bugs en technische schuld. Wanneer de documentatie een API-endpoint beschrijft dat niet meer bestaat of anders werkt dan gedocumenteerd, leidt dit tot integratiefouten die pas in een laat stadium worden ontdekt.
+
+\textcite{whiting2020drifterosion} plaatsen dit in de bredere context van architecturale erosie: drift tussen ontwerp en implementatie leidt tot een systeem dat niet langer voldoet aan de architecturale intenties, wat op zijn beurt leidt tot technische schuld, verminderde prestaties en hogere onderhoudskosten.
+
+\textcite{tripathy2014softwareevolution} stellen dat technische schuld, inclusief documentatie-achterstand, zich cumulatief ophoopt: elke wijziging die niet correct wordt gedocumenteerd, voegt een kleine hoeveelheid schuld toe die in de loop der tijd exponentieel groeit en steeds moeilijker af te lossen is.
+
+\subsection{Impact op AI en automatisering}
+\textcite{theunissen2022mappingdocumentation} wijzen op een relatief nieuwe dimensie van het drift-probleem: AI-assistenten en chatbots gebruiken documentatie als kennisbron. Wanneer documentatie verouderd of foutief is, leidt dit tot zelfverzekerde maar foute antwoorden van AI-systemen. Dit versterkt het probleem doordat foutieve antwoorden zich snel verspreiden en autoritair lijken: een ontwikkelaar die een vraag stelt aan een AI-assistent krijgt een antwoord dat gebaseerd is op verouderde documentatie, en bouwt voort op die foute basis zonder het te weten.
+
+Dit is bijzonder problematisch omdat AI-assistenten vaak worden ingezet om de onboarding van nieuwe ontwikkelaars te versnellen: juist de groep die het meest baat heeft bij betrouwbare documentatie, krijgt nu potentieel verouderde informatie aangereikt \autocite{bhatti2021docsdevelopers}.
+
+\section{Signalen dat er drift is}
+\label{sec:drift-signalen}
+
+Het herkennen van documentation drift is de eerste stap naar het aanpakken ervan. \textcite{bhatti2021docsdevelopers} beschrijven een aantal herkenbare symptomen:
+
+\begin{itemize}
+    \item \textbf{Vertrouwen in informele kanalen}: ontwikkelaars zeggen dingen als ``De wiki klopt toch niet, vraag het even aan X.'' Dit wijst erop dat de formele documentatie niet meer wordt vertrouwd en dat kennis informeel circuleert.
+    \item \textbf{Niet-werkende instructies}: README's beschrijven commands of configuraties die niet meer werken. API-voorbeelden in de documentatie geven foutmeldingen bij uitvoeren.
+    \item \textbf{Verouderde screenshots}: screenshots in de documentatie tonen een gebruikersinterface die niet meer bestaat.
+    \item \textbf{Support neemt alles over}: supportmedewerkers linken niet meer naar documentatie, maar leggen alles handmatig uit, omdat ze weten dat de documentatie onbetrouwbaar is.
+\end{itemize}
+
+\textcite{romeo2024didrift} beschrijven meer technische signalen:
+
+\begin{itemize}
+    \item Publieke API's in de code die niet in de documentatie voorkomen (of omgekeerd).
+    \item Functies of klassen in de documentatie die niet meer in de code bestaan.
+    \item Parameter-namen of types in de documentatie die niet overeenkomen met de daadwerkelijke code.
+    \item Beschreven gedrag dat niet overeenkomt met de geïmplementeerde logica.
+\end{itemize}
+
+Zij ontwikkelden tools om dit soort drift automatisch te detecteren door code en documentatie te analyseren en inconsistenties op te sporen. \textcite{whiting2020drifterosion} stellen dat dergelijke detectie-tools een belangrijk onderdeel vormen van een strategie tegen drift.
+
+\textcite{martraire2019livingdocumentation} stelt dat een ander signaal van drift de aanwezigheid van \textit{dead documentation} is: documentatie die verwijst naar componenten, functies of processen die niet meer bestaan. Het actief opsporen en verwijderen van dergelijke documentatie is een belangrijk onderdeel van drift-management.
+
+\section{Strategieën om documentation drift te voorkomen}
+\label{sec:drift-preventie}
+
+\subsection{Docs-as-code: documentatie in dezelfde repo als code}
+\textcite{gentle2017docslikecode} stelt dat docs-as-code de meest fundamentele strategie tegen drift is: door documentatie in dezelfde Git-repository als de code te bewaren, wordt het mogelijk om documentatie-wijzigingen te koppelen aan code-wijzigingen in dezelfde pull request. Dit maakt het moeilijker om code te mergen zonder dat de bijbehorende documentatie meegaat.
+
+\textcite{etter2016moderntechwriting} beargumenteert dat docs-as-code niet alleen een technische keuze is, maar ook een culturele: het stuurt het signaal dat documentatie even belangrijk is als code en dezelfde zorgvuldigheid verdient. Wanneer documentatie in dezelfde repository leeft, zien ontwikkelaars ze bij het openen van de repo, en worden ze herinnerd aan het bijwerken ervan bij code-wijzigingen.
+
+\textcite{theunissen2022mappingdocumentation} bevestigen in hun mapping study dat docs-as-code behoort tot de meest effectieve strategieën tegen drift in continuous software development. Zij stellen vast dat teams die docs-as-code toepassen, aanzienlijk minder drift ervaren dan teams die documentatie in aparte systemen bewaren.
+
+\subsection{Documentatie koppelen aan releases en pull requests}
+\textcite{bhatti2021docsdevelopers} raden aan om documentatie expliciet te koppelen aan het release-proces:
+
+\begin{itemize}
+    \item Maak het een regel: geen feature-PR zonder bijbehorende doc-update, waar relevant. Dit kan worden afgedwongen via PR-templates met een veld ``Welke documentatie is bijgewerkt?''
+    \item Koppel doc-taken aan release-planning: elke release heeft een ``doc checklist'' die moet worden afgewerkt voordat de release kan doorgaan.
+    \item Gebruik CI-checks die waarschuwen wanneer een PR code wijzigt in een module waarvan de documentatie niet is bijgewerkt.
+\end{itemize}
+
+\textcite{gentle2017docslikecode} stelt dat PR-templates een eenvoudige maar effectieve maatregel zijn: een veld in de PR-template dat vraagt ``Heeft deze wijziging impact op documentatie? Zo ja, welke documentatie is bijgewerkt?'' herinnert ontwikkelaars eraan om documentatie niet te vergeten en maakt het voor reviewers mogelijk om dit na te gaan.
+
+\subsection{Duidelijke eigenaarschap en verantwoordelijkheid}
+\textcite{bhatti2021docsdevelopers} benadrukken dat expliciet eigenaarschap cruciaal is: wijs per document of sectie een eigenaar toe (bijv. ``eigenaar van README'', ``eigenaar van API docs''). Zorg dat die eigenaar in de review-loop zit bij wijzigingen die hun domein raken. Maak expliciet wie verantwoordelijk is voor het signaleren en oplossen van drift.
+
+\textcite{ruping2005agiledocumentation} stelt dat in agile teams, waar de nadruk ligt op gedeelde verantwoordelijkheid, het risico bestaat dat documentatie ``iedereans verantwoordelijkheid'' wordt en dus ``niemands verantwoordelijkheid.'' Het toewijzen van specifieke eigenaars voorkomt dit probleem.
+
+\textcite{martraire2019livingdocumentation} stelt dat eigenaarschap niet alleen betekent dat iemand verantwoordelijk is voor het bijwerken van documentatie, maar ook voor het valideren ervan: de eigenaar moet periodiek controleren of de documentatie nog accuraat is en actief drift opsporen en verhelpen.
+
+\subsection{Automatisering en detectie}
+\textcite{martraire2019livingdocumentation} stelt dat automatisering de krachtigste strategie tegen drift is: door documentatie automatisch te genereren uit de code, wordt het onmogelijk om de code te wijzigen zonder dat de documentatie meestapt. Hij noemt dit \textit{documentation by extraction}: documentatie wordt niet handmatig geschreven, maar uit de code gehaald. Voorbeelden zijn:
+
+\begin{itemize}
+    \item API-documentatie gegenereerd uit docstrings (bijv. met Sphinx, Javadoc of TypeDoc).
+    \item Databaseschema-documentatie gegenereerd uit migrations.
+    \item Architectuurdiagrammen gegenereerd uit code-structuur.
+    \item Voorbeelden en use cases die executable zijn en automatisch worden gevalideerd.
+\end{itemize}
+
+\textcite{romeo2024didrift} ontwikkelden tools die automatisch drift detecteren door code en documentatie te analyseren en inconsistenties op te sporen. Zij stellen dat dergelijke tools een belangrijk onderdeel vormen van een CI/CD-pipeline: bij elke merge wordt gecontroleerd of de documentatie nog overeenkomt met de code, en zo niet, dan wordt een waarschuwing gegenereerd.
+
+\textcite{gentle2017docslikecode} stelt dat CI-checks voor documentatie meerdere vormen kunnen aannemen:
+
+\begin{itemize}
+    \item Checks op gebroken links.
+    \item Checks op stijlovertredingen (zoals een linter voor documentatie).
+    \item Checks op ontbrekende documentatie voor nieuwe publieke API's.
+    \item Checks op verouderde voorbeelden (bijv. door code-voorbeelden uit te voeren en te controleren of ze nog werken).
+\end{itemize}
+
+\textcite{theunissen2022mappingdocumentatie} bevestigen dat geautomatiseerde detectie en CI/CD-validatie behoren tot de meest effectieve strategieën om drift te beperken in continuous software development.
+
+\subsection{Proces en cultuur}
+\textcite{bhatti2021docsdevelopers} benadrukken dat technische oplossingen alleen niet volstaan: er is ook een cultuurverandering nodig. Teams moeten documentatie beschouwen als een integraal onderdeel van de development-workflow, niet als een optionele extra taak. Dit vereist:
+
+\begin{itemize}
+    \item Het plannen van tijd in sprints voor documentatie-onderhoud, en het zien van deze tijd als investering in onderhoudbaarheid \autocite{tripathy2014softwareevolution}.
+    \item Het aanmoedigen van een cultuur waarin het normaal is om documentatie bij te werken als je code aanraakt, en waarin collega's elkaar daarop aanspreken \autocite{gentle2017docslikecode}.
+    \item Het stellen van verwachtingen in onboarding: nieuwe teamleden leren vanaf dag één dat documentatie een gedeelde verantwoordelijkheid is \autocite{bhatti2021docsdevelopers}.
+\end{itemize}
+
+\textcite{ruping2005agiledocumentation} stelt dat in agile omgevingen, waar documentatie lichtgewicht moet zijn, het vooral belangrijk is om de drempel voor documentatie-onderhoud zo laag mogelijk te maken: documentatie moet gemakkelijk te vinden, te wijzigen en te valideren zijn. Hoe hoger de drempel, hoe meer drift.
+
+\textcite{martraire2019livingdocumentation} stelt dat cultuurverandering het moeilijkste aspect is van drift-preventie: terwijl tools en processen relatief snel kunnen worden ingevoerd, vergt het veranderen van gewoonten en attitudes tijd en volharding. Hij raadt aan om te beginnen met kleine, haalbare stappen: begin met het in versiebeheer plaatsen van een README, voeg vervolgens pull request-reviews toe voor documentatie, en bouw pas daarna geavanceerde automatisering uit.
+
+\section{Relatie met code as documentation}
+\label{sec:drift-relatie-cad}
+
+Code as documentation en documentation drift zijn twee kanten van dezelfde medaille. Waar code as documentation zich richt op het \textit{voorkomen} van drift door code en documentatie dichter bij elkaar te brengen, behandelt documentation drift het fenomeen dat ontstaat wanneer dit niet of onvoldoende gebeurt.
+
+\textcite{boswell2011readablecode} stellen dat zelf-documenterende code de oppervlakte waar drift kan optreden verkleint: wanneer code zelf al duidelijk communiceert wat het doet, is er minder externe documentatie nodig die kan verouderen. \textcite{ousterhout2018philosophy} voegt hieraan toe dat goed ontworpen \textit{deep modules} met heldere interfaces de nood aan externe documentatie verminderen: de interface zelf communiceert voldoende om de module te kunnen gebruiken zonder aanvullende docs.
+
+\textcite{martraire2019livingdocumentation} stelt dat living documentation drift niet alleen verkleint, maar in veel gevallen \textit{elimineert}: door documentatie te koppelen aan de code of aan executable specifications, wordt het onmogelijk om de code te wijzigen zonder dat de documentatie automatisch meestapt of een waarschuwing genereert. Living documentation verandert de aard van het probleem: in plaats van drift te \textit{bestrijden} met processen en reviews, wordt drift \textit{structuurlijk onmogelijk gemaakt} door de architectuur van het systeem.
+
+\textcite{gentle2017docslikecode} stelt dat docs-as-code en code as documentation elkaar versterken: code die goed leesbaar is, heeft minder uitgebreide externe toelichting nodig, en documentatie die dicht bij de code staat en via dezelfde pull requests wordt bijgewerkt, blijft langer accuraat. Samen vormen ze een raamwerk waarin documentatie altijd actueel en bruikbaar is.
+
+\textcite{theunissen2022mappingdocumentation} bevestigen in hun mapping study dat de integratie van documentatie in de ontwikkeling-workflow - via docs-as-code, geautomatiseerde generatie en CI/CD-validatie - de meest effectieve aanpak is om drift te voorkomen in continuous software development.
+
+\section{Conclusie}
+\label{sec:drift-conclusie}
+
+Documentation drift is een systematisch, bijna onvermijdelijk fenomeen in teams die snel code wijzigen zonder documentatie als first-class deliverable te behandelen \autocite{whiting2020drifterosion}. \textcite{romeo2024didrift} hebben empirisch aangetoond dat drift optreedt tussen ontwerp, implementatie en documentatie, en dat dit fenomeen wijdverspreid is. \textcite{theunissen2022mappingdocumentation} stellen vast dat de uitdaging in moderne ontwikkelingspraktijken, met hun hoge snelheid van verandering, alleen maar groter is geworden.
+
+De gevolgen zijn concreet: verlies van vertrouwen \autocite{bhatti2021docsdevelopers}, hogere kosten \autocite{tripathy2014softwareevolution}, foutieve implementaties \autocite{romeo2024didrift}, en versterking door AI-systemen die verouderde documentatie als kennisbron gebruiken \autocite{theunissen2022mappingdocumentation}.
+
+Oplossingen liggen in het koppelen van documentatie aan code via docs-as-code \autocite{gentle2017docslikecode}, het gebruik van living documentation die van bij ontwerp in het systeem is ingebouwd \autocite{martraire2019livingdocumentation}, duidelijk eigenaarschap \autocite{bhatti2021docsdevelopers}, en automatisering die drift detecteert en beperkt \autocite{romeo2024didrift}. Voor een onderhoudbaar systeem is het daarom essentieel om documentatie niet als los product te zien, maar als integraal onderdeel van de codebase en het ontwikkelproces \autocite{gentle2017docslikecode}.
+
+Dit hoofdstuk sluit aan bij het vorige chapter over code as documentation: samen vormen ze een raamwerk voor het schrijven en onderhouden van documentatie die accuraat, bruikbaar en duurzaam is. Waar code as documentation zich richt op het \textit{voorkomen} van drift door goede praktijken, behandelt dit chapter het fenomeen zelf en de strategieën om het te detecteren, te beperken en uiteindelijk te elimineren.

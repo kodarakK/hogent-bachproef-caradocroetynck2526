@@ -233,6 +233,235 @@ Praktisch kunnen voorbeelden worden opgenomen in:
     \item Geautomatiseerde tests, die tegelijkertijd dienen als documentatie en als validatie \autocite{martraire2019livingdocumentation}.
 \end{itemize}
 
+
+\section{Praktische technieken en patronen}
+\label{sec:cad-technieken}
+
+\subsection{Naamgevingsconventies en projectstructuur}
+\textcite{boswell2011readablecode} besteden een heel hoofdstuk aan naamgeving en stellen dat namen de belangrijkste bron van zelf-documentatie in code zijn. Hun belangrijkste richtlijnen zijn:
+
+\begin{itemize}
+    \item \textbf{Kies specifieke woorden.} \texttt{getPageSize} is beter dan \texttt{getSize}; \texttt{calculateMonthlyInterest} is beter dan \texttt{calc}. Hoe specifieker de naam, hoe minder commentaar nodig is \autocite{boswell2011readablecode}.
+    \item \textbf{Vermijd generieke namen} zoals \texttt{tmp}, \texttt{retval}, \texttt{data}, \texttt{foo}, tenzij er een specifieke reden is (zoals een lusvariabele met een zeer beperkte scope).
+    \item \textbf{Gebruik namen die de eenheid of type communiceren.} \texttt{delayMillis} is beter dan \texttt{delay}; \texttt{userAgeInYears} is beter dan \texttt{age} \autocite{boswell2011readablecode}.
+    \item \textbf{Wees consistent} in naamgevingsconventies binnen een project. Inconsistentie leidt tot verwarring en bugs \autocite{martin2008clean}.
+\end{itemize}
+
+\textcite{ousterhout2018philosophy} voegt hieraan toe dat namen nauwkeurig moeten zijn: als een naam een indruk geeft die niet overeenkomt met het werkelijke gedrag van de code, is dat erger dan geen naam. Hij stelt ook dat namen \textit{consistent} moeten zijn: als dezelfde term in verschillende delen van het systeem verschillende betekenissen heeft, leidt dit tot verwarring.
+
+\textcite{martin2008clean} benadrukt het belang van een consistente, modulaire structuur. Hij stelt dat code moet worden georganiseerd in modules met een duidelijke, enkele verantwoordelijkheid (het \textit{Single Responsibility Principle}). Een duidelijke scheiding tussen lagen --- zoals API, business logic en data access --- maakt het systeem gemakkelijker begrijpelijk en onderhoudbaar.
+
+\textcite{ousterhout2018philosophy} introduceert het concept van \textit{deep modules}: een module is diep wanneer de interface eenvoudig is maar de functionaliteit krachtig. Diepe modules verbergen complexiteit achter een eenvoudige interface, waardoor de gebruiker van de module niet belast wordt met implementatiedetails. Dit staat in contrast met \textit{shallow modules}, die weinig functionaliteit bieden maar een complexe interface hebben. Ousterhout stelt dat shallow modules leiden tot code die moeilijk te begrijpen en te onderhouden is.
+
+\subsubsection{Concrete naamgevingspatronen}
+Voor gebruik in een project kan men de volgende conventies expliciet vastleggen:
+
+\begin{itemize}
+    \item \textbf{Functies en methoden}: \texttt{werkwoord + zelfstandig naamwoord}, bijv. \texttt{calculateTotal}, \texttt{fetchUserById}.
+    \item \textbf{Variabelen}: \texttt{zelfstandig naamwoord + context}, bijv. \texttt{userAgeInYears}, \texttt{retryCount}.
+    \item \textbf{Booleans}: namen die een ja/nee-vraag suggereren, bijv. \texttt{isValid}, \texttt{hasPermission}.
+    \item \textbf{Constanten}: \texttt{UPPER\_CASE\_WITH\_UNDERSCORES}, bijv. \texttt{MAX\_RETRY\_COUNT}, \texttt{DEFAULT\_TIMEOUT\_MILLIS}.
+\end{itemize}
+
+Leg deze conventies vast in een document zoals \texttt{docs/conventions.md} en link hier naar vanuit de README.
+
+\subsubsection{Projectstructuur als documentatie}
+Een duidelijke mappenstructuur communiceert architectuur zonder extra tekst. Een veelgebruikt patroon is:
+
+\begin{verbatim}
+project-root/
+  src/
+    api/
+    domain/
+    infrastructure/
+  tests/
+  docs/
+    adr/
+    conventions.md
+  README.md
+\end{verbatim}
+
+Deze structuur maakt expliciet waar API-grenzen, domeinlogica en infrastructuurcode leven, en scheidt testcode en documentatie van de broncode.
+
+\subsection{Inline commentaar en docstrings}
+\textcite{boswell2011readablecode} onderscheiden nuttige van nutteloze commentaar. Nuttige commentaar:
+
+\begin{itemize}
+    \item Legt uit \textit{waarom} iets wordt gedaan, niet \textit{wat} er wordt gedaan.
+    \item Verduidelijkt complexe of niet-intuïtieve logica.
+    \item Waarschuwt voor valkuilen of randgevallen.
+    \item Vastlegt van beslissingen en hun redenering.
+\end{itemize}
+
+Nutteloze commentaar (\textit{noise comments}) herhaalt wat de code al zegt, verduidelijkt niets, en neemt plaats in zonder waarde toe te voegen. \textcite{boswell2011readablecode} raden aan om dergelijke commentaar actief te verwijderen.
+
+\textcite{ousterhout2018philosophy} stelt dat er een onderscheid moet worden gemaakt tussen \textit{interface commentaar} (die de publieke interface van een module of functie beschrijft) en \textit{implementatiecommentaar} (die interne details verduidelijkt). Interface commentaar is cruciaal omdat het de gebruiker vertelt hoe de module te gebruiken zonder de implementatie te hoeven lezen. Hij stelt: ``Als gebruikers de code van een methode moeten lezen om ze te kunnen gebruiken, dan is er geen abstractie'' \autocite{ousterhout2018philosophy}.
+
+\subsubsection{Docstring-template}
+Voor het schrijven van docstrings adviseren \textcite{bhatti2021docsdevelopers} om een consistente stijl te volgen, zoals Google-style docstrings in Python, JSDoc in JavaScript, of JavaDoc in Java. Een goede docstring bevat:
+
+\begin{itemize}
+    \item Een korte beschrijving van wat de functie of klasse doet.
+    \item Een beschrijving van de parameters (naam, type, betekenis).
+    \item Een beschrijving van de retourwaarde (type, betekenis).
+    \item Eventuele side-effects of uitzonderingen die de functie kan opwerpen.
+    \item Eventuele pre- of postcondities.
+\end{itemize}
+
+\textcite{martraire2019livingdocumentation} stelt dat docstrings niet alleen voor mensen moeten worden geschreven, maar ook zodanig dat tools ze kunnen verwerken: docstrings kunnen dienen als bron voor automatisch gegenereerde API-documentatie, voor validatie in CI-pipelines, of zelfs voor het genereren van executable specifications.
+
+\subsubsection{Voorbeeld: Python docstring (Google-style)}
+\begin{verbatim}
+def calculate_monthly_interest(
+    principal: float,
+    annual_rate: float,
+    months: int
+) -> float:
+    """Calculate monthly compound interest.
+
+    Args:
+        principal: The initial amount of money.
+        annual_rate: Annual interest rate as a decimal (e.g., 0.05 for 5%).
+        months: Number of months to compound.
+
+    Returns:
+        The total amount after compounding.
+
+    Raises:
+        ValueError: If principal <= 0 or annual_rate < 0.
+    """
+\end{verbatim}
+
+Dit template kun je als standaard afspreken voor alle publieke functies in je project.
+
+\subsection{README en project-overzicht}
+Een goede README is het eerste wat een nieuwe ontwikkelaar of gebruiker leest bij het openen van een repository. \textcite{bhatti2021docsdevelopers} beschrijven een README als de \textit{voordeur} van een project. Een goede README bevat:
+
+\begin{itemize}
+    \item Doel van het project: wat het doet en waarom het bestaat.
+    \item Installatie- en configuratie-instructies.
+    \item Een snelstartgids of voorbeeld van het basisgebruik.
+    \item Een overzicht van de belangrijkste componenten en hun rol.
+    \item Bijdragerichtlijnen (\textit{contributing guidelines}).
+    \item Licentie-informatie.
+\end{itemize}
+
+\textcite{gentle2017docslikecode} stelt dat de README in de root van de repository moet staan en dat ze bij grote wijzigingen moet worden bijgewerkt. \textcite{etter2016moderntechwriting} raadt aan om de README beknopt te houden en te linken naar meer gedetailleerde documentatie in submappen, om zo een hiërarchie te creëren waarin de lezer stap voor stap dieper kan gaan.
+
+\textcite{bhatti2021docsdevelopers} introduceren het concept van \textit{documentation types} gebaseerd op het Diátaxis-framework: tutorials (leren), how-to guides (taken uitvoeren), referentie (informatie opzoeken) en uitleg (begrijpen). Zij stellen dat elk type document een ander doel en een ander publiek heeft, en dat het belangrijk is om deze types niet te mengen in één document.
+
+\subsubsection{README-template}
+Je kunt een vaste structuur voor README's afspreken, bijvoorbeeld:
+
+\begin{verbatim}
+# Projectnaam
+
+Korte beschrijving (1–2 zinnen).
+
+## Installatie
+
+Stappen om het project lokaal te installeren.
+
+## Gebruik
+
+Basisvoorbeelden en snelstart.
+
+## Architectuur
+
+Overzicht van belangrijke componenten en hun rol.
+
+## Bijdragen
+
+Hoe bij te dragen, link naar CONTRIBUTING.md.
+
+## Licentie
+
+Link naar LICENSE-bestand.
+\end{verbatim}
+
+Dit template kun je opnemen als \texttt{docs/templates/README-template.md} en refereren vanuit je contributing guidelines.
+
+\subsection{Architecture Decision Records (ADRs)}
+ADRs zijn korte documenten die architecturale beslissingen vastleggen. \textcite{martraire2019livingdocumentation} beschrijft ADRs als een vorm van \textit{living documentation}: ze leven in de repository, worden versiebeheerd samen met de code, en evolueren mee met het systeem. Een ADR bevat typisch:
+
+\begin{itemize}
+    \item \textbf{Titel en status}: een korte beschrijving van de beslissing en haar status (voorgesteld, geaccepteerd, vervangen, \ldots).
+    \item \textbf{Context}: de situatie die de beslissing noodzakelijk maakte.
+    \item \textbf{Beslissing}: de gekozen optie, duidelijk geformuleerd.
+    \item \textbf{Alternatieven}: welke andere opties werden overwogen en waarom niet gekozen.
+    \item \textbf{Gevolgen}: wat zijn de implicaties van deze beslissing (zowel positief als negatief).
+\end{itemize}
+
+\textcite{bhatti2021docsdevelopers} stellen dat ADRs vooral waardevol zijn voor het vastleggen van \textit{waarom}-beslissingen: de redenering achter architecturale keuzes is vaak niet zichtbaar in de code, maar is cruciaal voor toekomstige ontwikkelaars die het systeem moeten begrijpen of uitbreiden.
+
+ADRs worden bewaard in een specifieke map in de repository (bijv. \texttt{/docs/adr/}) en worden genummerd of gedateerd om een chronologisch overzicht te bieden. Omdat ze in dezelfde repository leven als de code, zijn ze altijd toegankelijk voor iedereen die met de codebase werkt \autocite{gentle2017docslikecode}.
+
+\subsubsection{ADR-template}
+Een concreet template voor een ADR kan er als volgt uitzien:
+
+\begin{verbatim}
+# ADR-001: Gebruik van REST vs GraphQL voor de publieke API
+
+## Status
+Geaccepteerd
+
+## Context
+We moeten een publieke API bouwen voor externe ontwikkelaars.
+Er zijn twee opties: REST en GraphQL.
+
+## Beslissing
+We kiezen voor REST als standaard voor de publieke API.
+
+## Alternatieven
+- GraphQL: biedt meer flexibiliteit voor clients, maar heeft
+  een steilere leercurve en meer operationele complexiteit.
+- gRPC: geschikt voor interne services, maar minder geschikt
+  voor publieke HTTP-clients.
+
+## Gevolgen
++ Eenvoudiger te documenteren en te consumeren voor externe devs.
+- Minder flexibel voor complexe queries dan GraphQL.
+\end{verbatim}
+
+Dit template kun je vastleggen als \texttt{docs/templates/adr-template.md} en gebruiken als standaard voor alle nieuwe ADRs.
+
+\subsection{Voorbeelden en use cases}
+\textcite{bhatti2021docsdevelopers} benadrukken dat code-voorbeelden een van de meest effectieve vormen van documentatie zijn: ze laten zien hoe een API of functie in de praktijk moet worden gebruikt, wat vaak duidelijker is dan een tekstuele beschrijving. \textcite{martraire2019livingdocumentation} gaat nog verder en stelt dat voorbeelden \textit{executable} moeten zijn: wanneer voorbeelden kunnen worden uitgevoerd en automatisch worden gevalideerd, worden ze een vorm van living documentation die niet kan verouderen.
+
+Praktisch kunnen voorbeelden worden opgenomen in:
+\begin{itemize}
+    \item Docstrings, als korte code-snippets.
+    \item De README, als snelstart-voorbeelden.
+    \item Een aparte \texttt{/examples}-map, voor meer uitgebreide use cases.
+    \item Geautomatiseerde tests, die tegelijkertijd dienen als documentatie en als validatie \autocite{martraire2019livingdocumentation}.
+\end{itemize}
+
+\subsubsection{Voorbeeld: executable documentation in tests}
+Een test die een use case documenteert kan er als volgt uitzien:
+
+\begin{verbatim}
+def test_calculate_monthly_interest():
+    """
+    Example: calculate 5% annual interest over 12 months.
+
+    Given:
+        principal = 1000
+        annual_rate = 0.05
+        months = 12
+
+    Expected:
+        total ≈ 1051.16
+    """
+    result = calculate_monthly_interest(
+        principal=1000,
+        annual_rate=0.05,
+        months=12
+    )
+    assert abs(result - 1051.16) < 0.01
+\end{verbatim}
+
+Deze test fungeert zowel als validatie van de implementatie als als documentatie van hoe de functie gebruikt moet worden.
+
 \section{Tools en workflows}
 \label{sec:cad-tools}
 

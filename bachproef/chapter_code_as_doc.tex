@@ -98,8 +98,379 @@ Zij introduceren talrijke heuristieken voor zelf-documenterende code, waaronder:
 \begin{itemize}
 \item \textbf{Kies specifieke en informatieve namen.} \textcite{boswell2011readablecode} raden aan om informatie te verpakken in namen. Een naam als \texttt{calculateMonthlyInterest} communiceert veel meer dan \texttt{calc} of \texttt{foo}. Vermijd vage, generieke namen zoals \texttt{temp}, \texttt{retval} of \texttt{data}, tenzij de variabele werkenlijk geen specifiekere betekenis heeft.
 \item \textbf{Vermijd magische nummers en cryptische afkortingen.} \textcite{boswell2011readablecode} adviseren om constante waarden een beschrijvende naam te geven (bijv. \texttt{MAX\_CONNECTIONS\_PER\_USER = 5}) in plaats van het getal letterlijk in de code te gebruiken.
-
-\item 
+\item \textbf{Houd functies klein en gefocust.} \textcite{martin2008clean} stelt dat functies kort moeten zijn en precies \'e\'en ding moeten doen. Hoe korter en gefocuster een functie, hoe gemakkelijker ze te begrijpen, te testen en te hergebruiken is.
 \end{itemize}
 
+Ook \textcite{ousterhout2018philosophy} benadrukt het belang van precieze naamgeving. Hij stelt dat namen zowel nauwkeurig als betekenisvol moeten zijn: een naam die te vaag is, geeft aanleiding tot misverstanden; een naam die te specifiek is voor een tijdelijke implementatie, raakt snel verouderd.
+Hij adviseert om namen te kiezen die het \textit{concept} beschrijven, niet de \textit{implementatie}.
 
+\textcite{thomas2019pragmatic} dragen bij met het principe van \textit{ETC} (Easy to Change): code moet zo geschreven zijn dat wijzigingen makkelijk door te voeren zijn.
+Dit houdt in dat code modulair, los gekoppeld en goed benoemd moet zijn, zodat een wijziging in \'e\'en deel van het systeem geen onverwachte neveneffecten heeft in andere delen.
+
+\subsection{Documenteer het ``waarom'', niet alleen het ``wat''}
+Code laat vaak zien \textit{wat} er gebeurt, maar niet \textit{waarom} bepaalde keuzes zijn gemaakt.
+\textcite{boswell2011readablecode} formuleren dit als volgt: het doel van commentaar is om dingen uit te leggen die de code zelf niet kan uitdrukken.
+Zij onderscheiden verschillende soorten commentaar:
+
+\begin{itemize}
+\item \textbf{Intentie-commentaar}:
+  legt uit wat de code probeert te bereiken en waarom een bepaalde aanloop is gekozen.
+\item \textbf{Waarschuwingen}:
+  maakt andere ontwikkelaars attent op randgevallen of valkuilen.
+\item \textbf{TODO's en FIXME's}:
+  markeert onvolledige of tijdelijke code die nog aandacht veriest.
+\item \textbf{Verduidelijking van complexe logica}:
+  legt uit hoe een ingewikkeld algoritme werkt wanneer de code alleen niet voldoende zelfverklarend is.
+\end{itemize}
+
+\textcite{ousterhout2018philosophy} stelt dat commentaar informatie moet vastleggen die in het hoofd van de ontwerper aanwezig was, maar die niet direct in de code kan worden uitgedrukt.
+Hij stelt: ``het doel van commentaar is om dingen te beschrijven die niet voor de hand liggen vanuit de code''. Voorbeelden van zulke informatie zijn:
+
+\begin{itemize}
+\item De redenering achter een specifieke architecturale keuze.
+\item De voor- en nadelen van een gekozen oplossing ten opzichte van alternatieven.
+\item Beperkingen of assumpties waarvan de code afhankelijk is.
+\item De context van een beslissing (bijv.\ waarom een bepaalde datastructuur werd gekozen).
+\end{itemize}
+
+Hij benadrukt dat commentaar een ontwerpproces is, geen documentatieproces: commentaar helpt bij het nadenken over het ontwerp, niet alleen bij het vastleggen ervan \autocite{ousterhout2018philosophy}.
+
+Dit staat in contrast met de visie van \textcite{martin2008clean}, die stelt dat ``commentaar altijd een fout is''; niet in de zin dat commentaar verboden is, maar in de zin dat de nood aan commentaar vaak wijst op code die niet duidelijk genoeg geschreven is.
+Beide visies komen echter overeen op \'e\'en punt: commentaar moet waarde toevoegen en mag geen herhaling zijn van wat de code al zegt.
+
+Voor het vastleggen van narchitecturale beslissingen raadt men \textit{Architecture Decision Records} (ADRs) aan. Een ADR is een kort document dat vastlegt: welke beslissing is genomen, welke alternatieven er waren, waarom deze keuze is gemaakt, en wat de gevolgen zijn \autocite{martraire2019livingdocumentation}. ADRs leven in de repository en worden versiebeheerd samen met de code.
+
+\subsection{Houd documentatie dicht bij de code}
+\textcite{gentle2017docslikecode} stelt dat documentatie het dichts bij de code moet leven die ze beschrijft.
+Wanneer documentatie en code in dezelfde repository staan, is de kans kleiner dat de \'e\'en verandert zonder de ander.
+\textcite{ruping2005agiledocumentation} had dit principe al eerder geformuleerd in de context van agile documentatie: hij stelt dat documentatie \textit{dicht bij de code} moet worden bewaard en dat er een duidelijke relatie moet zijn tussen een document en de code die het beschrijft.
+
+\textcite{martraire2019livingdocumentation} gaat nog verder door te stellen dat documentatie idealiter \textit{uit} de code wordt gehaald, niet ernaast wordt geplaatst. Dit betekent dat code-annotaties, domeinmodellen en executable specifications fungeren als primaire bron voor documentatie, die vervolgens automatisch kan worden gegenereerd. Hierdoor is het onmogelijk om de code te wijzigen zonder dat de documentatie automatisch meestapt of een waarschuwing genereert.
+
+Praktisch betekent dit:
+\begin{itemize}
+    \item README's, docstrings, inline commentaar en ontwerpnota's in dezelfde Git-repository als de code \autocite{gentle2017docslikecode}.
+    \item Documentatie wijzigen in dezelfde commit of pull request als de code-wijziging \autocite{etter2016moderntechwriting}.
+    \item Een expliciete koppeling leggen tussen documentatie en code, bijvoorbeeld via links, tags of structuur \autocite{bhatti2021docsdevelopers}.
+\end{itemize}
+
+\subsection{Behandel documentatie als code}
+\textcite{gentle2017docslikecode} stelt dat documentatie door dezelfde workflows moet lopen als code: versiebeheer met Git, pull requests met reviews, geautomatiseerde builds en deployments, en kwaliteitschecks. \textcite{etter2016moderntechwriting} pleit voor het gebruik van lichtgewicht opmaaktalen zoals Markdown, AsciiDoc of reStructuredText, die leesbaar zijn in platte tekst en tegelijkertijd kunnen worden omgezet naar HTML, PDF of andere formaten.
+
+\textcite{bhatti2021docsdevelopers} beschrijven hoe engineers documentatie kunnen inrichten volgens het docs-as-code paradigma:
+
+\begin{itemize}
+    \item \textbf{Versiebeheer}: alle documentatie in Git, met dezelfde branch-strategie als de code.
+    \item \textbf{Reviews}: documentatie-wijzigingen via pull requests, met dezelfde review-standaarden als code.
+    \item \textbf{Stijl- en structuurgidsen}: definieer standaarden voor schrijfstijl, opmaak en structuur, net zoals code style guides.
+    \item \textbf{CI/CD-pipelines}: bouw, test en deploy documentatie automatisch bij elke merge, met checks op gebroken links, stijl en volledigheid.
+\end{itemize}
+
+\textcite{martin2008clean} stelt dat net als bij code, consistentie in documentatie belangrijk is: een uniforme stijl en structuur maken documentatie voorspelbaar en gemakkelijker te raadplegen.
+
+\subsection{Wees beknopt en relevant}
+\textcite{boswell2011readablecode} waarschuwen voor \textit{noise comments}: commentaar dat geen informatie toevoegt aan wat de code al uitdrukt. Voorbeelden zijn commentaar dat gewoon de functienaam herhaalt, voor de hand liggende dingen uitlegt, of achterhaald is. Zij adviseren om dergelijk commentaar actief te verwijderen.
+
+\textcite{martin2008clean} stelt dat over-documentatie even schadelijk kan zijn als geen documentatie: het creëert ruis die het lezen van de code vertraagt en de lezer afleidt van wat echt belangrijk is. Hij raadt aan om commentaar te gebruiken als verduidelijking, niet als excuus voor slechte code.
+
+\textcite{ruping2005agiledocumentation} introduceert het principe van \textit{documentation fitness}: documentatie moet \textit{juist voldoende} zijn --- niet te veel en niet te weinig. Hij stelt dat de waarde van documentatie moet opwegen tegen de kost van het schrijven en onderhouden ervan. Documentatie die niet wordt gelezen of onderhouden, heeft geen waarde en kan beter worden verwijderd.
+
+\textcite{martraire2019livingdocumentation} sluit hierbij aan en stelt dat verouderde of irrelevante documentatie (\textit{dead documentation}) actief moet worden opgespoord en verwijderd. Hij introduceert het concept van \textit{documentation debt}: de opgebouwde achterstand in documentatie-onderhoud die vergelijkbaar is met technische schuld in code.
+
+\section{Praktische technieken en patronen}
+\label{sec:cad-technieken}
+
+\subsection{Naamgevingsconventies en projectstructuur}
+\textcite{boswell2011readablecode} besteden een heel hoofdstuk aan naamgeving en stellen dat namen de belangrijkste bron van zelf-documentatie in code zijn. Hun belangrijkste richtlijnen zijn:
+
+\begin{itemize}
+    \item \textbf{Kies specifieke woorden.} \texttt{getPageSize} is beter dan \texttt{getSize}; \texttt{calculateMonthlyInterest} is beter dan \texttt{calc}. Hoe specifieker de naam, hoe minder commentaar nodig is \autocite{boswell2011readablecode}.
+    \item \textbf{Vermijd generieke namen} zoals \texttt{tmp}, \texttt{retval}, \texttt{data}, \texttt{foo}, tenzij er een specifieke reden is (zoals een lusvariabele met een zeer beperkte scope).
+    \item \textbf{Gebruik namen die de eenheid of type communiceren.} \texttt{delayMillis} is beter dan \texttt{delay}; \texttt{userAgeInYears} is beter dan \texttt{age} \autocite{boswell2011readablecode}.
+    \item \textbf{Wees consistent} in naamgevingsconventies binnen een project. Inconsistentie leidt tot verwarring en bugs \autocite{martin2008clean}.
+\end{itemize}
+
+\textcite{ousterhout2018philosophy} voegt hieraan toe dat namen nauwkeurig moeten zijn: als een naam een indruk geeft die niet overeenkomt met het werkelijke gedrag van de code, is dat erger dan geen naam. Hij stelt ook dat namen \textit{consistent} moeten zijn: als dezelfde term in verschillende delen van het systeem verschillende betekenissen heeft, leidt dit tot verwarring.
+
+\textcite{martin2008clean} benadrukt het belang van een consistente, modulaire structuur. Hij stelt dat code moet worden georganiseerd in modules met een duidelijke, enkele verantwoordelijkheid (het \textit{Single Responsibility Principle}). Een duidelijke scheiding tussen lagen --- zoals API, business logic en data access --- maakt het systeem gemakkelijker begrijpelijk en onderhoudbaar.
+
+\textcite{ousterhout2018philosophy} introduceert het concept van \textit{deep modules}: een module is diep wanneer de interface eenvoudig is maar de functionaliteit krachtig. Diepe modules verbergen complexiteit achter een eenvoudige interface, waardoor de gebruiker van de module niet belast wordt met implementatiedetails. Dit staat in contrast met \textit{shallow modules}, die weinig functionaliteit bieden maar een complexe interface hebben. Ousterhout stelt dat shallow modules leiden tot code die moeilijk te begrijpen en te onderhouden is.
+
+Voor gebruik in een project kan men de volgende conventies expliciet vastleggen:
+
+\begin{itemize}
+    \item \textbf{Functies en methoden}: \texttt{werkwoord + zelfstandig naamwoord}, bijv. \texttt{calculateTotal}, \texttt{fetchUserById}.
+    \item \textbf{Variabelen}: \texttt{zelfstandig naamwoord + context}, bijv. \texttt{userAgeInYears}, \texttt{retryCount}.
+    \item \textbf{Booleans}: namen die een ja/nee-vraag suggereren, bijv. \texttt{isValid}, \texttt{hasPermission}.
+    \item \textbf{Constanten}: \texttt{UPPER\_CASE\_WITH\_UNDERSCORES}, bijv. \texttt{MAX\_RETRY\_COUNT}, \texttt{DEFAULT\_TIMEOUT\_MILLIS}.
+\end{itemize}
+
+\subsubsection{Projectstructuur als documentatie}
+Een duidelijke mappenstructuur communiceert architectuur zonder extra tekst. Een veelgebruikt patroon is:
+
+\begin{verbatim}
+project-root/
+  src/
+    api/
+    domain/
+    infrastructure/
+  tests/
+  docs/
+    adr/
+    conventions.md
+  README.md
+\end{verbatim}
+
+Deze structuur maakt expliciet waar API-grenzen, domeinlogica en infrastructuurcode leven, en scheidt testcode en documentatie van de broncode.
+
+\subsection{Inline commentaar en docstrings}
+\textcite{boswell2011readablecode} onderscheiden nuttige van nutteloze commentaar. Nuttige commentaar:
+
+\begin{itemize}
+    \item Legt uit \textit{waarom} iets wordt gedaan, niet \textit{wat} er wordt gedaan.
+    \item Verduidelijkt complexe of niet-intuïtieve logica.
+    \item Waarschuwt voor valkuilen of randgevallen.
+    \item Vastlegt van beslissingen en hun redenering.
+\end{itemize}
+
+Nutteloze commentaar (\textit{noise comments}) herhaalt wat de code al zegt, verduidelijkt niets, en neemt plaats in zonder waarde toe te voegen. \textcite{boswell2011readablecode} raden aan om dergelijke commentaar actief te verwijderen.
+
+\textcite{ousterhout2018philosophy} stelt dat er een onderscheid moet worden gemaakt tussen \textit{interface commentaar} (die de publieke interface van een module of functie beschrijft) en \textit{implementatiecommentaar} (die interne details verduidelijkt). Interface commentaar is cruciaal omdat het de gebruiker vertelt hoe de module te gebruiken zonder de implementatie te hoeven lezen. Hij stelt: ``Als gebruikers de code van een methode moeten lezen om ze te kunnen gebruiken, dan is er geen abstractie'' \autocite{ousterhout2018philosophy}.
+
+\subsubsection{Docstring-template}
+Voor het schrijven van docstrings adviseren \textcite{bhatti2021docsdevelopers} om een consistente stijl te volgen, zoals Google-style docstrings in Python, JSDoc in JavaScript, of JavaDoc in Java. Een goede docstring bevat:
+
+\begin{itemize}
+    \item Een korte beschrijving van wat de functie of klasse doet.
+    \item Een beschrijving van de parameters (naam, type, betekenis).
+    \item Een beschrijving van de retourwaarde (type, betekenis).
+    \item Eventuele side-effects of uitzonderingen die de functie kan opwerpen.
+    \item Eventuele pre- of postcondities.
+\end{itemize}
+
+\textcite{martraire2019livingdocumentation} stelt dat docstrings niet alleen voor mensen moeten worden geschreven, maar ook zodanig dat tools ze kunnen verwerken: docstrings kunnen dienen als bron voor automatisch gegenereerde API-documentatie, voor validatie in CI-pipelines, of zelfs voor het genereren van executable specifications.
+
+\subsubsection{Voorbeeld: Python docstring (Google-style)}
+\begin{minted}{python}
+def calculate_monthly_interest(
+    principal: float,
+    annual_rate: float,
+    months: int
+) -> float:
+    """Calculate monthly compound interest.
+
+    Args:
+        principal: The initial amount of money.
+        annual_rate: Annual interest rate as a decimal (e.g., 0.05 for 5%).
+        months: Number of months to compound.
+
+    Returns:
+        The total amount after compounding.
+
+    Raises:
+        ValueError: If principal <= 0 or annual_rate < 0.
+    """
+\end{minted}
+
+\subsection{README en project-overzicht}
+Een goede README is het eerste wat een nieuwe ontwikkelaar of gebruiker leest bij het openen van een repository. \textcite{bhatti2021docsdevelopers} beschrijven een README als de \textit{voordeur} van een project. Een goede README bevat:
+
+\begin{itemize}
+    \item Doel van het project: wat het doet en waarom het bestaat.
+    \item Installatie- en configuratie-instructies.
+    \item Een snelstartgids of voorbeeld van het basisgebruik.
+    \item Een overzicht van de belangrijkste componenten en hun rol.
+    \item Bijdragerichtlijnen (\textit{contributing guidelines}).
+    \item Licentie-informatie.
+\end{itemize}
+
+\textcite{gentle2017docslikecode} stelt dat de README in de root van de repository moet staan en dat ze bij grote wijzigingen moet worden bijgewerkt. \textcite{etter2016moderntechwriting} raadt aan om de README beknopt te houden en te linken naar meer gedetailleerde documentatie in submappen, om zo een hiërarchie te creëren waarin de lezer stap voor stap dieper kan gaan.
+
+\textcite{bhatti2021docsdevelopers} introduceren het concept van \textit{documentation types} gebaseerd op het Diátaxis-framework: tutorials (leren), how-to guides (taken uitvoeren), referentie (informatie opzoeken) en uitleg (begrijpen). Zij stellen dat elk type document een ander doel en een ander publiek heeft, en dat het belangrijk is om deze types niet te mengen in één document.
+
+\subsubsection{README-template}
+Men kan een vaste structuur voor README's afspreken bijvoorbeeld:
+
+\begin{verbatim}
+# Projectnaam
+
+Korte beschrijving (1–2 zinnen).
+
+## Installatie
+
+Stappen om het project lokaal te installeren.
+
+## Gebruik
+
+Basisvoorbeelden en snelstart.
+
+## Architectuur
+
+Overzicht van belangrijke componenten en hun rol.
+
+## Bijdragen
+
+Hoe bij te dragen, link naar CONTRIBUTING.md.
+
+## Licentie
+
+Link naar LICENSE-bestand.
+\end{verbatim}
+
+\subsection{Architecture Decision Records (ADRs)}
+ADRs zijn korte documenten die architecturale beslissingen vastleggen. \textcite{martraire2019livingdocumentation} beschrijft ADRs als een vorm van \textit{living documentation}: ze leven in de repository, worden versiebeheerd samen met de code, en evolueren mee met het systeem. Een ADR bevat typisch:
+
+\begin{itemize}
+    \item \textbf{Titel en status}: een korte beschrijving van de beslissing en haar status (voorgesteld, geaccepteerd, vervangen, \ldots).
+    \item \textbf{Context}: de situatie die de beslissing noodzakelijk maakte.
+    \item \textbf{Beslissing}: de gekozen optie, duidelijk geformuleerd.
+    \item \textbf{Alternatieven}: welke andere opties werden overwogen en waarom niet gekozen.
+    \item \textbf{Gevolgen}: wat zijn de implicaties van deze beslissing (zowel positief als negatief).
+\end{itemize}
+
+\textcite{bhatti2021docsdevelopers} stellen dat ADRs vooral waardevol zijn voor het vastleggen van \textit{waarom}-beslissingen: de redenering achter architecturale keuzes is vaak niet zichtbaar in de code, maar is cruciaal voor toekomstige ontwikkelaars die het systeem moeten begrijpen of uitbreiden.
+
+ADRs worden bewaard in een specifieke map in de repository (bijv. \texttt{/docs/adr/}) en worden genummerd of gedateerd om een chronologisch overzicht te bieden. Omdat ze in dezelfde repository leven als de code, zijn ze altijd toegankelijk voor iedereen die met de codebase werkt \autocite{gentle2017docslikecode}.
+
+\subsubsection{ADR-template}
+Een concreet template voor een ADR kan er als volgt uitzien:
+
+\begin{verbatim}
+# ADR-001: Gebruik van REST vs GraphQL voor de publieke API
+
+## Status
+Geaccepteerd
+
+## Context
+We moeten een publieke API bouwen voor externe ontwikkelaars.
+Er zijn twee opties: REST en GraphQL.
+
+## Beslissing
+We kiezen voor REST als standaard voor de publieke API.
+
+## Alternatieven
+- GraphQL: biedt meer flexibiliteit voor clients, maar heeft
+  een steilere leercurve en meer operationele complexiteit.
+- gRPC: geschikt voor interne services, maar minder geschikt
+  voor publieke HTTP-clients.
+
+## Gevolgen
++ Eenvoudiger te documenteren en te consumeren voor externe devs.
+- Minder flexibel voor complexe queries dan GraphQL.
+\end{verbatim}
+
+\subsection{Voorbeelden en use cases}
+\textcite{bhatti2021docsdevelopers} benadrukken dat code-voorbeelden een van de meest effectieve vormen van documentatie zijn: ze laten zien hoe een API of functie in de praktijk moet worden gebruikt, wat vaak duidelijker is dan een tekstuele beschrijving. \textcite{martraire2019livingdocumentation} gaat nog verder en stelt dat voorbeelden \textit{executable} moeten zijn: wanneer voorbeelden kunnen worden uitgevoerd en automatisch worden gevalideerd, worden ze een vorm van living documentation die niet kan verouderen.
+
+Praktisch kunnen voorbeelden worden opgenomen in:
+\begin{itemize}
+    \item Docstrings, als korte code-snippets.
+    \item De README, als snelstart-voorbeelden.
+    \item Een aparte \texttt{/examples}-map, voor meer uitgebreide use cases.
+    \item Geautomatiseerde tests, die tegelijkertijd dienen als documentatie en als validatie \autocite{martraire2019livingdocumentation}.
+\end{itemize}
+
+\subsubsection{Voorbeeld: executable documentation in tests}
+Een test die een use case documenteert kan er als volgt uitzien:
+
+\begin{minted}{python}
+def test_calculate_monthly_interest():
+    """
+    Example: calculate 5% annual interest over 12 months.
+
+    Given:
+        principal = 1000
+        annual_rate = 0.05
+        months = 12
+
+    Expected:
+        total ≈ 1051.16
+    """
+    result = calculate_monthly_interest(
+        principal=1000,
+        annual_rate=0.05,
+        months=12
+    )
+    assert abs(result - 1051.16) < 0.01
+\end{minted}
+
+Deze test fungeert zowel als validatie van de implementatie als als documentatie van hoe de functie gebruikt moet worden.
+
+
+\section{Tools en workflows}
+\label{sec:cad-tools}
+
+\subsection{Versiebeheer}
+\textcite{gentle2017docslikecode} stelt dat versiebeheer (Git) het fundament is van docs-as-code: het maakt het mogelijk om wijzigingen in documentatie te tracken, te reviewen en te herstellen. \textcite{etter2016moderntechwriting} beargumenteert dat versiebeheer voor documentatie zelfs essentieel is: zonder versiebeheer is er geen manier om te weten wie wat wanneer heeft gewijzigd, en is er geen mogelijkheid om reviews uit te voeren of wijzigingen terug te draaien.
+
+Praktisch betekent dit dat alle documentatie - README's, ADR's, architectuurdocs, API-referentie - in dezelfde Git-repository als de code wordt bewaard \autocite{gentle2017docslikecode}. Documentatie-wijzigingen doorlopen dezelfde branch-strategie en dezelfde pull request-workflow als code-wijzigingen.
+
+\subsection{Opmaaktalen}
+\textcite{etter2016moderntechwriting} pleit voor het gebruik van lichtgewicht opmaaktalen zoals Markdown, AsciiDoc of reStructuredText. Deze formaten zijn:
+\begin{itemize}
+    \item Leesbaar in platte tekst, zonder speciale software.
+    \item Geschikt voor versiebeheer: wijzigingen zijn duidelijk zichtbaar in diffs.
+    \item Converteerbaar naar HTML, PDF of andere formaten met statische sitegeneratoren.
+    \item Ondersteund door code-hostingplatforms zoals GitHub en GitLab, die Markdown automatisch renderen.
+\end{itemize}
+
+\textcite{gentle2017docslikecode} stelt dat de keuze van opmaaktaal minder belangrijk is dan de keuze voor een \textit{lichtgewicht} formaat dat in versiebeheer kan worden bewaard. Zij raadt Markdown aan als de meest toegankelijke en breed ondersteunde optie.
+
+\subsection{Review-proces}
+\textcite{gentle2017docslikecode} stelt dat het review-proces voor documentatie hetzelfde moet zijn als voor code: documentatie-wijzigingen worden voorgesteld via pull requests, worden gereviewed door mede-ontwikkelaars, en worden pas gemerged nadat ze zijn goedgekeurd. Dit zorgt voor:
+
+\begin{itemize}
+    \item \textbf{Kwaliteitscontrole}: fouten, onduidelijkheden en onnauwkeurigheden worden opgemerkt voordat ze in de hoofdbranch terechtkomen.
+    \item \textbf{Kennisdeling}: reviewers leren over delen van het systeem die ze niet zelf hebben geschreven.
+    \item \textbf{Eigenaarschap}: het review-proces creëert een gedeelde verantwoordelijkheid voor de kwaliteit van documentatie.
+\end{itemize}
+
+\textcite{bhatti2021docsdevelopers} raden aan om review-checklists te gebruiken voor documentatie, met aandachtspunten zoals accuraatheid, volledigheid, leesbaarheid en actualiteit.
+
+\subsection{Automatisering}
+\textcite{etter2016moderntechwriting} stelt dat automatisering de sleutel is tot schaalbaarheid van documentatie: naarmate een project groeit, wordt het onmogelijk om documentatie handmatig te onderhouden. Hij beveelt het gebruik van statische sitegeneratoren aan (zoals Sphinx, MkDocs, Hugo, Docusaurus of Jekyll) die documentatie in lichtgewicht opmaaktalen omzetten naar professionele websites.
+
+\textcite{gentle2017docslikecode} beschrijft hoe CI/CD-pipelines kunnen worden ingezet voor documentatie:
+
+\begin{itemize}
+    \item \textbf{Bouwen}: bij elke merge naar de hoofdbranch wordt de documentatie automatisch gebouwd en gepubliceerd.
+    \item \textbf{Testen}: checks op gebroken links, ontbrekende afbeeldingen, stijlovertredingen en andere kwaliteitsaspecten.
+    \item \textbf{Genereren van API-documentatie}: tools zoals Sphinx (Python), Javadoc (Java) of TypeDoc (TypeScript) zetten docstrings om in gestructureerde API-referentie.
+    \item \textbf{Validatie}: sommige teams gebruiken tools die de code analyseren en waarschuwen wanneer publieke API's niet of onvolledig zijn gedocumenteerd.
+\end{itemize}
+
+\textcite{martraire2019livingdocumentation} stelt dat automatische generatie van documentatie uit code een van de krachtigste vormen van living documentation is: de documentatie kan niet verouderen omdat ze bij elke build opnieuw wordt gegenereerd uit de actuele code. Hij noemt dit \textit{documentation by extraction}.
+
+\textcite{theunissen2022mappingdocumentation} bevestigen in hun mapping study dat geautomatiseerde documentatie-generatie en CI/CD-validatie behoren tot de meest effectieve strategieën om documentatie actueel te houden in continuous software development.
+
+\section{Valkuilen en beperkingen}
+\label{sec:cad-valkuilen}
+
+\subsection{Documentatie kan tóch verouderen}
+Zelfs met goede processen kan documentatie verouderen als ze niet structureel wordt onderhouden \autocite{tripathy2014softwareevolution}. \textcite{tripathy2014softwareevolution} benadrukken dat software-evolutie een inherent en onvermijdelijk proces is: elk systeem verandert, en elke verandering biedt de mogelijkheid dat documentatie niet meegaat. \textcite{martraire2019livingdocumentation} erkent dit en stelt dat zelfs living documentation aandacht vereist: geautomatiseerde documentatie lost het probleem van veroudering grotendeels op, maar handmatig geschreven documentatie blijft een risico vormen.
+
+\subsection{Te veel documentatie}
+\textcite{boswell2011readablecode} waarschuwen voor \textit{noise comments} en over-documentatie: commentaar dat te veel is, of dat dingen uitlegt die voor de hand liggen, creëert ruis die het lezen van code vertraagt. \textcite{martin2008clean} stelt dat over-documentatie zelfs schadelijker kan zijn dan geen documentatie, omdat het een valse zin van volledigheid geeft: de lezer veronderstelt dat alles is gedocumenteerd en stopt met kritisch nadenken.
+
+\textcite{ruping2005agiledocumentation} introduceert het principe van \textit{documentation fitness}: documentatie moet voldoende zijn voor haar doel, maar niet meer dan dat. De kost van het schrijven en onderhouden van documentatie moet in verhouding staan tot haar waarde. Documentatie die niemand leest, kost tijd en aandacht zonder iets op te leveren.
+
+\subsection{Code alleen is niet genoeg}
+\textcite{ousterhout2018philosophy} stelt dat, hoewel leesbare code belangrijk is, code alleen niet volstaat om alle aspecten van een systeem te begrijpen. Complexe architectuur, business-regels, kruisende concerns en historische context vragen vaak extra uitleg naast de code. Hij benadrukt dat commentaar nodig is om informatie vast te leggen die niet in de code kan worden uitgedrukt, zoals de redenering achter ontwerpkeuzes.
+
+\textcite{bhatti2021docsdevelopers} bevestigen dit: zij stellen dat verschillende soorten documentatie verschillende doelen dienen en dat code as documentation niet alle vormen van documentatie kan vervangen. Tutorials, how-to guides en architectuurdocumentatie hebben een eigen waarde die niet kan worden vervangen door leesbare code alleen.
+
+\textcite{martraire2019livingdocumentation} stelt dat living documentation niet betekent dat \textit{alle} documentatie uit de code wordt gehaald: sommige kennis, zoals business context en gebruikersscenario's, moet expliciet worden gedocumenteerd. Living documentation betekent wel dat deze expliciete documentatie wordt gekoppeld aan het systeem en wordt gevalideerd.
+
+\subsection{Leercurve en cultuur}
+\textcite{bhatti2021docsdevelopers} benadrukken dat de overstap naar docs-as-code en code as documentation een cultuurverandering vereist. Teams moeten wennen aan het idee dat documentatie net zo belangrijk is als code, en dat review-tijd ook voor documentatie nodig is. Dit vereist leiderschap en het stellen van verwachtingen.
+
+\textcite{gentle2017docslikecode} stelt dat de invoering van docs-as-code het best stapsgewijs gebeurt: begin met het in versiebeheer plaatsen van een README, voeg vervolgens pull request-reviews toe voor documentatie, en bouw pas daarna CI/CD-pipelines uit. Een te ambitieuze invoering kan leiden tot weerstand en onrealistische verwachtingen.
+
+\section{Conclusie}
+\label{sec:cad-conclusie}
+
+Code as documentation is een benadering die code en documentatie dichter bij elkaar brengt. Door leesbare, zelf-documenterende code te schrijven \autocite{boswell2011readablecode}, documentatie dicht bij de code te bewaren \autocite{gentle2017docslikecode}, commentaar te gebruiken om het ``waarom'' vast te leggen \autocite{ousterhout2018philosophy}, en documentatie als first-class deliverable te behandelen \autocite{etter2016moderntechwriting}, kunnen teams de onderhoudbaarheid en kennisoverdracht verbeteren.
+
+Living documentation \autocite{martraire2019livingdocumentation} biedt een raamwerk om dit idee verder door te voeren: door documentatie van bij ontwerp in het systeem in te bouwen en te koppelen aan de code, kan drift worden geminimaliseerd en kan documentatie altijd actueel blijven.
+
+De principes en technieken uit dit chapter vormen de basis voor het volgende chapter over documentation drift, dat ingaat op de risico's en gevolgen van verouderde documentatie. Waar code as documentation zich richt op het \textit{voorkomen} van drift, behandelt het volgende chapter het fenomeen zelf: hoe drift ontstaat, welke gevolgen ze heeft, en welke strategieën er zijn om ze te detecteren en aan te pakken.
