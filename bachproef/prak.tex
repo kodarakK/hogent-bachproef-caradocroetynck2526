@@ -1,8 +1,9 @@
-\section{idk title yet}
+\chapter{Praktische implementaties}
+\label{ch:prak}
 
-\subsection{Onderdelen van EMAV vervangen}
+\section{Onderdelen van EMAV vervangen}
 Een van de oplossingen is onderdelen in C\#, specifieker de berekeningen, vervangen door python.
-Hierdoor zijn de onderzoekers al thuis.
+Hierin zijn de onderzoekers al thuis.
 
 Een voorbeeld van een onderdeel van een berekening:
 \begin{minted}{csharp}
@@ -118,4 +119,26 @@ for ea in input.EmissieStallen:
   ea.EmissieNH3 = emissie
 \end{minted}
 
-Om dit te kunnen gebruiken moet men in C\#
+Om dit te kunnen gebruiken moet men in C\# ook een setup voorzien: \ref{lst:berekenvoederemissiepythonandcsharp}.
+Deze laadt de python runtime in de C\# omgeving en laat toe dat de python kan worden uitgevoerd.
+De volledige python implementatie ziet er zo uit: \ref{lst:berekenvoederemissiepython}.
+
+Dit ziet er complexer uit en dat is ook zo.
+Er is ondervonden dat hoe meer men wilt overzetten naar python, hoe minder gebruiksvriendelijker dit wordt.
+Voor kleine stukken met primitieve data types is dit zeker mogelijk, maar hoe meer custom data types er gebruikt worden,
+hoe complexer en minder leesbaarder de python implementatie wordt.
+
+\section{Testen in python}
+Dit lijkt een goed en haalbaar idee, maar leert dat dit niet waar is.
+Voor kleinere testen die mock data gebruiken en die 1 berekening testen, is dat nog mogelijk.
+
+Vanaf dat er data uit de database moet worden gehaald, bijvoorbeeld om manuele checks die onderzoekers nu nog uitvoeren te automatiseren, komt dit niet goed.
+De manier waarop EMAV hun database aanspreken werkt goed in C\#, zeker met de razor pages.
+Maar dat gaat niet om dan via dll's in python aan te spreken.
+Het is omslachtig om in python de vele dependency injection en claimsprinicipals, die nodig zijn, te configureren.
+Het is niet hiervoor gemaakt.
+
+Voorbeelden zijn deze python scripts die onsuccesvol en omslachtig proberen om connecties te maken via de dll's:
+\ref{lst:inputrepoaanspreken} en \ref{lst:inttest}.
+
+Dit zou ook voor ervaren developers een uitdaging kunnen zijn.

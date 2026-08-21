@@ -13,6 +13,7 @@
 
 \usepackage{lipsum} % For blind text, can be removed after adding actual content
 \usepackage{soul}
+\usepackage{float}
 
 %% Pictures to include in the text can be put in the graphics/ folder
 \graphicspath{{../graphics/}}
@@ -28,11 +29,15 @@
 %% Formatting for minted environments.
 \setminted{%
     autogobble,
-    frame=lines,
+    fontsize=\footnotesize,
+    frame=single,
+    framesep=2mm,
     breaklines,
-    linenos,
+    breakanywhere,
+    baselinestretch=0.95,
     tabsize=4
 }
+\captionsetup[listing]{skip=6pt, font=small}
 
 %% Ensure the list of listings is in the table of contents
 \renewcommand\listoflistingscaption{%
@@ -150,6 +155,7 @@
 \input{old/documentatie_vormen}
 \input{chapter_code_as_doc}
 \input{chapter_doc_drift}
+\input{prak}
 %\input{...}
 %...
 %
@@ -159,7 +165,8 @@
 %---------- Bijlagen -----------------------------------------------------------
 
 \appendix{}
-
+\chapter{CodeFragmenten}
+\input{appendix-code}
 \chapter{Onderzoeksvoorstel}
 
 Het onderwerp van deze bachelorproef is gebaseerd op een onderzoeksvoorstel dat vooraf werd beoordeeld door de promotor. Dat voorstel is opgenomen in deze bijlage.
