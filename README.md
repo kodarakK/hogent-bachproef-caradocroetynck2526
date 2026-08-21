@@ -26,15 +26,15 @@ Information and Software Technology, 142, 106733.
 DOI: 10.1016/j.infsof.2021.106733
 ## shit todo
 
-- [] abstract
-- [] intro
-- [] die bepaalde dingen
-- [] unittesten herschrijven in python
-- [] emav onderdelen herschrijven in python
-- [] die doorsturen aan onderzoekers
-- [] docu onderdeel schrijven
-- [] duidelijke code onderdeel schrijvens
-- [] playground idk what yet
+- [ ] abstract
+- [ ] intro
+- [ ] die bepaalde dingen
+- [ ] unittesten herschrijven in python
+- [ ] emav onderdelen herschrijven in python
+- [ ] die doorsturen aan onderzoekers
+- [x] docu onderdeel schrijven
+- [x] duidelijke code onderdeel schrijvens
+// - [] playground idk what yet
 
 leesbaarder: 
 - feature: code ervoor schrijven + testen
