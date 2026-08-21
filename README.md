@@ -81,7 +81,8 @@ DOI: 10.1016/j.infsof.2021.106733
 ## shit todo
 
 - [ ] abstract
-- [ ] intro
+- [ ] intro~
+- [x] methodologie
 - [ ] die bepaalde dingen
 - [ ] unittesten herschrijven in python
 - [ ] emav onderdelen herschrijven in python
