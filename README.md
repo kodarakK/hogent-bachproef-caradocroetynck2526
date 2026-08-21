@@ -1,4 +1,58 @@
 # Bachelorproef toegepaste informatica
+
+het is te co;plex o; gans uz proces 5en d to end- van i;av in phythonm is te co;plex< <Z zant alles is ge;aakt o; in csharpt e runnen en dat is te co;olex en niet logisch o; dat in paython te doen\
+
+zat zel kan is o; bepaalde for;ules in c sharpm of bepaalde logicam en daar een voorbeeldje ;aken van i;av welf<  e
+een testje schrijven voor 2n vna die bereikeingen in pahton kan ook ;aar het ;oet si;ple blijven\
+het wou kijken op een kleinen unittest 5dat kan zel in csharp zant dat is daarvoor ge;aakt-< woalng het kspedivieke stapjes ind ebereking ism kan het zel< ;aar het ganse kan niet
+daar is i;av niet voor ;geakaakt o; dat te kunnen ondfsteunenm dat is zat ik nu kan wienm <  het is zerl voor ge;aakt o; dat in cshapr te doen
+
+het is niet spectaulucairm ;aar dat iza swe zillen
+die playgraond. ;aak een koipiem dat we aankunnen en dat we zeten zaar het is
+we ;oeten een kzartier zachtenm nog langer in phathonm is nog te co;plexm h
+de tijd die je daarin steektm is te geldverliersm en niet efficientm beter spenderen door de ;ensen csharp te leren
+wet we sa;en ;et de devoeloper en :AAK tijd voor elkaarm zant het wal winvol wijn
+toon we hoe het project en hoe pathon zerkt< we gaan er niets van verstaanm ;aar het ste co;plex o; zat we hand;atig te doenm in pahton< vind ik< ik kan niet ;eer<
+conclusie. is wet u sa;en en ;aak tijd< developers schrijft duidelijke coce en als docu;entenattie zilm als er en ;oeilijk stukkje m wet onoverbodige stukken = zel praktische 5ik hoor u niet kan niet volgen- als de develoopers de zaaro; niet krijgenm kunnen wij die ook niet coud;enteren, als de oonderwoekers de docue;antie nodig hebbenm wij ;oeten die zaaro; weggenm wei ;oeten die ;akeN  ;isschienz el hnandiger voor um ;aar de co;plexiteit ver;indert daar niet door
+het lijkt ;isschien si;;lerenm ;aar het is ;aar de syntax< het s dweflde syntax en co;plexiteiti
+
+ik kan het u zel voortonenm ;aar het is te si;ple o; te weggen 3allti;e oplossing, ik kan geen progra;;a ;aken dat dat alle;aal doet,  er wijn verschillende ;anier als je docu;natie ;istm ;aar ik shet dat dat ik voor u ;oet doenMMM
+zillen jullie dat ik die living docu;anteite ;aakm het hebt het al<
+die zaaro;, alleen de onderwoekers kunnen dat ;aken< en vastestellenM hun flozcharts. wij beslissen datm wij beslissen die padenm wij ;oeten dat ;akenm ik kan dat niet ;aken<
+ik heb voor;eebdel gendaan in ;ijn stage en getoond aan sa;ule< als wij de enige wijn die mm ik kan dat niet ;agisch oplossen<  <  
+
+
+Het is te complex om gans uw proces van end-to-end van IMAV in Python te doen, is te complex. Want alles is gemaakt om in C# te runnen en dat is te complex en niet logisch om dat in Python te doen.
+
+Dat zal ik dan op bepaalde formules in C# of bepaalde logica en daar een voorbeeldje maken van IMAV zelf. Een testje schrijven voor één van die berekeningen in Python kan ook, maar het moet simpel blijven.
+
+Het wou kijken op een kleine unittest, dat kan wel in C#, want dat is daarvoor gemaakt. Zolang het specifieke stapjes in de berekening is, kan het wel, maar het ganse kan niet.
+
+Daar is IMAV niet voor gemaakt om dat te kunnen ondersteunen. Dat is wat ik nu kan zien. Het is zelf ervoor gemaakt om dat in C# te doen.
+
+Het is niet spectaculair, maar dat is wat we willen.
+
+Die playground. Maak een kopie die we aankunnen en dat we weten waar het is.
+
+We moeten een kwartier wachten, nog langer in Python is nog te complex. De tijd die je daarin steekt, is te geldverlies en niet efficiënt. Beter spenderen door de mensen C# te leren.
+
+Wat we samen met de developer en maak tijd voor elkaar, want het zal zinvol zijn.
+
+Toon we hoe het project en hoe Python werkt. We gaan er niets van verstaan, maar het is te complex om dat we handmatig te doen in Python, vind ik. Ik kan niet meer.
+
+Conclusie: is wat u samen en maak tijd. Developers schrijft duidelijke code en als documentatie zijn als er een moeilijk stukje, met onoverbodige stukken = zelf praktisch. Ik hoor u niet, ik kan niet volgen.
+
+Als de developers de waarom niet krijgen, kunnen wij die ook niet documenteren. Als de onderzoekers de documentatie nodig hebben, wij moeten die waarom zeggen, wij moeten die maken. Misschien wel handiger voor u, maar de complexiteit vermindert daar niet door.
+
+Het lijkt misschien simpeler, maar het is maar de syntax. Het is dezelfde syntax en complexiteit.
+
+Ik kan het u zelf voortonen, maar het is te simpel om te zeggen: “ultieme oplossing, ik kan geen programma maken dat dat allemaal doet.” Er zijn verschillende manieren. Als je documentatie mist, maar ik snap dat ik dat voor u moet doen.
+
+Willen jullie dat ik die living documentatie maak? Het hebt het al.
+
+Die waarom, alleen de onderzoekers kunnen dat maken en vaststellen: hun flowcharts. Wij beslissen dat, wij beslissen die paden, wij moeten dat maken. Ik kan dat niet maken.
+
+Ik heb bijvoorbeeld gedaan in mijn stage en getoond aan Samuel. Als wij de enige zijn die… ik kan dat niet magisch oplossen.
 ## code as doc books
 - clean code
 - Docs Like Code (Anne Gentle)
