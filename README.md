@@ -22,37 +22,27 @@ die zaaro;, alleen de onderwoekers kunnen dat ;aken< en vastestellenM hun flozch
 ik heb voor;eebdel gendaan in ;ijn stage en getoond aan sa;ule< als wij de enige wijn die mm ik kan dat niet ;agisch oplossen<  <  
 
 
+
+
+
+
 Het is te complex om gans uw proces van end-to-end van IMAV in Python te doen, is te complex. Want alles is gemaakt om in C# te runnen en dat is te complex en niet logisch om dat in Python te doen.
-
 Dat zal ik dan op bepaalde formules in C# of bepaalde logica en daar een voorbeeldje maken van IMAV zelf. Een testje schrijven voor één van die berekeningen in Python kan ook, maar het moet simpel blijven.
-
 Het wou kijken op een kleine unittest, dat kan wel in C#, want dat is daarvoor gemaakt. Zolang het specifieke stapjes in de berekening is, kan het wel, maar het ganse kan niet.
-
 Daar is IMAV niet voor gemaakt om dat te kunnen ondersteunen. Dat is wat ik nu kan zien. Het is zelf ervoor gemaakt om dat in C# te doen.
-
 Het is niet spectaculair, maar dat is wat we willen.
-
 Die playground. Maak een kopie die we aankunnen en dat we weten waar het is.
-
 We moeten een kwartier wachten, nog langer in Python is nog te complex. De tijd die je daarin steekt, is te geldverlies en niet efficiënt. Beter spenderen door de mensen C# te leren.
-
 Wat we samen met de developer en maak tijd voor elkaar, want het zal zinvol zijn.
-
 Toon we hoe het project en hoe Python werkt. We gaan er niets van verstaan, maar het is te complex om dat we handmatig te doen in Python, vind ik. Ik kan niet meer.
-
 Conclusie: is wat u samen en maak tijd. Developers schrijft duidelijke code en als documentatie zijn als er een moeilijk stukje, met onoverbodige stukken = zelf praktisch. Ik hoor u niet, ik kan niet volgen.
-
 Als de developers de waarom niet krijgen, kunnen wij die ook niet documenteren. Als de onderzoekers de documentatie nodig hebben, wij moeten die waarom zeggen, wij moeten die maken. Misschien wel handiger voor u, maar de complexiteit vermindert daar niet door.
-
 Het lijkt misschien simpeler, maar het is maar de syntax. Het is dezelfde syntax en complexiteit.
-
 Ik kan het u zelf voortonen, maar het is te simpel om te zeggen: “ultieme oplossing, ik kan geen programma maken dat dat allemaal doet.” Er zijn verschillende manieren. Als je documentatie mist, maar ik snap dat ik dat voor u moet doen.
-
 Willen jullie dat ik die living documentatie maak? Het hebt het al.
-
 Die waarom, alleen de onderzoekers kunnen dat maken en vaststellen: hun flowcharts. Wij beslissen dat, wij beslissen die paden, wij moeten dat maken. Ik kan dat niet maken.
-
 Ik heb bijvoorbeeld gedaan in mijn stage en getoond aan Samuel. Als wij de enige zijn die… ik kan dat niet magisch oplossen.
+
 ## code as doc books
 - clean code
 - Docs Like Code (Anne Gentle)
@@ -81,7 +71,8 @@ DOI: 10.1016/j.infsof.2021.106733
 ## shit todo
 
 - [ ] abstract
-- [ ] intro
+- [ ] intro~
+- [x] methodologie
 - [ ] die bepaalde dingen
 - [ ] unittesten herschrijven in python
 - [ ] emav onderdelen herschrijven in python
