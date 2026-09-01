@@ -40,41 +40,48 @@
 
 \section{Introductie}
 
-  Bij ILVO vormen complexe rekenmodellen de kern van onderzoek naar milieu-impact en emissies in de landbouw.
-  Deze modellen worden door onderzoekers bedacht, maar door IT-developers vertaald naar software in een .NET/C\# omgeving.
+Bij ILVO worden complexe rekenmodellen gebruikt om milieu-impact en emissies in de landbouw te berekenen. 
+Deze modellen ontstaan vanuit wetenschappelijke kennis, maar worden in de praktijk omgezet naar software in een .NET/C\#-omgeving. 
+Daardoor ontstaat een duidelijke kloof tussen de wetenschappelijke logica en de technische implementatie.
 
-  \textbf{De Uitdaging} \\
-  Hoewel deze taakverdeling logisch is, zorgt het in de praktijk voor een kloof tussen de wetenschappelijke theorie en de technische praktijk:
+\textbf{De uitdaging} \\
+Hoewel de verdeling tussen onderzoekers en ontwikkelaars logisch is, leidt ze in de praktijk tot twee problemen:
 \begin{itemize}
-    \item Beperkte Zichtbaarheid: De wetenschappelijke logica zit verweven in de broncode, waardoor de berekeningsstappen voor onderzoekers moeilijk te verifiëren zijn.
-    \item Afhankelijkheid: Voor elke wijziging of test van een formule is technische hulp nodig, wat de snelheid van het onderzoek vertraagt.
+    \item Beperkte zichtbaarheid: de berekeningslogica is verspreid over broncode, documentatie en overleg, waardoor onderzoekers de stappen moeilijk kunnen verifiëren.
+    \item Afhankelijkheid: voor elke wijziging of test van een formule is technische hulp nodig, wat de experimenteerruimte beperkt en de snelheid van onderzoek vertraagt.
 \end{itemize}
+
+Het probleem is niet alleen technisch, maar ook organisatorisch: documentatie raakt snel achter op de implementatie. 
+Daardoor ontstaat \emph{documentation drift}, een groeiende kloof tussen wat de documentatie zegt en wat de software werkelijk doet.
 
 \textbf{Onderzoeksvraag} \\
 \textit{Hoe kunnen we de kloof tussen IT-logica en wetenschappelijke analyse verkleinen, zodat onderzoekers zonder diepgaande programmeerkennis inzicht krijgen in hun modellen en er zelf mee kunnen experimenteren?}
 
 \section{Methodologie \& Technologie}
 
-Om deze kloof te dichten, is een hybride architectuur ontwikkeld die onderzoekers in staat stelt om direct met de gecompileerde .NET-logica te interageren via een vertrouwde Python-omgeving.
+Het onderzoek is opgebouwd in een iteratief proces: gesprekken met onderzoekers en IT-medewerkers, literatuuronderzoek en een praktische proof-of-concept. 
+De verzamelde inzichten worden steeds teruggekoppeld om de oplossing te verfijnen.
 
-\textbf{Gekozen Aanpak:}
+\textbf{Gekozen aanpak:}
 \begin{enumerate}
-  \item Bridge-technologie (Python.NET): Gebruik van pythonnet (Python.NET, 2026) om C\#-modules (DLL's) direct in Python aan te roepen, zonder de code te herschrijven.
-  \item Interactieve Notebooks (Jupyter): Inzet van Jupyter Notebooks (Project Jupyter, 2025) als interface. Dit combineert uitvoerbare code met rijke tekstuele uitleg (Literate Programming).
-  \item Isolatie \& Beveiliging (Docker (Docker Inc., 2026)): De gehele analyse-omgeving is gecontaineriseerd. Dit garandeert reproduceerbaarheid en beschermt de infrastructuur tegen onbedoelde schadelijke code-executie.
-    \item Experimenteer-switch: Ontwikkeling van een mechanisme om veilig te schakelen tussen de officiële C\#-berekening en een experimentele Python-versie via een strategy pattern.
+  \item Probleemanalyse: gesprekken met onderzoekers en IT-medewerkers om de huidige werkwijze, knelpunten en behoeften in kaart te brengen.
+  \item Literatuur- en technologieverkenning: onderzoek naar Python.NET, Jupyter, literate programming, containers en documentatie-praktijken die de kloof tussen model en code kunnen verkleinen.
+  \item Ontwerp van een hybride oplossing: een proof-of-concept waarbij C\#-logica via Python beschikbaar wordt gemaakt in een veilige, interactieve analyseomgeving.
+  \item Iteratieve evaluatie: feedback uit de praktijk gebruiken om de oplossing te verfijnen en te toetsen op bruikbaarheid, veiligheid en wetenschappelijke validatie.
 \end{enumerate}
 
+Deze aanpak sluit aan bij de kern van het onderzoek: niet alleen een technische integratie, maar ook een methodiek om documentatie, experimenteren en samenwerking tussen onderzoekers en ontwikkelaars beter te laten samenwerken.
 
 \section{Proof-of-Concept: Hybride Architectuur}
 
-De PoC demonstreert een ecosysteem waarin de robuuste .NET-backend de regie voert over interactieve Jupyter-omgevingen. Dit garandeert een naadloze overgang van ontwikkeling naar wetenschappelijke analyse.
+De proof-of-concept laat zien hoe een robuuste .NET-backend als bron van waarheid kan dienen, terwijl onderzoekers in een vertrouwde Python-omgeving met de berekeningen kunnen werken. De architectuur is ontworpen om de samenwerking tussen wetenschappelijke analyse en softwareontwikkeling te verbeteren zonder de stabiliteit van de hoofdapplicatie te ondermijnen.
 
 \textbf{Kernaspecten van de realisatie:}
 \begin{itemize}
-    \item Geautomatiseerde Orchestratie: De C\#-backend beheert via de Docker SDK de levenscyclus van de analyse-omgevingen. Elke onderzoeker krijgt automatisch een identieke, geïsoleerde setup.
-    \item Dynamic DLL Injection: Domeinlogica (C\#-libraries) wordt automatisch verzameld en in de container geïnjecteerd. De onderzoeker werkt altijd op de Single Source of Truth van de applicatie.
-    \item Seamless Interop: Dankzij Python.NET (Python.NET, 2026) worden C\#-types behandeld als native Python-klassen, wat de technische drempel voor onderzoekers minimaliseert.
+    \item Geautomatiseerde orchestration: de C\#-backend beheert via Docker de levenscyclus van de analyse-omgevingen, zodat elke onderzoeker een identieke en geïsoleerde setup krijgt.
+    \item Single source of truth: de domeinlogica blijft in de C\#-codebase, terwijl onderzoekers deze logica via Python kunnen gebruiken en testen.
+    \item Naadloze interop: dankzij Python.NET kunnen C\#-types en methoden direct worden aangeroepen vanuit Python, zonder dat de onderzoeker zelf diep in C\# hoeft te werken.
+    \item Interactieve validatie: notebooks dienen als werkruimte waarin resultaten, parameters en scenario's kunnen worden vergeleken in een veilige omgeving.
 \end{itemize}
 
 \begin{center}
@@ -85,26 +92,26 @@ De PoC demonstreert een ecosysteem waarin de robuuste .NET-backend de regie voer
 
 \section{Schakelbare Implementatie}
 
-Het belangrijkste onderdeel is de mogelijkheid om op laag niveau te wisselen tussen implementaties via een Factory- en Strategy-patroon.
+Het kernidee is dat onderzoekers op een gecontroleerde manier kunnen wisselen tussen de officiële implementatie en een experimentele alternatieve variant, zonder de productieomgeving direct te verstoren.
 
 \textbf{Het mechanisme:}
 \begin{itemize}
-    \item Dynamische Selectie: Een factory beslist op runtime of een rekenmodule de officiële C\#-code of een experimenteel Python-script uitvoert.
-    \item Granulaire Controle: Onderzoekers kunnen per specifieke rekenstap (bijv. ``Enterische emissies'') een alternatieve versie testen zonder het hele systeem te beïnvloeden.
-    \item Veiligheid: Door het gebruik van tijdelijke SQLite-kopieën en Docker-isolatie kunnen scenario's getest worden zonder de productie-database te vervuilen.
+    \item Dynamische selectie: op runtime kan een rekenmodule kiezen voor de standaard C\#-variant of een Python-variant.
+    \item Granulaire controle: per berekeningsstap kan een alternatief scenario worden getest zonder het hele systeem te beïnvloeden.
+    \item Veiligheid: tijdelijke data- en databasekopieën, gecombineerd met Docker-isolatie, voorkomen dat experimentele berekeningen de productiedata vervuilen.
+    \item Ondersteuning van onderzoek: de switch maakt het mogelijk om snelle experimenten uit te voeren en resultaten te vergelijken met de vaste productie-implementatie.
 \end{itemize}
 
 \section{Conclusies \& Toekomst}
 
-De PoC bewijst dat een hybride strategie de autonomie van onderzoekers verhoogt zonder in te boeten op de softwarekwaliteit van de backend.
+De proof-of-concept toont aan dat een hybride aanpak de autonomie van onderzoekers vergroot zonder het vertrouwen in de bestaande .NET-backend te ondermijnen. De combinatie van Python, Jupyter en veilige isolatie maakt het mogelijk om complexe berekeningen beter te begrijpen, te testen en te valideren.
 
 \textbf{Toekomstig onderzoek:}
 \begin{itemize}
-    \item Structurele inbedding van de switch-logica in alle EMAV-rekenmodules.
-    \item Uitbreiding van de in-notebook validatietools voor automatische vergelijking tussen C\# en Python resultaten.
-    \item Verder consulteren met de onderzoekers zelf.
-    \item De PoC volledig uitwerken.
-    \item Een effectieve implementatie van documentatie.
+    \item Structureel inbedden van de switch-logica in de verschillende EMAV-rekenmodules.
+    \item Uitbreiden van notebook-validatietools voor automatische vergelijking tussen C\#- en Python-resultaten.
+    \item Verdiepen van de samenwerking met onderzoekers om de experimenteerruimte te optimaliseren.
+    \item Verder uitwerken van de PoC en de documentatiepraktijk om drift te beperken.
 \end{itemize}
 
 \end{multicols}
