@@ -74,34 +74,6 @@ Deze aanpak sluit aan bij de kern van het onderzoek: niet alleen een technische 
 
 \section{Proof-of-Concept: Hybride Architectuur}
 
-De proof-of-concept laat zien hoe een robuuste .NET-backend als bron van waarheid kan dienen, terwijl onderzoekers in een vertrouwde Python-omgeving met de berekeningen kunnen werken. De architectuur is ontworpen om de samenwerking tussen wetenschappelijke analyse en softwareontwikkeling te verbeteren zonder de stabiliteit van de hoofdapplicatie te ondermijnen.
-
-\textbf{Kernaspecten van de realisatie:}
-\begin{itemize}
-    \item Geautomatiseerde orchestration: de C\#-backend beheert via Docker de levenscyclus van de analyse-omgevingen, zodat elke onderzoeker een identieke en geïsoleerde setup krijgt.
-    \item Single source of truth: de domeinlogica blijft in de C\#-codebase, terwijl onderzoekers deze logica via Python kunnen gebruiken en testen.
-    \item Naadloze interop: dankzij Python.NET kunnen C\#-types en methoden direct worden aangeroepen vanuit Python, zonder dat de onderzoeker zelf diep in C\# hoeft te werken.
-    \item Interactieve validatie: notebooks dienen als werkruimte waarin resultaten, parameters en scenario's kunnen worden vergeleken in een veilige omgeving.
-\end{itemize}
-
-\begin{center}
-  \captionsetup{type=figure}
-  \includegraphics[width=1.0\linewidth]{../graphics/poc_architectuur}
-  \captionof{figure}{Architecturaal overzicht van de PoC met C\#-orchestratie en hybride Python-integratie.}
-\end{center}
-
-\section{Schakelbare Implementatie}
-
-Het kernidee is dat onderzoekers op een gecontroleerde manier kunnen wisselen tussen de officiële implementatie en een experimentele alternatieve variant, zonder de productieomgeving direct te verstoren.
-
-\textbf{Het mechanisme:}
-\begin{itemize}
-    \item Dynamische selectie: op runtime kan een rekenmodule kiezen voor de standaard C\#-variant of een Python-variant.
-    \item Granulaire controle: per berekeningsstap kan een alternatief scenario worden getest zonder het hele systeem te beïnvloeden.
-    \item Veiligheid: tijdelijke data- en databasekopieën, gecombineerd met Docker-isolatie, voorkomen dat experimentele berekeningen de productiedata vervuilen.
-    \item Ondersteuning van onderzoek: de switch maakt het mogelijk om snelle experimenten uit te voeren en resultaten te vergelijken met de vaste productie-implementatie.
-\end{itemize}
-
 \section{Conclusies \& Toekomst}
 
 De proof-of-concept toont aan dat een hybride aanpak de autonomie van onderzoekers vergroot zonder het vertrouwen in de bestaande .NET-backend te ondermijnen. De combinatie van Python, Jupyter en veilige isolatie maakt het mogelijk om complexe berekeningen beter te begrijpen, te testen en te valideren.
