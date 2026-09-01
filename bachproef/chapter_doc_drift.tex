@@ -96,7 +96,7 @@ Samengevat is drift geen kwestie van luiheid of onwil, maar een systeemprobleem 
 \textcite{tripathy2014softwareevolution} stellen dat technische schuld, inclusief documentatie-achterstand, zich cumulatief ophoopt: elke wijziging die niet correct wordt gedocumenteerd, voegt een kleine hoeveelheid schuld toe die in de loop der tijd exponentieel groeit en steeds moeilijker af te lossen is.
 
 \subsection{Impact op AI en automatisering}
-\textcite{theunissen2022mappingdocumentation} wijzen op een relatief nieuwe dimensie van het drift-probleem: AI-assistenten en chatbots gebruiken documentatie als kennisbron. Wanneer documentatie verouderd of foutief is, leidt dit tot zelfverzekerde maar foute antwoorden van AI-systemen. Dit versterkt het probleem doordat foutieve antwoorden zich snel verspreiden en autoritair lijken: een ontwikkelaar die een vraag stelt aan een AI-assistent krijgt een antwoord dat gebaseerd is op verouderde documentatie, en bouwt voort op die foute basis zonder het te weten.
+\textcite{theunissen2022mappingdocumentation} wijzen op een relatief nieuwe imensie van het drift-probleem: AI-assistenten en chatbots gebruiken documentatie als kennisbron. Wanneer documentatie verouderd of foutief is, leidt dit tot zelfverzekerde maar foute antwoorden van AI-systemen. Dit versterkt het probleem doordat foutieve antwoorden zich snel verspreiden en autoritair lijken: een ontwikkelaar die een vraag stelt aan een AI-assistent krijgt een antwoord dat gebaseerd is op verouderde documentatie, en bouwt voort op die foute basis zonder het te weten.
 
 Dit is bijzonder problematisch omdat AI-assistenten vaak worden ingezet om de onboarding van nieuwe ontwikkelaars te versnellen: juist de groep die het meest baat heeft bij betrouwbare documentatie, krijgt nu potentieel verouderde informatie aangereikt \autocite{bhatti2021docsdevelopers}.
 
@@ -174,8 +174,7 @@ Zij ontwikkelden tools om dit soort drift automatisch te detecteren door code en
     \item Checks op verouderde voorbeelden (bijv. door code-voorbeelden uit te voeren en te controleren of ze nog werken).
 \end{itemize}
 
-\textcite{theunissen2022mappingdocumentatie} bevestigen dat geautomatiseerde detectie en CI/CD-validatie behoren tot de meest effectieve strategieën om drift te beperken in continuous software development.
-
+\textcite{theunissen2022mappingdocumentation} bevestigen dat geautomatiseerde detectie en CI/CD-validatie behoren tot de meest effectieve strategieën om drift te beperken in continuous software development.
 \subsection{Proces en cultuur}
 \textcite{bhatti2021docsdevelopers} benadrukken dat technische oplossingen alleen niet volstaan: er is ook een cultuurverandering nodig. Teams moeten documentatie beschouwen als een integraal onderdeel van de development-workflow, niet als een optionele extra taak. Dit vereist:
 
@@ -211,4 +210,4 @@ De gevolgen zijn concreet: verlies van vertrouwen \autocite{bhatti2021docsdevelo
 
 Oplossingen liggen in het koppelen van documentatie aan code via docs-as-code \autocite{gentle2017docslikecode}, het gebruik van living documentation die van bij ontwerp in het systeem is ingebouwd \autocite{martraire2019livingdocumentation}, duidelijk eigenaarschap \autocite{bhatti2021docsdevelopers}, en automatisering die drift detecteert en beperkt \autocite{romeo2024didrift}. Voor een onderhoudbaar systeem is het daarom essentieel om documentatie niet als los product te zien, maar als integraal onderdeel van de codebase en het ontwikkelproces \autocite{gentle2017docslikecode}.
 
-Dit hoofdstuk sluit aan bij het vorige chapter over code as documentation: samen vormen ze een raamwerk voor het schrijven en onderhouden van documentatie die accuraat, bruikbaar en duurzaam is. Waar code as documentation zich richt op het \textit{voorkomen} van drift door goede praktijken, behandelt dit chapter het fenomeen zelf en de strategieën om het te detecteren, te beperken en uiteindelijk te elimineren.
+Dit hoofdstuk sluit aan bij het vorige hoofdstuk over code as documentation: samen vormen ze een raamwerk voor het schrijven en onderhouden van documentatie die accuraat, bruikbaar en duurzaam is. Waar code as documentation zich richt op het \textit{voorkomen} van drift door goede praktijken, behandelt dit hoofdstuk het fenomeen zelf en de strategieën om het te detecteren, te beperken en uiteindelijk te elimineren.
