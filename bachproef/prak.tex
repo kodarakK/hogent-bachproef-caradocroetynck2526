@@ -1,0 +1,144 @@
+\chapter{Praktische implementaties}
+\label{ch:prak}
+
+\section{Onderdelen van EMAV vervangen}
+Een van de oplossingen is onderdelen in C\#, specifieker de berekeningen, vervangen door python.
+Hierin zijn de onderzoekers al thuis.
+
+Een voorbeeld van een onderdeel van een berekening:
+\begin{minted}{csharp}
+foreach (EmissieStal ea in input.EmissieStallen)
+{
+    // laagste waarde van de 3 Tmp kolommen
+    emissie = Math.Min(ea.TmpEmissieNH3Gereduceerd, Math.Min(ea.TmpEmissieNH3Trad, ea.TmpEmissieNH3StalEF));
+    if (emissie > 0.0 && ea.AantalDierenPASVoeding == 0 && ea.AantalDierenPASCombi == 0) // voor varkens en pluimvee is een combi tot nu (2025) altijd stal + voeding
+    {
+        if (ea.Regressie)
+        { //één rechte per diersubcat, maar meerdere klasses voor de max en bijhorend reductiepercentage
+            // todo zoek het hoogste jaartal voor een diersubcategorie! selecteer dan die subcat en jaartal
+            TblRegressieRechte regR = regressieRechteList.Single(r =>
+                r.TblDierSubCategorie.Code == ea.DierSubCategorieCode
+            );
+            if (regR == null)
+            {
+                throw new Exception(
+                    "Geen data gevonden voor regressieRechte in databank voor diersubcategorie "
+                        + ea.DierSubCategorie
+                );
+            }
+
+            double X = ((ea.ProductieN / ea.AantalDieren) - regR.B) / regR.A; // y = ax+b
+            //één rechte per diersubcat, maar meerdere klasses voor de max en bijhorend reductiepercentage
+            List<TblRegressie> regDierSubCatList = regressieList
+                .Where(r => r.TblDierSubCategorie.Code == ea.DierSubCategorieCode)
+                .ToList();
+            TblRegressie reg = regDierSubCatList
+                .Where(r => X < r.Regressiemax)
+                .OrderByDescending(r => r.Regressiemax)
+                .Reverse()
+                .FirstOrDefault(); //als niet kleiner, niets doen
+            if (
+                reg != null
+                && !ea.CodeStalType.StartsWith("V ")
+                && !ea.CodeStalType.StartsWith("P ")
+                && ea.AantalDierenTechniek == 0
+            ) // aangepast, reductie mag enkel nog bij traditioneel systeem zonder luchtwasser (techniek), anders combireductiepercentage nodig
+            {
+                emissie *= 1 - (reg.Reductiepercentage / 100);
+            }
+        }
+        else if (ea.Convenant)
+        { //één rij per diersubcat
+            TblConvenant convenant = convenantList.FirstOrDefault(r =>
+                r.TblDierSubCategorie.Code == ea.DierSubCategorieCode
+            );
+            if (convenant == null)
+            {
+                throw new Exception(
+                    "Geen data gevonden voor convenant in databank voor diersubcategorie " + ea.DierSubCategorie
+                );
+            }
+
+            if (ea.ProductieN / ea.AantalDieren <= convenant.Convenantmax)
+            {
+                emissie *= 1 - (convenant.Reductiepercentage / 100);
+            }
+        }
+    }
+    ea.EmissieNH3 = emissie;
+}
+\end{minted}
+
+Dit kan omgezet worden naar python:
+\begin{minted}{python}
+for ea in input.EmissieStallen:
+  emissie = min(ea.TmpEmissieNH3Gereduceerd, min(ea.TmpEmissieNH3Trad, ea.TmpEmissieNH3StalEF))
+  if emissie > 0.0 and ea.AantalDierenPASVoeding == 0 and ea.AantalDierenPASCombi == 0:
+      if ea.Regressie:
+          regR_matches = [r for r in regressieRechteList if r.TblDierSubCategorie.Code == ea.DierSubCategorieCode]
+
+          if len(regR_matches) != 1:
+              raise Exception(f"Geen unieke data gevonden voor regressieRechte in databank voor diersubcategorie {ea.DierSubCategorie}")
+
+          regR = regR_matches[0]
+
+          X = ((ea.ProductieN / ea.AantalDieren) - regR.B) / regR.A
+
+          regDierSubCatList = [r for r in regressieList if r.TblDierSubCategorie.Code == ea.DierSubCategorieCode]
+
+          mogelijke_regels = [r for r in regDierSubCatList if X < r.Regressiemax]
+
+          mogelijke_regels.sort(key=lambda r: r.Regressiemax)
+          
+          reg = None
+          if mogelijke_regels:
+              reg = mogelijke_regels[0]
+
+          if (
+              reg is not None
+              and not ea.CodeStalType.startswith("V ")
+              and not ea.CodeStalType.startswith("P ")
+              and ea.AantalDierenTechniek == 0
+          ):
+              emissie *= 1 - reg.Reductiepercentage / 100
+
+      elif ea.Convenant:
+
+          convenant_matches = [r for r in convenantList if r.TblDierSubCategorie.Code == ea.DierSubCategorieCode]
+
+          convenant = None
+          if convenant_matches:
+              conventant = convenant_matches[0]
+
+          if convenant is None:
+              raise Exception(f"Geen data gevonden voor convenant in databank voor diersubcategorie {ea.DierSubCategorie}")
+
+          if (ea.ProductieN / ea.AantalDieren) <= convenant.Convenantmax):
+              emissie *= 1 - convenant.Reductiepercentage / 100
+
+  ea.EmissieNH3 = emissie
+\end{minted}
+
+Om dit te kunnen gebruiken moet men in C\# ook een setup voorzien: \ref{lst:berekenvoederemissiepythonandcsharp}.
+Deze laadt de python runtime in de C\# omgeving en laat toe dat de python kan worden uitgevoerd.
+De volledige python implementatie ziet er zo uit: \ref{lst:berekenvoederemissiepython}.
+
+Dit ziet er complexer uit en dat is ook zo.
+Er is ondervonden dat hoe meer men wilt overzetten naar python, hoe minder gebruiksvriendelijker dit wordt.
+Voor kleine stukken met primitieve data types is dit zeker mogelijk, maar hoe meer custom data types er gebruikt worden,
+hoe complexer en minder leesbaarder de python implementatie wordt.
+
+\section{Testen in python}
+Dit lijkt een goed en haalbaar idee, maar leert dat dit niet waar is.
+Voor kleinere testen die mock data gebruiken en die 1 berekening testen, is dat nog mogelijk.
+
+Vanaf dat er data uit de database moet worden gehaald, bijvoorbeeld om manuele checks die onderzoekers nu nog uitvoeren te automatiseren, komt dit niet goed.
+De manier waarop EMAV hun database aanspreken werkt goed in C\#, zeker met de razor pages.
+Maar dat gaat niet om dan via dll's in python aan te spreken.
+Het is omslachtig om in python de vele dependency injection en claimsprinicipals, die nodig zijn, te configureren.
+Het is niet hiervoor gemaakt.
+
+Voorbeelden zijn deze python scripts die onsuccesvol en omslachtig proberen om connecties te maken via de dll's:
+\ref{lst:inputrepoaanspreken} en \ref{lst:inttest}.
+
+Dit zou ook voor ervaren developers een uitdaging kunnen zijn.

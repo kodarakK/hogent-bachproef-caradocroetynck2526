@@ -1,0 +1,587 @@
+\section{Codefragmenten}
+\label{ch:codefragmenten}
+
+\begin{listing}[H]
+   \caption[db aanspreken via pythonnet]{De input en rekenfactor database aanspreken via pythonnet (onsuccesvol)}
+  \label{lst:inputrepoaanspreken}
+\end{listing}
+
+ \begin{minted}{python}
+    import sys
+import os
+import pythonnet
+pythonnet.load("coreclr")
+import clr
+dll_path: str = os.path.dirname(os.path.realpath(__file__)) + "/dlls/"
+sys.path.append(dll_path)
+clr.AddReference("ILVO.EMAV.Web")
+clr.AddReference("ILVO.EMAV.Core")
+clr.AddReference("ILVO.EMAV.Data.Input")
+clr.AddReference("ILVO.EMAV.Data.Rekenfactoren")
+clr.AddReference("ILVO.EMAV.Data.Web")
+clr.AddReference("ILVO.EMAV.Infrastructure.Exporter")
+clr.AddReference("ILVO.EMAV.Infrastructure.Input")
+clr.AddReference("ILVO.EMAV.Infrastructure.Jobs")
+clr.AddReference("ILVO.EMAV.Infrastructure.Old")
+clr.AddReference("ILVO.EMAV.Infrastructure.Rekenfactoren")
+clr.AddReference("ILVO.EMAV.Infrastructure.Shared")
+clr.AddReference("ILVO.EMAV.Infrastructure.Web")
+clr.AddReference("ILVO.EMAV.Shared")
+# Try to load Microsoft.Extensions assemblies from local NuGet cache (useful when running under pythonnet)
+nuget_packages = [
+    "Microsoft.Extensions.Configuration",
+    "Microsoft.Extensions.Configuration.Abstractions",
+    "Microsoft.Extensions.Configuration.FileExtensions",
+    "Microsoft.Extensions.Configuration.Json",
+    "Microsoft.Extensions.DependencyInjection",
+    "Microsoft.Extensions.DependencyInjection.Abstractions",
+]
+nuget_root = os.path.join(os.path.expanduser("~"), ".nuget", "packages")
+for pkg in nuget_packages:
+    pkg_dir = os.path.join(nuget_root, pkg.lower())
+    if not os.path.isdir(pkg_dir):
+        continue
+    versions = sorted(os.listdir(pkg_dir), reverse=True)
+    loaded = False
+    for ver in versions:
+        candidate = os.path.join(pkg_dir, ver)
+        if not os.path.isdir(candidate):
+            continue
+        for lib in ("lib/net6.0", "lib/net5.0", "lib/netstandard2.0", "lib/netcoreapp3.1"):
+            libdir = os.path.join(candidate, lib)
+            dll_path = os.path.join(libdir, f"{pkg}.dll")
+            if os.path.isfile(dll_path):
+                try:
+                    clr.AddReferenceToFileAndPath(dll_path)
+                    loaded = True
+                    break
+                except Exception:
+                    # try next location
+                    pass
+        if loaded:
+            break
+# best-effort: still attempt AddReference by simple name for cases where runtime can resolve them
+for pkg in nuget_packages:
+    try:
+        clr.AddReference(pkg)
+    except Exception:
+        pass
+
+# from ILVO.EMAV.Web import ServiceExtentions
+from ILVO.EMAV.Core import *
+from ILVO.EMAV.Data.Input import *
+from ILVO.EMAV.Data.Rekenfactoren import *
+from ILVO.EMAV.Data.Web import *
+from ILVO.EMAV.Infrastructure.Exporter import *
+from ILVO.EMAV.Infrastructure.Input import *
+from ILVO.EMAV.Infrastructure.Old import *
+from ILVO.EMAV.Infrastructure.Rekenfactoren import *
+from ILVO.EMAV.Infrastructure.Shared import *
+from ILVO.EMAV.Infrastructure.Web import *
+from ILVO.EMAV.Shared import *
+# from ILVO.EMAV.Web import *
+
+from System import Guid
+from Microsoft.Extensions.DependencyInjection import ServiceCollection
+from ILVO.EMAV.Core.Interfaces.Services.Calculation import IEmissionCalculationService
+from System.Security.Claims import ClaimsPrincipal
+from System.Security.Claims import ClaimsIdentity
+from LiteBus.Commands.Abstractions import ICommandMediator
+from ILVO.EMAV.Core.Commands.Calculations import ScheduleEmissionCalcCommand
+import os
+import sqlite3
+from System import Guid, Type, Activator
+from Microsoft.Extensions.Configuration import ConfigurationBuilder
+from Microsoft.Extensions.DependencyInjection import ServiceCollection
+
+from ILVO.EMAV.Core.Interfaces import IBackgroundJobService
+from ILVO.EMAV.Core.Interfaces.Repositories import IWebBaseRepository, ICalculationFactorBaseRepository
+from ILVO.EMAV.Core.Interfaces.Services.Calculation import IEmissionCalculationService
+from ILVO.EMAV.Data.Web.Models.Metadata import (
+    InputMetadata,
+    CalculationFactorMetadata,
+    CalculationOutputMetadata,
+)
+from ILVO.EMAV.Data.Web.Models.Jobs.Requests import EmissionCalcRequest
+from ILVO.EMAV.Data.Web.Models.Jobs.Payloads import EmissionCalcPayload
+from ILVO.EMAV.Data.Web.Enums import EmissionCalcStep
+
+def await_task(task):
+  return task.GetAwaiter().GetResult()
+
+# config om bestaande webapp te gebruiken (user id enzo nodig)
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+web_root = os.path.join(project_root, "ILVO.EMAV.Web")
+
+# Build configuration. Some extension methods (like SetBasePath) are not visible as instance methods
+# under pythonnet, so change working dir to the web root and call AddJsonFile with a relative path.
+prev_cwd = os.getcwd()
+os.chdir(web_root)
+try:
+    builder = ConfigurationBuilder()
+    try:
+        builder = builder.AddJsonFile("appsettings.json", False)
+    except Exception:
+        # best-effort: try calling extension method class if available
+        try:
+            from Microsoft.Extensions.Configuration.Json import JsonConfigurationExtensions
+            builder = JsonConfigurationExtensions.AddJsonFile(builder, "appsettings.json", False)
+        except Exception:
+            pass
+    try:
+        builder = builder.AddEnvironmentVariables()
+    except Exception:
+        try:
+            from Microsoft.Extensions.Configuration import ConfigurationBuilderExtensions
+            builder = ConfigurationBuilderExtensions.AddEnvironmentVariables(builder)
+        except Exception:
+            pass
+    configuration = builder.Build()
+finally:
+    os.chdir(prev_cwd)
+# depency injection
+services = ServiceCollection()
+# Ensure ILVO.EMAV.Web assembly is loaded from local dlls folder
+web_dll = os.path.join(dll_path, "ILVO.EMAV.Web.dll")
+if os.path.isfile(web_dll):
+    try:
+        clr.AddReferenceToFileAndPath(web_dll)
+    except Exception:
+        pass
+
+# Try loading common ASP.NET Core assemblies from NuGet (required by ConfigureServices like AddSession)
+aspnet_packages = [
+    "Microsoft.AspNetCore.Session",
+    "Microsoft.AspNetCore.Http.Abstractions",
+    "Microsoft.AspNetCore.Http",
+    "Microsoft.Extensions.Caching.Memory",
+    "Microsoft.AspNetCore.Hosting.Abstractions",
+    "Microsoft.AspNetCore"  # fallback
+]
+for pkg in aspnet_packages:
+    pkg_dir = os.path.join(nuget_root, pkg.lower())
+    if not os.path.isdir(pkg_dir):
+        continue
+    versions = sorted(os.listdir(pkg_dir), reverse=True)
+    for ver in versions:
+        candidate = os.path.join(pkg_dir, ver)
+        if not os.path.isdir(candidate):
+            continue
+        for lib in ("lib/net6.0", "lib/net7.0", "lib/net8.0", "lib/net5.0", "lib/netstandard2.0", "lib/netcoreapp3.1"):
+            libdir = os.path.join(candidate, lib)
+            dll_path = os.path.join(libdir, f"{pkg}.dll")
+            if os.path.isfile(dll_path):
+                try:
+                    clr.AddReferenceToFileAndPath(dll_path)
+                    break
+                except Exception:
+                    pass
+
+# The web project defines ServiceExtentions (note spelling) — try both names
+service_extension_type = Type.GetType("ILVO.EMAV.Web.ServiceExtensions, ILVO.EMAV.Web") or Type.GetType("ILVO.EMAV.Web.ServiceExtentions, ILVO.EMAV.Web")
+if service_extension_type is None:
+    try:
+        from System.Reflection import Assembly
+        assembly = Assembly.LoadFile(web_dll)
+        service_extension_type = assembly.GetType("ILVO.EMAV.Web.ServiceExtensions") or assembly.GetType("ILVO.EMAV.Web.ServiceExtentions")
+    except Exception:
+        service_extension_type = None
+
+if service_extension_type is None:
+    raise RuntimeError("Could not locate ILVO.EMAV.Web.ServiceExtensions/ServiceExtentions type in ILVO.EMAV.Web assembly. Ensure ILVO.EMAV.Web.dll is present in dlls/ and contains that type.")
+
+service_extensions = Activator.CreateInstance(service_extension_type, configuration)
+service_extensions.ConfigureServices(services)
+provider = services.BuildServiceProvider()
+scope = provider.CreateScope()
+service_provider = scope.ServiceProvider
+
+user = ClaimsPrincipal(ClaimsIdentity())
+
+input_repo = service_provider.GetService(IWebBaseRepository[InputMetadata])
+factor_repo = service_provider.GetService(IWebBaseRepository[CalculationFactorMetadata])
+
+inputs = await_task(input_repo.GetAll())
+factors = await_task(factor_repo.GetAll())
+
+# command = ScheduleEmissionCalcCommand(
+#   calculation
+# )
+
+  \end{minted}
+
+\begin{listing}[H]
+   \caption[integratie test]{test die de input op haalt en checkt als na de berekening alles van DierSubCategorie correct is ingevuld.}
+  \label{lst:inttest}
+\end{listing}
+
+\begin{minted}{python}
+    import os
+import sqlite3
+import traceback
+
+# Reuse startup which wires DI and loads CLR assemblies
+import importlib.util
+startup_path = os.path.join(os.path.dirname(__file__), "startup.py")
+spec = importlib.util.spec_from_file_location("ilvo_startup", startup_path)
+startup = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(startup)
+
+await_task = startup.await_task
+
+
+def main():
+    try:
+        # find input metadata for year 2015
+        inputs = await_task(startup.input_repo.GetAll())
+        input_metadata = next((i for i in inputs if getattr(i, 'Year', None) == 2015), None)
+        if input_metadata is None:
+            raise RuntimeError("No InputMetadata found for year 2015. Ensure the preprocessed input DB exists in the web app.")
+
+        # find calculation-factor version for year 2015
+        factors = await_task(startup.factor_repo.GetAll())
+        factor = next((f for f in factors if getattr(f, 'Year', None) == 2015), None)
+        if factor is None:
+            raise RuntimeError("No CalculationFactorMetadata found for year 2015.")
+
+        # prepare job and output DB path
+        job_id = startup.Guid.NewGuid()
+        user_id = startup.Guid.NewGuid()
+        db_path = os.path.join(os.getcwd(), f"calculation.integration.2015.{job_id}.db")
+
+        # create calculation output metadata record so EmissionCalculationService can find it
+        calc_output_repo = startup.service_provider.GetService(startup.IWebBaseRepository[startup.CalculationOutputMetadata])
+        calc_metadata = startup.CalculationOutputMetadata()
+        calc_metadata.CalculationFactorMetadataId = factor.Id
+        calc_metadata.InputMetadataId = input_metadata.Id
+        calc_metadata.DbFileName = db_path
+        calc_metadata.JobMetadataId = job_id
+        calc_metadata.UserID = user_id
+
+        await_task(calc_output_repo.Create(calc_metadata))
+
+        # run calculation up to output tab (includes animal subcategory summary)
+        emission_service = startup.service_provider.GetService(startup.IEmissionCalculationService)
+        payload = startup.EmissionCalcPayload(input_metadata.Id, user_id, factor.Id, job_id)
+
+        print("Starting calculation (this may take a while)...")
+        await_task(emission_service.CalculateAll(payload, startup.EmissionCalcStep.OutputTabAfterGIS, False))
+        print("Calculation finished.")
+
+        # verify output DB exists
+        if not os.path.isfile(db_path):
+            raise RuntimeError(f"Expected output DB not found at {db_path}")
+
+        # read output DierSubCategorieInfo
+        conn = sqlite3.connect(db_path)
+        cur = conn.cursor()
+
+        cur.execute("SELECT Code, NbDieren FROM DierSubCategorieInfo")
+        rows = cur.fetchall()
+        conn.close()
+
+        if not rows:
+            raise AssertionError("No rows found in DierSubCategorieInfo in calculation output DB")
+
+        # get expected subcategory codes from rekenfactor repository
+        tbl_repo = startup.service_provider.GetService(startup.ICalculationFactorBaseRepository[startup.TblDierSubCategorie])
+        all_subcats = await_task(tbl_repo.GetAllByVersion(factor.Id))
+        expected_codes = set([(s.Code or "").strip() for s in all_subcats if getattr(s, 'Code', None)])
+
+        # validate rows
+        missing_in_factors = []
+        zero_counts = []
+        for code, nb in rows:
+            code_str = (code or "").strip()
+            if code_str not in expected_codes:
+                missing_in_factors.append(code_str)
+            try:
+                nb_val = int(nb)
+            except Exception:
+                nb_val = float(nb)
+            if nb_val <= 0:
+                zero_counts.append((code_str, nb_val))
+
+        if missing_in_factors:
+            raise AssertionError(f"Found DierSubCategorieInfo codes not present in calculation factors: {missing_in_factors}")
+        if zero_counts:
+            raise AssertionError(f"Some DierSubCategorieInfo rows have zero or negative NbDieren: {zero_counts}")
+
+        print("Integration test success: all reported dier-subcategories are valid and have NbDieren > 0")
+
+    except Exception as e:
+        print("Integration test failed:")
+        traceback.print_exc()
+        raise
+
+
+if __name__ == '__main__':
+    main()
+
+  \end{minted}
+ \begin{listing}[H]
+  \caption[bereken emissie voedertechnieken]{python implementatie klaar voor integratie met csharp}
+  \label{lst:berekenvoederemissiepython}
+\end{listing}
+
+  \begin{minted}{python}
+    """
+Simulated BerekenEmissieVoedertechnieken module called from C# via pythonnet.
+
+Public function:
+  Bereken(emissie_stallen, regressie_list=None, regressie_rechte_list=None, convenant_list=None)
+
+Behavior (implements the original C# logic):
+ - For each EmissieStal element compute emissie = min(TmpEmissieNH3Gereduceerd, TmpEmissieNH3Trad, TmpEmissieNH3StalEF)
+ - If emissie > 0 and AantalDierenPASVoeding == 0 and AantalDierenPASCombi == 0 then:
+     - if ea.Regressie: try to find a matching regressieRechte (by TblDierSubCategorie.Code == DierSubCategorieCode)
+         compute X = ((ProductieN / AantalDieren) - B) / A (safe-guard A != 0)
+         find regression entry where X < Regessiemax (chooses the smallest Regessiemax that is > X)
+         if found and not CodeStalType startswith 'V ' or 'P ' and AantalDierenTechniek == 0
+             emissie *= (1 - Reductiepercentage/100)
+     - elif ea.Convenant: find convenant entry and if ProductieN / AantalDieren <= Convenantmax
+             emissie *= (1 - Reductiepercentage/100)
+ - Set ea.EmissieNH3 = emissie
+ - Return the (possibly modified) emissie_stallen sequence (as a Python list)
+
+Notes:
+ - This module is defensive: it accepts CLR objects (pythonnet proxies) or plain dicts.
+ - If regressie/convenant lists are not provided, it will try to read them from the passed objects (if they contain links), else it uses no-op fallbacks.
+ - Designed for simulation and predictable behavior when called from C# for testing/documentation.
+"""
+
+from typing import Iterable, List, Any, Optional
+
+
+def _get(obj: Any, name: str, default=None):
+    """Robust property accessor for CLR proxies and dicts."""
+    if obj is None:
+        return default
+    # dict-like
+    try:
+        return obj[name]
+    except Exception:
+        pass
+    try:
+        return getattr(obj, name)
+    except Exception:
+        pass
+    try:
+        # some CLR proxies expose methods
+        prop = getattr(obj, name, default)
+        return prop
+    except Exception:
+        return default
+
+
+def _set(obj: Any, name: str, value):
+    try:
+        obj[name] = value
+        return
+    except Exception:
+        pass
+    try:
+        setattr(obj, name, value)
+        return
+    except Exception:
+        pass
+    # last resort: ignore
+
+
+def _to_float(v, default=0.0):
+    try:
+        if v is None:
+            return float(default)
+        return float(v)
+    except Exception:
+        return float(default)
+
+
+def _starts_with(v: Any, prefix: str) -> bool:
+    try:
+        if v is None:
+            return False
+        return str(v).startswith(prefix)
+    except Exception:
+        return False
+
+
+# helper to find a single item in a list by nested property: item.<nested>.<prop> == value
+def _find_first_by_nested_code(collection: Iterable[Any], nested_attr: str, prop_name: str, value: str):
+    if collection is None:
+        return None
+    for it in collection:
+        nested = _get(it, nested_attr)
+        if nested is None:
+            continue
+        code = _get(nested, prop_name)
+        if code is None:
+            continue
+        if str(code).strip() == str(value).strip():
+            return it
+    return None
+
+
+def Bereken(emissie_stallen: Iterable[Any],
+           regressie_list: Optional[Iterable[Any]] = None,
+           regressie_rechte_list: Optional[Iterable[Any]] = None,
+           convenant_list: Optional[Iterable[Any]] = None) -> List[Any]:
+    """Compute EmissieNH3 for each EmissieStal. Returns list of same objects with EmissieNH3 set.
+
+    Parameters are permissive to accept CLR proxies or plain python dicts.
+    """
+    out = []
+
+    # normalize collections to lists
+    regressie_list = list(regressie_list) if regressie_list is not None else []
+    regressie_rechte_list = list(regressie_rechte_list) if regressie_rechte_list is not None else []
+    convenant_list = list(convenant_list) if convenant_list is not None else []
+
+    for ea in emissie_stallen:
+        # read tmp emissions, fallback to 0
+        t1 = _to_float(_get(ea, 'TmpEmissieNH3Gereduceerd', 0.0))
+        t2 = _to_float(_get(ea, 'TmpEmissieNH3Trad', 0.0))
+        t3 = _to_float(_get(ea, 'TmpEmissieNH3StalEF', 0.0))
+        emissie = min(t1, t2, t3)
+
+        aantal_pas_voeding = _to_float(_get(ea, 'AantalDierenPASVoeding', 0))
+        aantal_pas_combi = _to_float(_get(ea, 'AantalDierenPASCombi', 0))
+
+        # guard missing AantalDieren
+        aantal_dieren = _to_float(_get(ea, 'AantalDieren', 0))
+        productie_n = _to_float(_get(ea, 'ProductieN', 0))
+
+        if emissie > 0.0 and aantal_pas_voeding == 0 and aantal_pas_combi == 0 and aantal_dieren > 0:
+            if _get(ea, 'Regressie', False):
+                # try to find regressieRechte and regressie entries for this diersubcat
+                ds_code = (str(_get(ea, 'DierSubCategorieCode', '') or '')).strip()
+                regR = _find_first_by_nested_code(regressie_rechte_list, 'TblDierSubCategorie', 'Code', ds_code)
+                # fallbacks: if not supplied, try attributes on ea (some PRs put inline values)
+                if regR is None:
+                    # no regR available -> do no regression reduction
+                    regR = None
+
+                if regR is not None:
+                    A = _to_float(_get(regR, 'A', None))
+                    B = _to_float(_get(regR, 'B', None))
+                    # safe compute X
+                    X = None
+                    if A != 0:
+                        X = ((_to_float(productie_n) / aantal_dieren) - B) / A
+                    else:
+                        X = 0.0
+
+                    # find appropriate TblRegressie entry for this diersubcat
+                    reg_candidates = [r for r in regressie_list if str(_get(_get(r, 'TblDierSubCategorie'), 'Code', '')).strip() == ds_code]
+                    # choose the first where X < Regessiemax; emulate ordering logic defensively
+                    chosen = None
+                    try:
+                        # try to pick smallest Regessiemax that is >= X
+                        reg_candidates_sorted = sorted(reg_candidates, key=lambda r: _to_float(_get(r, 'Regressiemax', 0)))
+                        for rc in reg_candidates_sorted:
+                            if X is None:
+                                continue
+                            if X < _to_float(_get(rc, 'Regressiemax', float('inf'))):
+                                chosen = rc
+                                break
+                    except Exception:
+                        chosen = None
+
+                    if (
+                        chosen is not None
+                        and not _starts_with(_get(ea, 'CodeStalType', ''), 'V ')
+                        and not _starts_with(_get(ea, 'CodeStalType', ''), 'P ')
+                        and _to_float(_get(ea, 'AantalDierenTechniek', 0)) == 0
+                    ):
+                        reductie = _to_float(_get(chosen, 'Reductiepercentage', 0))
+                        emissie = emissie * (1.0 - reductie / 100.0)
+
+            elif _get(ea, 'Convenant', False):
+                ds_code = (str(_get(ea, 'DierSubCategorieCode', '') or '')).strip()
+                convenant = _find_first_by_nested_code(convenant_list, 'TblDierSubCategorie', 'Code', ds_code)
+                if convenant is not None:
+                    conv_max = _to_float(_get(convenant, 'Convenantmax', float('inf')))
+                    if (productie_n / aantal_dieren) <= conv_max:
+                        reductie = _to_float(_get(convenant, 'Reductiepercentage', 0))
+                        emissie = emissie * (1.0 - reductie / 100.0)
+
+        # set the computed emission back
+        _set(ea, 'EmissieNH3', emissie)
+        out.append(ea)
+
+    return out
+
+
+# small self-test when run directly (simulates CLR objects with simple dicts)
+if __name__ == '__main__':
+    sample = [
+        {
+            'TmpEmissieNH3Gereduceerd': 10.0,
+            'TmpEmissieNH3Trad': 12.0,
+            'TmpEmissieNH3StalEF': 11.0,
+            'AantalDierenPASVoeding': 0,
+            'AantalDierenPASCombi': 0,
+            'AantalDieren': 5,
+            'ProductieN': 50,
+            'Regressie': True,
+            'DierSubCategorieCode': 'S1',
+            'CodeStalType': 'X',
+            'AantalDierenTechniek': 0,
+        }
+    ]
+
+    regressie_rechte_list = [ {'TblDierSubCategorie': {'Code': 'S1'}, 'A': 1.0, 'B': 0.0} ]
+    regressie_list = [ {'TblDierSubCategorie': {'Code': 'S1'}, 'Regressiemax': 100, 'Reductiepercentage': 10} ]
+
+    out = Bereken(sample, regressie_list, regressie_rechte_list, [])
+    print(out[0]['EmissieNH3'])
+
+  \end{minted}
+\begin{listing}[H]
+  \begin{minted}{csharp}
+            List<EmissieVoederTechnieken> result = [];
+        List<TblRegressie> regressieList =
+        [
+            .. await tblRegressieRepo.GetAllByVersion(
+                input.CalculationFactors.Id,
+                true,
+                item => item.TblDierSubCategorie
+            ),
+        ];
+        List<TblRegressieRechte> regressieRechteList =
+        [
+            .. await tblRegressieRechteRepo.GetAllByVersion(
+                input.CalculationFactors.Id,
+                true,
+                item => item.TblDierSubCategorie
+            ),
+        ];
+        List<TblConvenant> convenantList =
+        [
+            .. await tblCovenantRepo.GetAllByVersion(
+                input.CalculationFactors.Id,
+                true,
+                item => item.TblDierSubCategorie
+            ),
+        ];
+
+        // omzetten naar python call
+        Runtime.PythonDLL = "";
+        PythonEngine.Initialize();
+
+        var result = new List<EmissieVoederTechnieken>();
+        using (Py.GIL())
+        {
+            dynamic sys = Py.Import("sys");
+            string executorDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\..\ILVO.EMAV.Jupyter\berekeningen\");
+            sys.path.append(executorDirectory);
+            dynamic emissieBerekening = Py.Import("BerekenEmissieVoedertechnieken");
+            result = emissieBerekening.Bereken(input.EmissieStallen);
+        }
+        return result;
+
+
+  \end{minted}
+  \caption[csharp versie van berekenvoedertechnieken met python]{de C\# versie voor integratie met python module}
+  \label{lst:berekenvoederemissiepythonandcsharp}
+\end{listing}

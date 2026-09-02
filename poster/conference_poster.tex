@@ -32,78 +32,80 @@
 \begin{abstract}
   Bij ILVO (Instituut voor Landbouw-, Visserij- en Voedingsonderzoek) ontwerpen onderzoekers complexe rekenmodellen die door IT-developers in .NET worden geïmplementeerd. 
   Hierdoor kunnen onderzoekers hun modellen niet altijd zelf aanpassen of snel testen, wat de experimenteerruimte beperkt. 
-  Dit onderzoek toont aan dat door de integratie van Jupyter Notebooks (Project Jupyter, 2025) met de bestaande C\#-code, onderzoekers de autonomie krijgen om modellen direct te valideren en aan te passen, zonder de stabiliteit van de hoofdapplicatie te schaden.
+  Dit onderzoek toont aan dat door de integratie van Python met de bestaande C\#-code, onderzoekers de autonomie krijgen om modellen direct te valideren en aan te passen, zonder de stabiliteit van de hoofdapplicatie te schaden.
+  Naast de Python gaat dit onderzoek ook diep in Clean Code en Documentatie Drift, aangezien dit belangrijke zaken zijn om code te verduidelijken.
 \end{abstract}
 
 \begin{multicols}{2} % This is how many columns your poster will be broken into, a portrait poster is generally split into 2 columns
 
 \section{Introductie}
 
-  Bij ILVO vormen complexe rekenmodellen de kern van onderzoek naar milieu-impact en emissies in de landbouw.
-  Deze modellen worden door onderzoekers bedacht, maar door IT-developers vertaald naar software in een .NET/C\# omgeving.
+Bij ILVO worden complexe rekenmodellen gebruikt om milieu-impact en emissies in de landbouw te berekenen. 
+Deze modellen ontstaan vanuit wetenschappelijke kennis, maar worden in de praktijk omgezet naar software in een .NET/C\#-omgeving. 
+Daardoor ontstaat een duidelijke kloof tussen de wetenschappelijke logica en de technische implementatie.
 
-  \textbf{De Uitdaging} \\
-  Hoewel deze taakverdeling logisch is, zorgt het in de praktijk voor een kloof tussen de wetenschappelijke theorie en de technische praktijk:
+\textbf{De uitdaging} \\
+Hoewel de verdeling tussen onderzoekers en ontwikkelaars logisch is, leidt ze in de praktijk tot twee problemen:
 \begin{itemize}
-    \item Beperkte Zichtbaarheid: De wetenschappelijke logica zit verweven in de broncode, waardoor de berekeningsstappen voor onderzoekers moeilijk te verifiëren zijn.
-    \item Afhankelijkheid: Voor elke wijziging of test van een formule is technische hulp nodig, wat de snelheid van het onderzoek vertraagt.
+    \item Beperkte zichtbaarheid: de berekeningslogica is verspreid over broncode, documentatie en overleg, waardoor onderzoekers de stappen moeilijk kunnen verifiëren.
+    \item Afhankelijkheid: voor elke wijziging of test van een formule is technische hulp nodig, wat de experimenteerruimte beperkt en de snelheid van onderzoek vertraagt.
 \end{itemize}
+
+Het probleem is niet alleen technisch, maar ook organisatorisch: documentatie raakt snel achter op de implementatie. 
+Daardoor ontstaat \emph{documentation drift}, een groeiende kloof tussen wat de documentatie zegt en wat de software werkelijk doet.
 
 \textbf{Onderzoeksvraag} \\
 \textit{Hoe kunnen we de kloof tussen IT-logica en wetenschappelijke analyse verkleinen, zodat onderzoekers zonder diepgaande programmeerkennis inzicht krijgen in hun modellen en er zelf mee kunnen experimenteren?}
 
 \section{Methodologie \& Technologie}
 
-Om deze kloof te dichten, is een hybride architectuur ontwikkeld die onderzoekers in staat stelt om direct met de gecompileerde .NET-logica te interageren via een vertrouwde Python-omgeving.
+Het onderzoek is opgebouwd in een iteratief proces: gesprekken met onderzoekers en IT-medewerkers, literatuuronderzoek en een praktische proof-of-concept. 
+De verzamelde inzichten worden steeds teruggekoppeld om de oplossing te verfijnen.
 
-\textbf{Gekozen Aanpak:}
+\textbf{Gekozen aanpak:}
 \begin{enumerate}
-  \item Bridge-technologie (Python.NET): Gebruik van pythonnet (Python.NET, 2026) om C\#-modules (DLL's) direct in Python aan te roepen, zonder de code te herschrijven.
-  \item Interactieve Notebooks (Jupyter): Inzet van Jupyter Notebooks (Project Jupyter, 2025) als interface. Dit combineert uitvoerbare code met rijke tekstuele uitleg (Literate Programming).
-  \item Isolatie \& Beveiliging (Docker (Docker Inc., 2026)): De gehele analyse-omgeving is gecontaineriseerd. Dit garandeert reproduceerbaarheid en beschermt de infrastructuur tegen onbedoelde schadelijke code-executie.
-    \item Experimenteer-switch: Ontwikkeling van een mechanisme om veilig te schakelen tussen de officiële C\#-berekening en een experimentele Python-versie via een strategy pattern.
+  \item Probleemanalyse: gesprekken met onderzoekers en IT-medewerkers om de huidige werkwijze, knelpunten en behoeften in kaart te brengen.
+  \item Literatuur- en technologieverkenning: onderzoek naar Python.NET, Jupyter, literate programming en documentatie-praktijken die de kloof tussen model en code kunnen verkleinen.
+  \item Ontwerp van een hybride oplossing: een proof-of-concept waarbij C\#-logica via Python beschikbaar wordt gemaakt in een veilige, interactieve analyseomgeving.
+  \item Iteratieve evaluatie: feedback uit de praktijk gebruiken om de oplossing te verfijnen en te toetsen op bruikbaarheid, veiligheid en wetenschappelijke validatie.
 \end{enumerate}
 
+Deze aanpak sluit aan bij de kern van het onderzoek: niet alleen een technische integratie, maar ook een methodiek om documentatie, experimenteren en samenwerking tussen onderzoekers en ontwikkelaars beter te laten samenwerken.
 
-\section{Proof-of-Concept: Hybride Architectuur}
+\section{Clean Code}
 
-De PoC demonstreert een ecosysteem waarin de robuuste .NET-backend de regie voert over interactieve Jupyter-omgevingen. Dit garandeert een naadloze overgang van ontwikkeling naar wetenschappelijke analyse.
+Voor ILVO is duidelijke, leesbare code niet alleen een technische keuze, maar een organisatorische noodzaak. Wanneer onderzoekers en ontwikkelaars samen werken aan complexe modellen, is het belangrijk dat de bedoeling van berekeningen, aannames en randgevallen niet alleen in een wiki of e-mail staan, maar ook in de code zelf. Goede naamgeving, kleine eenheden en duidelijke verantwoordelijkheden maken de broncode beter begrijpelijk en verminderen de afhankelijkheid van individuele kennis.
 
-\textbf{Kernaspecten van de realisatie:}
+\section{Documentation Drift}
+
+De onderzoeker-ervaring bij ILVO laat zien dat documentatie snel achterloopt zodra code, data en workflows niet meer synchroon lopen. Deze \emph{documentation drift} vergroot de kans op misinterpretatie, vertraagt validatie en maakt het moeilijk om wijzigingen correct te beoordelen. Daarom is een duidelijke, centrale en versioned bron van waarheid essentieel: code, tests, notities en modelafspraken moeten beter samen evolueren.
+Zeker de `waarom' is nodig om te documenteren, de developers kunnen wel de `wat' beschrijven, maar de waarom weten zij niet. Dit is eerder een taak voor de onderzoekers.
+
+\section{Proof-of-Concept}
+
+De proof-of-concept toont dat bepaalde berekeningsonderdelen relatief eenvoudig kunnen worden vertaald naar Python, met name kleine, goed afgebakende formules en scenario's. Dit kan nuttig zijn om onderzoekers inzicht te geven in de logica en om specifieke onderdelen makkelijker te analyseren. Maar de haalbaarheid verdwijnt snel zodra het gaat om de echte dataflow, integratietests en de volledige applicatiecontext van EMAV.
+
+\textbf{Praktische lessen uit de PoC:}
 \begin{itemize}
-    \item Geautomatiseerde Orchestratie: De C\#-backend beheert via de Docker SDK de levenscyclus van de analyse-omgevingen. Elke onderzoeker krijgt automatisch een identieke, geïsoleerde setup.
-    \item Dynamic DLL Injection: Domeinlogica (C\#-libraries) wordt automatisch verzameld en in de container geïnjecteerd. De onderzoeker werkt altijd op de Single Source of Truth van de applicatie.
-    \item Seamless Interop: Dankzij Python.NET (Python.NET, 2026) worden C\#-types behandeld als native Python-klassen, wat de technische drempel voor onderzoekers minimaliseert.
+    \item Kleine, zelfstandige berekeningen zijn in Python begrijpelijker voor onderzoekers, maar vormen geen volledige vervanging van de C\#-applicatie.
+    \item Integratie-tests, unit-tests en contextgevoelige rekenstappen blijven in de praktijk beter in C\# omdat de volledige domeinlogica en infrastructuur daar centraal staan.
+    \item Hoe complexer de inputdata, custom data types en database-gestuurde flows worden, hoe moeilijker het omzetten naar Python wordt.
+    \item De echte uitdaging ligt niet in het reproduceren van één formule, maar in het veilig en consistent laten werken van de volledige rekencontext.
 \end{itemize}
 
-\begin{center}
-  \captionsetup{type=figure}
-  \includegraphics[width=1.0\linewidth]{../graphics/poc_architectuur}
-  \captionof{figure}{Architecturaal overzicht van de PoC met C\#-orchestratie en hybride Python-integratie.}
-\end{center}
-
-\section{Schakelbare Implementatie}
-
-Het belangrijkste onderdeel is de mogelijkheid om op laag niveau te wisselen tussen implementaties via een Factory- en Strategy-patroon.
-
-\textbf{Het mechanisme:}
-\begin{itemize}
-    \item Dynamische Selectie: Een factory beslist op runtime of een rekenmodule de officiële C\#-code of een experimenteel Python-script uitvoert.
-    \item Granulaire Controle: Onderzoekers kunnen per specifieke rekenstap (bijv. ``Enterische emissies'') een alternatieve versie testen zonder het hele systeem te beïnvloeden.
-    \item Veiligheid: Door het gebruik van tijdelijke SQLite-kopieën en Docker-isolatie kunnen scenario's getest worden zonder de productie-database te vervuilen.
-\end{itemize}
+Deze ervaring onderstreept het belangrijkste inzicht van het onderzoek: Python kan waarde bieden als ondersteunende analyse- en validatieomgeving, maar het doel is nooit om EMAV te vervangen. De kernlogica blijft in C\# staan, terwijl Python alleen beperkt kan dienen voor selectieve onderdelen, vergelijking van resultaten en onderzoekergerichte analyse.
 
 \section{Conclusies \& Toekomst}
 
-De PoC bewijst dat een hybride strategie de autonomie van onderzoekers verhoogt zonder in te boeten op de softwarekwaliteit van de backend.
+De centrale vaststelling van het onderzoek is dat de bedoeling nooit was om EMAV volledig te vervangen. De huidige .NET-architectuur is te complex en te sterk ingebed in de bedrijfslogica om zonder meer te vervangen. De praktische route is een hybride aanpak: de kern van de berekeningen blijft in een stabiele C\#-omgeving, terwijl onderzoekers via Python, Jupyter-notebooks en gecontroleerde experimentatieomgevingen toegang krijgen tot geselecteerde modelonderdelen en vergelijkingsscenario's.
+
+Deze keuze vergroot de autonomie van onderzoekers zonder de stabiliteit van de hoofdapplicatie te ondermijnen. De proof-of-concept toont aan dat Python waardevol is voor kleine onderdelen, maar dat het niet voldoende toepasbaar is om grote workflows te testen. Clean Code en Documentation Drift zijn hierbij cruciaal: ze verbeteren niet alleen de leesbaarheid van de code, maar ook de samenwerking tussen onderzoekers en IT, en verminderen de kans op misinterpretatie in een complex domeinmodel.
 
 \textbf{Toekomstig onderzoek:}
 \begin{itemize}
-    \item Structurele inbedding van de switch-logica in alle EMAV-rekenmodules.
-    \item Uitbreiding van de in-notebook validatietools voor automatische vergelijking tussen C\# en Python resultaten.
-    \item Verder consulteren met de onderzoekers zelf.
-    \item De PoC volledig uitwerken.
-    \item Een effectieve implementatie van documentatie.
+    \item Verdiepen van de samenwerking tussen onderzoekers en ontwikkelaars om de experimenteerruimte te optimaliseren.
+    \item Verder uitwerken van de PoC met aandacht voor clean code, veilige data-isolatie, docs-as-code en het beperken van documentation drift voor ILVO.
+    \item Onderzoeken hoe Python kan helpen specifiek bij testen.
 \end{itemize}
 
 \end{multicols}

@@ -1,0 +1,5 @@
+* Notes voor de boeken
+** A philosophy of software design
+*** intro
+"if you can visualize a system, you can probably implement it in a computer program"
+it doesnt require great physical skill

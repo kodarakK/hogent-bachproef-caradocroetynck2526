@@ -4,13 +4,36 @@
 
 \chapter{Conclusie}
 \label{ch:conclusie}
+Deze bachelorproef onderzocht hoe de kloof tussen de wetenschappelijke logica van het EMAV-project bij ILVO en de technische implementatie in C\#/.NET kon worden verkleind. 
+De centrale vaststelling is dat de huidige situatie ertoe leidt dat onderzoekers het systeem als een “black box” ervaren: de berekeningen zijn beschikbaar, maar de onderliggende intentie, aannames, dataflow en validatiestappen zijn niet steeds duidelijk genoeg gedocumenteerd of reproduceerbaar. 
+Daardoor ontstaat documentation drift, neemt de kans op misinterpretatie toe en wordt de ontwikkeling van nieuwe experimenten en analyses vertraagd.
 
-Dit onderzoek richtte zich op de fundamentele vraag hoe de kloof tussen IT-logica en wetenschappelijke analyse binnen de context van ILVO verkleind kan worden. Door de bevindingen en afwegingen uit de opeenvolgende hoofdstukken te synthetiseren, kan een integraal antwoord op de onderzoeksvragen worden geformuleerd.
+Uit het onderzoek blijkt dat een volledige migratie van het bestaande model naar Python niet de meest realistische of efficiënte oplossing is. 
+De huidige .NET-architectuur is te complex en te sterk ingebed in de bedrijfslogica om zonder meer te vervangen. 
+De meer praktische en duurzame route is een hybride aanpak: de kern van de wetenschappelijke berekeningen en de domeinkennis blijven in de bestaande technisch stabiele omgeving, terwijl onderzoekers toegang krijgen via Python, Jupyter-notebooks en gecontroleerde experimentatieomgevingen. 
+Deze keuze houdt de stabiliteit van het systeem intact, maar geeft onderzoekers wel meer autonomie, flexibiliteit en inzicht.
 
-De uitleg in de \textit{huidige staat van documentatie} leerde dat eerdere pogingen tot documentatie, zoals het bijhouden van ``schaduw-code'' in losse Markdown-bestanden, faalden door documentation drift. Hoewel deze aanpak voor developers overzichtelijker was dan de lijvige Word-documenten uit het legacy-tijdperk, bleef de informatie gefragmenteerd. De analyse van de \textit{projectcomplexiteit} bevestigde dat een ad-hoc programmeerstijl ontoereikend is voor de hybride datastructuur en legacy-rekenmodules van EMAV. Hoewel alternatieve, eenvoudiger architecturen overwogen zijn, bleek de keuze voor Clean Architecture en een uitgebreid frame van design patterns (zoals Repositories en Strategieën) de enige manier om de wetenschappelijke kern te isoleren. In het hoofdstuk over de \textit{tekortschieting van documentatie} werd vastgesteld dat zelfs moderne tools zoals DocFX en Swagger, ondanks hun technische kracht, fundamenteel tekortschieten voor onderzoekers omdat zij de intentie en de wiskundige onderbouwing van de modellen niet ontsluiten.
+De proof-of-concept bevestigt deze conclusie. 
+De uitgevoerde experimenten laten zien dat onderdelen van EMAV succesvol kunnen worden benaderd, getest en geanalyseerd in Python, zonder dat de bestaande C\#-implementatie direct hoeft te worden omgevormd. 
+Python.NET bleek daarbij een geschikte keuze omdat het moderne Python-ondersteuning biedt en daarmee het data-science ecosysteem toegankelijk maakt. 
+Vanaf dat pythonnet met de dependency injection en andere interne zaken van .NET moet werken, zijn er meestal meer nadelen en frustratie dan de voordelen die python kan opleveren. 
+Jupyter-notebooks bieden een laagdrempelige manier om berekeningen te reproduceren en te communiceren
 
-Bij de verkenning van \textit{alternatieve documentatievormen} zijn diverse platforms kritisch tegen elkaar afgewogen. Quarto werd overwogen vanwege het superieure versiebeheer via platte tekst, en Org-mode vanwege de pure implementatie van Literate Programming. Echter, de noodzaak voor een drempelloze interface leidde tot de keuze voor Jupyter-notebooks. Voor de technische koppeling werd Python.NET verkozen boven IronPython; waar IronPython beperkt blijft tot verouderde Python-versies, biedt Python.NET de toegang tot het moderne data-science ecosysteem dat voor onderzoekers essentieel is.
+Belangrijk is echter dat deze aanpak geen technologische wondermiddel is. 
+De grootste uitdaging is niet alleen het kiezen van de juiste tooling, maar ook het structureren van samenwerking en proces. 
+De analyse van documentation drift toont aan dat informatie vaak verloren gaat omdat code, documentatie, analyse-werkflows en communicatiekanalen apart van elkaar opereren. 
+Daarom is een Single Source of Truth essentieel: een centrale, duidelijke, versiebeheerbare bron waarin de modeldefinities, aannames, validaties en interpretaties samenkomen. 
+Geautomatiseerde tests, notebooks en duidelijke ADR’s (Architecture Decision Records) vormen daarbij een belangrijke basis om drift te beperken.
 
-De uitwerking van de \textit{architectuur} en de \textit{Proof-of-Concept} valideerden deze keuzes. Waar directe toegang tot productiedata of het handmatig opzetten van lokale omgevingen te risicovol of complex werd bevonden, boden Docker-sandboxen en lokale data-clonering een veilig alternatief. Het onderzoek bewijst dat een samenwerking van deze technologieën een \textit{Single Source of Truth} realiseert die technisch robuust is en de autonomie van de wetenschapper herstelt.
+De belangrijkste bijdrage van deze bachelorproef is dus niet dat Python de oplossing op zichzelf is, maar dat het toont hoe een hybride, pragmatische en goed gedefinieerde aanpak de wetenschappelijke transparantie en technische betrouwbaarheid tegelijk kan verbeteren. 
+De gekozen oplossing combineert Clean Architecture-principes, duidelijke domeinabstracties, Python-gebaseerde experimentatie en CI-geïntegreerde validatie. 
+Hierdoor kunnen onderzoekers sneller experimenteren, sneller begrijpen wat er in het model gebeurt en beter formuleren welke assumpties werkelijk van invloed zijn op de uitkomsten.
 
-Concluderend toont dit onderzoek aan dat de hybride integratie van .NET en Jupyter de meest levensvatbare strategie is om de ``black-box'' van wetenschappelijke software te openen. De belangrijkste beperking is dat een definitieve validatie nog afhankelijk is van een structurele inname van de mening en ervaringen van de onderzoekers zelf. De technische fundering is hiermee gelegd; de menselijke adoptie en verdere automatisatie binnen CI/CD-pipelines vormen de logische vervolgstappen voor de toekomst van EMAV.
+Concluderend kan gesteld worden dat het onderzoek heeft aangetoond dat de “black box” van EMAV niet alleen technisch, maar vooral organisatorisch en communicatief wordt veroorzaakt. 
+De technische complexiteit is realistisch, maar niet onoverkomelijk. 
+De oplossing ligt in een goed afgestemde hybride architectuur waarin de vaste C\#-basis behouden blijft, terwijl Python en notebooks worden gebruikt als open, interactieve en reproduceerbare laag voor onderzoek en validatie. 
+De belangrijkste stap voor ILVO is nu niet meer een complete herontwikkeling, maar het institutionaliseren van deze aanpak: docs-as-code, expliciete eigenaarschap, test- en notebook-integratie in de workflow en een bewuste cultuur van samenwerking tussen ontwikkelaars en onderzoekers.
+
+Als deze aanbevelingen worden overgenomen, kan de organisatie profiteren van meer transparantie, minder documentation drift, beter reproduceerbare analyses en een kortere kennisoverdracht tussen technisch personeel en wetenschappelijk onderzoek. 
+Daarmee wordt niet alleen de kwaliteit van de software verbeterd, maar ook de betrouwbaarheid en geloofwaardigheid van de onderzoeksresultaten zelf.
+
