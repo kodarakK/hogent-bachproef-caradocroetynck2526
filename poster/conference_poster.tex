@@ -65,25 +65,47 @@ De verzamelde inzichten worden steeds teruggekoppeld om de oplossing te verfijne
 \textbf{Gekozen aanpak:}
 \begin{enumerate}
   \item Probleemanalyse: gesprekken met onderzoekers en IT-medewerkers om de huidige werkwijze, knelpunten en behoeften in kaart te brengen.
-  \item Literatuur- en technologieverkenning: onderzoek naar Python.NET, Jupyter, literate programming, containers en documentatie-praktijken die de kloof tussen model en code kunnen verkleinen.
+  \item Literatuur- en technologieverkenning: onderzoek naar Python.NET, Jupyter, literate programming en documentatie-praktijken die de kloof tussen model en code kunnen verkleinen.
   \item Ontwerp van een hybride oplossing: een proof-of-concept waarbij C\#-logica via Python beschikbaar wordt gemaakt in een veilige, interactieve analyseomgeving.
   \item Iteratieve evaluatie: feedback uit de praktijk gebruiken om de oplossing te verfijnen en te toetsen op bruikbaarheid, veiligheid en wetenschappelijke validatie.
 \end{enumerate}
 
 Deze aanpak sluit aan bij de kern van het onderzoek: niet alleen een technische integratie, maar ook een methodiek om documentatie, experimenteren en samenwerking tussen onderzoekers en ontwikkelaars beter te laten samenwerken.
 
-\section{Proof-of-Concept: Hybride Architectuur}
+\section{Clean Code}
+
+Voor ILVO is duidelijke, leesbare code niet alleen een technische keuze, maar een organisatorische noodzaak. Wanneer onderzoekers en ontwikkelaars samen werken aan complexe modellen, is het belangrijk dat de bedoeling van berekeningen, aannames en randgevallen niet alleen in een wiki of e-mail staan, maar ook in de code zelf. Goede naamgeving, kleine eenheden en duidelijke verantwoordelijkheden maken de broncode beter begrijpelijk en verminderen de afhankelijkheid van individuele kennis.
+
+\section{Documentation Drift}
+
+De onderzoeker-ervaring bij ILVO laat zien dat documentatie snel achterloopt zodra code, data en workflows niet meer synchroon lopen. Deze \emph{documentation drift} vergroot de kans op misinterpretatie, vertraagt validatie en maakt het moeilijk om wijzigingen correct te beoordelen. Daarom is een duidelijke, centrale en versioned bron van waarheid essentieel: code, tests, notities en modelafspraken moeten beter samen evolueren.
+Zeker de `waarom' is nodig om te documenteren, de developers kunnen wel de `wat' beschrijven, maar de waarom weten zij niet. Dit is eerder een taak voor de onderzoekers.
+
+\section{Proof-of-Concept}
+
+De proof-of-concept toont dat bepaalde berekeningsonderdelen relatief eenvoudig kunnen worden vertaald naar Python, met name kleine, goed afgebakende formules en scenario's. Dit kan nuttig zijn om onderzoekers inzicht te geven in de logica en om specifieke onderdelen makkelijker te analyseren. Maar de haalbaarheid verdwijnt snel zodra het gaat om de echte dataflow, integratietests en de volledige applicatiecontext van EMAV.
+
+\textbf{Praktische lessen uit de PoC:}
+\begin{itemize}
+    \item Kleine, zelfstandige berekeningen zijn in Python begrijpelijker voor onderzoekers, maar vormen geen volledige vervanging van de C\#-applicatie.
+    \item Integratie-tests, unit-tests en contextgevoelige rekenstappen blijven in de praktijk beter in C\# omdat de volledige domeinlogica en infrastructuur daar centraal staan.
+    \item Hoe complexer de inputdata, custom data types en database-gestuurde flows worden, hoe moeilijker het omzetten naar Python wordt.
+    \item De echte uitdaging ligt niet in het reproduceren van één formule, maar in het veilig en consistent laten werken van de volledige rekencontext.
+\end{itemize}
+
+Deze ervaring onderstreept het belangrijkste inzicht van het onderzoek: Python kan waarde bieden als ondersteunende analyse- en validatieomgeving, maar het doel is nooit om EMAV te vervangen. De kernlogica blijft in C\# staan, terwijl Python alleen beperkt kan dienen voor selectieve onderdelen, vergelijking van resultaten en onderzoekergerichte analyse.
 
 \section{Conclusies \& Toekomst}
 
-De proof-of-concept toont aan dat een hybride aanpak de autonomie van onderzoekers vergroot zonder het vertrouwen in de bestaande .NET-backend te ondermijnen. De combinatie van Python, Jupyter en veilige isolatie maakt het mogelijk om complexe berekeningen beter te begrijpen, te testen en te valideren.
+De centrale vaststelling van het onderzoek is dat de bedoeling nooit was om EMAV volledig te vervangen. De huidige .NET-architectuur is te complex en te sterk ingebed in de bedrijfslogica om zonder meer te vervangen. De praktische route is een hybride aanpak: de kern van de berekeningen blijft in een stabiele C\#-omgeving, terwijl onderzoekers via Python, Jupyter-notebooks en gecontroleerde experimentatieomgevingen toegang krijgen tot geselecteerde modelonderdelen en vergelijkingsscenario's.
+
+Deze keuze vergroot de autonomie van onderzoekers zonder de stabiliteit van de hoofdapplicatie te ondermijnen. De proof-of-concept toont aan dat Python waardevol is voor kleine onderdelen, maar dat het niet voldoende toepasbaar is om grote workflows te testen. Clean Code en Documentation Drift zijn hierbij cruciaal: ze verbeteren niet alleen de leesbaarheid van de code, maar ook de samenwerking tussen onderzoekers en IT, en verminderen de kans op misinterpretatie in een complex domeinmodel.
 
 \textbf{Toekomstig onderzoek:}
 \begin{itemize}
-    \item Structureel inbedden van de switch-logica in de verschillende EMAV-rekenmodules.
-    \item Uitbreiden van notebook-validatietools voor automatische vergelijking tussen C\#- en Python-resultaten.
-    \item Verdiepen van de samenwerking met onderzoekers om de experimenteerruimte te optimaliseren.
-    \item Verder uitwerken van de PoC en de documentatiepraktijk om drift te beperken.
+    \item Verdiepen van de samenwerking tussen onderzoekers en ontwikkelaars om de experimenteerruimte te optimaliseren.
+    \item Verder uitwerken van de PoC met aandacht voor clean code, veilige data-isolatie, docs-as-code en het beperken van documentation drift voor ILVO.
+    \item Onderzoeken hoe Python kan helpen specifiek bij testen.
 \end{itemize}
 
 \end{multicols}
